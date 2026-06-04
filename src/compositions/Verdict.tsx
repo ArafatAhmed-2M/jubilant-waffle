@@ -78,7 +78,7 @@ export const Verdict: React.FC = () => {
           style={{
             position: "relative",
             height: 720,
-            maxWidth: 1100,
+            width: 1500,
             margin: "0 auto",
           }}
         >
@@ -144,21 +144,22 @@ export const Verdict: React.FC = () => {
                 <div
                   style={{
                     fontSize: 90,
-                    marginBottom: 24,
+                    marginBottom: 20,
                     position: "relative",
+                    lineHeight: 1,
                   }}
                 >
                   {insight.icon}
                 </div>
                 <div
                   style={{
-                    fontSize: 60,
+                    fontSize: 56,
                     fontWeight: 900,
                     color: insight.color,
                     fontFamily: "'Bebas Neue', 'Inter', sans-serif",
                     letterSpacing: 3,
                     lineHeight: 1,
-                    marginBottom: 24,
+                    marginBottom: 28,
                     position: "relative",
                     whiteSpace: "nowrap",
                   }}
@@ -167,13 +168,13 @@ export const Verdict: React.FC = () => {
                 </div>
                 <div
                   style={{
-                    fontSize: 32,
+                    fontSize: 34,
                     color: "#e2e8f0",
                     fontWeight: 500,
                     fontFamily: "Inter, sans-serif",
                     lineHeight: 1.4,
                     position: "relative",
-                    maxWidth: 920,
+                    maxWidth: 1340,
                   }}
                 >
                   {insight.body}

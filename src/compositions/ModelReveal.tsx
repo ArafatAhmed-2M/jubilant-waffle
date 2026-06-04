@@ -149,15 +149,15 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
           style={{
             display: "grid",
             gridTemplateColumns: "1.05fr 1fr",
-            gap: 32,
+            gap: 36,
             alignItems: "stretch",
             flex: 1,
             minHeight: 0,
           }}
         >
           {/* Left column: scores + info + pros/cons */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14, minHeight: 0 }}>
-            <div style={{ display: "flex", gap: 14 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 18, minHeight: 0 }}>
+            <div style={{ display: "flex", gap: 16 }}>
               <ScoreCard
                 label="CODE"
                 score={data.myScore}
@@ -183,7 +183,7 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
             />
 
             {/* Pros + Cons in 2 columns */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, flex: 1 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, flex: 1 }}>
               <BulletList
                 items={data.pros}
                 color="#4ade80"
@@ -215,8 +215,8 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
               />
               <div
                 style={{
-                  marginTop: 24,
-                  padding: "16px 20px",
+                  marginTop: 20,
+                  padding: "14px 18px",
                   background: "rgba(255,255,255,0.04)",
                   border: "1px solid rgba(255,255,255,0.1)",
                   borderRadius: 12,
@@ -234,12 +234,12 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
               >
                 <div
                   style={{
-                    fontSize: 13,
-                    color: "#64748b",
-                    fontWeight: 700,
+                    fontSize: 12,
+                    color: "#94a3b8",
+                    fontWeight: 800,
                     letterSpacing: 3,
                     textTransform: "uppercase",
-                    marginBottom: 6,
+                    marginBottom: 4,
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
@@ -247,14 +247,14 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
                 </div>
                 <div
                   style={{
-                    fontSize: 18,
+                    fontSize: 16,
                     color: "#cbd5e1",
                     fontWeight: 500,
                     lineHeight: 1.4,
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  This is what {data.name} generated for the prompt — running live in the browser above.
+                  What {data.name} generated for the prompt — running live in the browser above.
                 </div>
               </div>
             </div>
@@ -330,21 +330,21 @@ const BulletList: React.FC<{
   return (
     <div
       style={{
-        padding: "16px 18px",
+        padding: "14px 16px",
         background: `${color}0d`,
-        border: `2px solid ${color}55`,
-        borderRadius: 14,
+        border: `1.5px solid ${color}55`,
+        borderRadius: 12,
         display: "flex",
         flexDirection: "column",
-        gap: 10,
+        gap: 8,
       }}
     >
       <div
         style={{
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: 900,
           color: color,
-          letterSpacing: 4,
+          letterSpacing: 3,
           fontFamily: "Inter, sans-serif",
           textTransform: "uppercase",
           marginBottom: 4,
@@ -367,20 +367,20 @@ const BulletList: React.FC<{
               transform: `translateX(${(1 - appear) * -20}px)`,
               display: "flex",
               alignItems: "center",
-              gap: 12,
+              gap: 10,
             }}
           >
             <div
               style={{
-                width: 26,
-                height: 26,
+                width: 22,
+                height: 22,
                 borderRadius: "50%",
                 background: color,
                 color: "#0a0a0f",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: 900,
                 flexShrink: 0,
               }}
@@ -389,7 +389,7 @@ const BulletList: React.FC<{
             </div>
             <div
               style={{
-                fontSize: 17,
+                fontSize: 15,
                 fontWeight: 600,
                 color: "#fff",
                 fontFamily: "Inter, sans-serif",
@@ -415,23 +415,24 @@ const FinalBadge: React.FC<{
     <div
       style={{
         position: "absolute",
-        bottom: 50,
-        right: 70,
+        top: 200,
+        right: 60,
         opacity: appear,
         transform: `scale(${appear * pulse})`,
-        padding: "24px 44px",
+        padding: "18px 32px",
         background: `linear-gradient(135deg, ${color}, ${color}cc)`,
-        borderRadius: 24,
-        boxShadow: `0 20px 60px ${color}80`,
+        borderRadius: 20,
+        boxShadow: `0 16px 50px ${color}80`,
         textAlign: "center",
+        zIndex: 10,
       }}
     >
       <div
         style={{
-          fontSize: 18,
+          fontSize: 14,
           fontWeight: 800,
           color: "#0a0a0f",
-          letterSpacing: 4,
+          letterSpacing: 3,
           fontFamily: "Inter, sans-serif",
           textTransform: "uppercase",
         }}
@@ -440,8 +441,8 @@ const FinalBadge: React.FC<{
       </div>
       <div
         style={{
-          marginTop: 4,
-          fontSize: 76,
+          marginTop: 2,
+          fontSize: 58,
           fontWeight: 900,
           color: "#0a0a0f",
           lineHeight: 1,
@@ -452,7 +453,7 @@ const FinalBadge: React.FC<{
       </div>
       <div
         style={{
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: 700,
           color: "#0a0a0f",
           fontFamily: "Inter, sans-serif",

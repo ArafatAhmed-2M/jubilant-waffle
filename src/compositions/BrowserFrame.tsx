@@ -97,13 +97,13 @@ export const InfoCard: React.FC<InfoCardProps> = ({ maker, params, license, rele
       style={{
         opacity: appear,
         transform: `translateY(${(1 - appear) * 20}px)`,
-        padding: "16px 20px",
-        background: `linear-gradient(135deg, ${color}11, ${color}06)`,
-        border: `1px solid ${color}55`,
-        borderRadius: 12,
+        padding: "22px 26px",
+        background: `linear-gradient(135deg, ${color}14, ${color}06)`,
+        border: `1.5px solid ${color}66`,
+        borderRadius: 14,
         display: "grid",
         gridTemplateColumns: "auto 1fr",
-        gap: "6px 18px",
+        gap: "10px 22px",
         fontFamily: "Inter, sans-serif",
       }}
     >
@@ -111,20 +111,20 @@ export const InfoCard: React.FC<InfoCardProps> = ({ maker, params, license, rele
       <Field label="Params" value={params} color={color} />
       <Field label="License" value={license} color={color} />
       <Field label="Released" value={release} color={color} />
-      <div style={{ gridColumn: "1 / -1", marginTop: 8, paddingTop: 10, borderTop: `1px solid ${color}33` }}>
+      <div style={{ gridColumn: "1 / -1", marginTop: 12, paddingTop: 12, borderTop: `1px solid ${color}44` }}>
         <div
           style={{
-            fontSize: 11,
-            color: "#64748b",
-            fontWeight: 700,
-            letterSpacing: 2,
+            fontSize: 13,
+            color: "#94a3b8",
+            fontWeight: 800,
+            letterSpacing: 3,
             textTransform: "uppercase",
-            marginBottom: 4,
+            marginBottom: 8,
           }}
         >
           What it built
         </div>
-        <div style={{ fontSize: 14, color: "#cbd5e1", lineHeight: 1.4 }}>{info}</div>
+        <div style={{ fontSize: 20, color: "#e2e8f0", lineHeight: 1.45, fontWeight: 500 }}>{info}</div>
       </div>
     </div>
   );
@@ -134,15 +134,15 @@ const Field: React.FC<{ label: string; value: string; color: string }> = ({ labe
   <>
     <div
       style={{
-        fontSize: 11,
-        color: "#64748b",
-        fontWeight: 700,
-        letterSpacing: 2,
+        fontSize: 13,
+        color: "#94a3b8",
+        fontWeight: 800,
+        letterSpacing: 3,
         textTransform: "uppercase",
       }}
     >
       {label}
     </div>
-    <div style={{ fontSize: 14, color: "#fff", fontWeight: 600 }}>{value}</div>
+    <div style={{ fontSize: 19, color: "#fff", fontWeight: 700 }}>{value}</div>
   </>
 );
