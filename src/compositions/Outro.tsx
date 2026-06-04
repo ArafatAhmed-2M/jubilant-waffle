@@ -41,14 +41,14 @@ export const Outro: React.FC = () => {
     config: { damping: 12, stiffness: 200, mass: 0.5 },
   });
 
-  // End card with watch-next
-  const endCardAppear = interpolate(frame, [T(0.78), T(0.92)], [0, 1], {
+  // Winner reveal pulse
+  const winnerPulse = frame >= T(0.50) ? 1 + Math.sin((frame - T(0.50)) * 0.12) * 0.04 : 1;
+
+  // Final thanks
+  const thanksAppear = interpolate(frame, [T(0.80), T(0.92)], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-
-  // Winner reveal pulse
-  const winnerPulse = frame >= T(0.50) ? 1 + Math.sin((frame - T(0.50)) * 0.12) * 0.04 : 1;
 
   return (
     <AbsoluteFill>
@@ -187,24 +187,8 @@ export const Outro: React.FC = () => {
             transform: `translateY(${(1 - ctaAppear) * 30}px)`,
           }}
         >
-          <CTA
-            icon="👍"
-            label="LIKE"
-            color="#3b82f6"
-            delay={0}
-            current={frame}
-            t0={T(0.22)}
-            fps={fps}
-          />
-          <CTA
-            icon="🔔"
-            label="BELL"
-            color="#f59e0b"
-            delay={0.03}
-            current={frame}
-            t0={T(0.22)}
-            fps={fps}
-          />
+          <CTA icon="👍" label="LIKE" color="#3b82f6" delay={0} current={frame} t0={T(0.22)} fps={fps} />
+          <CTA icon="🔔" label="BELL" color="#f59e0b" delay={0.03} current={frame} t0={T(0.22)} fps={fps} />
           <button
             style={{
               transform: `scale(${subBounce})`,
@@ -223,24 +207,8 @@ export const Outro: React.FC = () => {
           >
             SUBSCRIBE
           </button>
-          <CTA
-            icon="↗"
-            label="SHARE"
-            color="#10b981"
-            delay={0.06}
-            current={frame}
-            t0={T(0.22)}
-            fps={fps}
-          />
-          <CTA
-            icon="💬"
-            label="COMMENT"
-            color="#8b5cf6"
-            delay={0.09}
-            current={frame}
-            t0={T(0.22)}
-            fps={fps}
-          />
+          <CTA icon="↗" label="SHARE" color="#10b981" delay={0.06} current={frame} t0={T(0.22)} fps={fps} />
+          <CTA icon="💬" label="COMMENT" color="#8b5cf6" delay={0.09} current={frame} t0={T(0.22)} fps={fps} />
         </div>
 
         {/* Comment typewriter */}
@@ -274,62 +242,21 @@ export const Outro: React.FC = () => {
           </span>
         </div>
 
-        {/* End card with watch next */}
+        {/* Final thanks line */}
         <div
           style={{
-            position: "absolute",
-            bottom: 40,
-            left: 80,
-            right: 80,
-            opacity: endCardAppear,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "20px 32px",
-            background: "rgba(0,0,0,0.5)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: 16,
-            backdropFilter: "blur(20px)",
+            textAlign: "center",
+            opacity: thanksAppear,
+            transform: `translateY(${(1 - thanksAppear) * 20}px)`,
+            fontSize: 32,
+            fontWeight: 800,
+            color: "#fff",
+            fontFamily: "'Bebas Neue', 'Inter', sans-serif",
+            letterSpacing: 6,
+            marginTop: 20,
           }}
         >
-          <div>
-            <div
-              style={{
-                fontSize: 14,
-                color: "#64748b",
-                fontWeight: 700,
-                letterSpacing: 3,
-                textTransform: "uppercase",
-                fontFamily: "Inter, sans-serif",
-                marginBottom: 4,
-              }}
-            >
-              Up Next
-            </div>
-            <div
-              style={{
-                fontSize: 26,
-                color: "#fff",
-                fontWeight: 800,
-                fontFamily: "'Bebas Neue', 'Inter', sans-serif",
-                letterSpacing: 2,
-              }}
-            >
-              I Made These 7 Models Fight in a Code Battle
-            </div>
-          </div>
-          <div
-            style={{
-              fontSize: 18,
-              color: "#94a3b8",
-              fontWeight: 600,
-              fontFamily: "Inter, sans-serif",
-              letterSpacing: 3,
-              textTransform: "uppercase",
-            }}
-          >
-            Coming soon →
-          </div>
+          THANKS FOR WATCHING 🎬
         </div>
       </AbsoluteFill>
 

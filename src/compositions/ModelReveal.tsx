@@ -79,9 +79,7 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
     config: { damping: 14, stiffness: 120, mass: 0.7 },
   });
 
-  // 35-50%: pros (3 staggered)
-  // 55-70%: cons (2 staggered)
-  // 75-95%: badge with pulse
+  // 78-95%: badge with pulse
   const badgeAppear = spring({
     frame: frame - T(0.78),
     fps,
@@ -91,16 +89,10 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
     ? 1 + Math.sin((frame - T(0.85)) * 0.18) * 0.05
     : 1;
 
-  // Final fade out near the end
-  const fadeOut = interpolate(frame, [T(0.96), T(1.0)], [1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
   const nameSize = getNameSize(data.name);
 
   return (
-    <AbsoluteFill style={{ opacity: fadeOut }}>
+    <AbsoluteFill>
       <AnimatedBackground baseColor="#08080d" accentColor={data.color} intensity={0.4} />
       <Audio src={staticFile(audioFile)} />
 
@@ -111,15 +103,15 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
         }}
       />
 
-      <AbsoluteFill style={{ padding: "50px 80px" }}>
-        {/* Top: tagline + name + info card */}
+      <AbsoluteFill style={{ padding: "40px 70px", display: "flex", flexDirection: "column" }}>
+        {/* Top: tagline + name */}
         <div style={{ marginBottom: 20 }}>
           <div
             style={{
               opacity: taglineAppear,
               transform: `translateY(${(1 - taglineAppear) * 20}px)`,
-              fontSize: 18,
-              fontWeight: 700,
+              fontSize: 22,
+              fontWeight: 800,
               color: data.color,
               letterSpacing: 6,
               textTransform: "uppercase",
@@ -136,7 +128,7 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
               transform: `translateX(${(1 - nameX) * -200}px)`,
               fontSize: nameSize,
               fontWeight: 900,
-              lineHeight: 1.1,
+              lineHeight: 1.05,
               fontFamily: "'Bebas Neue', 'Inter', sans-serif",
               background: `linear-gradient(135deg, #ffffff 0%, ${data.color} 100%)`,
               WebkitBackgroundClip: "text",
@@ -145,18 +137,27 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
               textShadow: `0 0 80px ${data.color}40`,
               whiteSpace: "nowrap",
               overflow: "hidden",
-              paddingBottom: 12,
+              paddingBottom: 8,
             }}
           >
             {data.name}
           </div>
         </div>
 
-        {/* Main content: 2 columns */}
-        <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 32, alignItems: "start" }}>
+        {/* Main content: 2 columns filling remaining height */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.05fr 1fr",
+            gap: 32,
+            alignItems: "stretch",
+            flex: 1,
+            minHeight: 0,
+          }}
+        >
           {/* Left column: scores + info + pros/cons */}
-          <div>
-            <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14, minHeight: 0 }}>
+            <div style={{ display: "flex", gap: 14 }}>
               <ScoreCard
                 label="CODE"
                 score={data.myScore}
@@ -171,76 +172,91 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
               />
             </div>
 
-            <div style={{ marginBottom: 16 }}>
-              <InfoCard
-                maker={data.maker}
-                params={data.params}
-                license={data.license}
-                release={data.release}
-                info={data.info}
-                color={data.color}
-                appear={infoAppear}
-              />
-            </div>
+            <InfoCard
+              maker={data.maker}
+              params={data.params}
+              license={data.license}
+              release={data.release}
+              info={data.info}
+              color={data.color}
+              appear={infoAppear}
+            />
 
-            {/* Pros + Cons */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              {data.pros.map((pro, i) => {
-                const delay = T(0.32) + i * T(0.04);
-                const appear = spring({
-                  frame: frame - delay,
-                  fps,
-                  config: { damping: 14, stiffness: 180, mass: 0.5 },
-                });
-                return (
-                  <BulletItem
-                    key={`p-${pro}`}
-                    text={pro}
-                    appear={appear}
-                    color="#4ade80"
-                    icon="✓"
-                  />
-                );
-              })}
-              {data.cons.map((con, i) => {
-                const delay = T(0.50) + i * T(0.04);
-                const appear = spring({
-                  frame: frame - delay,
-                  fps,
-                  config: { damping: 14, stiffness: 180, mass: 0.5 },
-                });
-                return (
-                  <BulletItem
-                    key={`c-${con}`}
-                    text={con}
-                    appear={appear}
-                    color="#ff4d6d"
-                    icon="✕"
-                  />
-                );
-              })}
+            {/* Pros + Cons in 2 columns */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, flex: 1 }}>
+              <BulletList
+                items={data.pros}
+                color="#4ade80"
+                icon="✓"
+                label="PROS"
+                startFrame={T(0.32)}
+                frame={frame}
+                fps={fps}
+              />
+              <BulletList
+                items={data.cons}
+                color="#ff4d6d"
+                icon="✕"
+                label="CONS"
+                startFrame={T(0.50)}
+                frame={frame}
+                fps={fps}
+              />
             </div>
           </div>
 
           {/* Right column: browser frame */}
-          <div style={{ position: "relative" }}>
-            <BrowserFrame
-              screenshot={`screenshots/${data.id}.png`}
-              url={data.url}
-              appear={screenshotAppear}
-            />
-            <div
-              style={{
-                position: "absolute",
-                bottom: -36,
-                right: 0,
-                fontSize: 14,
-                color: "#64748b",
-                fontFamily: "Inter, sans-serif",
-                fontStyle: "italic",
-              }}
-            >
-              Live preview of what the model generated ↓
+          <div style={{ position: "relative", display: "flex", alignItems: "stretch" }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+              <BrowserFrame
+                screenshot={`screenshots/${data.id}.png`}
+                url={data.url}
+                appear={screenshotAppear}
+              />
+              <div
+                style={{
+                  marginTop: 24,
+                  padding: "16px 20px",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: 12,
+                  opacity: interpolate(frame, [T(0.45), T(0.55)], [0, 1], {
+                    extrapolateLeft: "clamp",
+                    extrapolateRight: "clamp",
+                  }),
+                  transform: `translateY(${
+                    interpolate(frame, [T(0.45), T(0.55)], [20, 0], {
+                      extrapolateLeft: "clamp",
+                      extrapolateRight: "clamp",
+                    })
+                  }px)`,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 13,
+                    color: "#64748b",
+                    fontWeight: 700,
+                    letterSpacing: 3,
+                    textTransform: "uppercase",
+                    marginBottom: 6,
+                    fontFamily: "Inter, sans-serif",
+                  }}
+                >
+                  Live preview
+                </div>
+                <div
+                  style={{
+                    fontSize: 18,
+                    color: "#cbd5e1",
+                    fontWeight: 500,
+                    lineHeight: 1.4,
+                    fontFamily: "Inter, sans-serif",
+                  }}
+                >
+                  This is what {data.name} generated for the prompt — running live in the browser above.
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -266,7 +282,7 @@ const ScoreCard: React.FC<{
         opacity: appear,
         transform: `scale(${0.7 + appear * 0.3}) translateY(${(1 - appear) * 20}px)`,
         flex: 1,
-        padding: "20px 26px",
+        padding: "20px 24px",
         background: `linear-gradient(135deg, ${color}22, ${color}08)`,
         border: `2px solid ${color}`,
         borderRadius: 18,
@@ -276,8 +292,8 @@ const ScoreCard: React.FC<{
     >
       <div
         style={{
-          fontSize: 16,
-          fontWeight: 700,
+          fontSize: 18,
+          fontWeight: 800,
           color: "#94a3b8",
           letterSpacing: 4,
           fontFamily: "Inter, sans-serif",
@@ -287,8 +303,8 @@ const ScoreCard: React.FC<{
       </div>
       <div
         style={{
-          marginTop: 8,
-          fontSize: 80,
+          marginTop: 4,
+          fontSize: 76,
           fontWeight: 900,
           color: color,
           lineHeight: 1,
@@ -296,61 +312,95 @@ const ScoreCard: React.FC<{
         }}
       >
         {score.toFixed(1)}
-        <span style={{ fontSize: 36, color: "#64748b", marginLeft: 6 }}>/ 10</span>
+        <span style={{ fontSize: 28, color: "#64748b", marginLeft: 4 }}>/ 10</span>
       </div>
     </div>
   );
 };
 
-const BulletItem: React.FC<{
-  text: string;
-  appear: number;
+const BulletList: React.FC<{
+  items: string[];
   color: string;
   icon: string;
-}> = ({ text, appear, color, icon }) => {
+  label: string;
+  startFrame: number;
+  frame: number;
+  fps: number;
+}> = ({ items, color, icon, label, startFrame, frame, fps }) => {
   return (
     <div
       style={{
-        opacity: appear,
-        transform: `translateX(${(1 - appear) * -30}px)`,
-        padding: "12px 16px",
-        background: `${color}11`,
-        border: `1.5px solid ${color}55`,
-        borderRadius: 10,
+        padding: "16px 18px",
+        background: `${color}0d`,
+        border: `2px solid ${color}55`,
+        borderRadius: 14,
         display: "flex",
-        alignItems: "center",
-        gap: 12,
-        minHeight: 52,
+        flexDirection: "column",
+        gap: 10,
       }}
     >
       <div
         style={{
-          width: 28,
-          height: 28,
-          borderRadius: "50%",
-          background: color,
-          color: "#0a0a0f",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           fontSize: 16,
           fontWeight: 900,
-          flexShrink: 0,
-        }}
-      >
-        {icon}
-      </div>
-      <div
-        style={{
-          fontSize: 16,
-          fontWeight: 600,
-          color: "#fff",
+          color: color,
+          letterSpacing: 4,
           fontFamily: "Inter, sans-serif",
-          lineHeight: 1.3,
+          textTransform: "uppercase",
+          marginBottom: 4,
         }}
       >
-        {text}
+        {label}
       </div>
+      {items.map((text, i) => {
+        const delay = startFrame + i * 8;
+        const appear = spring({
+          frame: frame - delay,
+          fps,
+          config: { damping: 14, stiffness: 200, mass: 0.5 },
+        });
+        return (
+          <div
+            key={text}
+            style={{
+              opacity: appear,
+              transform: `translateX(${(1 - appear) * -20}px)`,
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
+            <div
+              style={{
+                width: 26,
+                height: 26,
+                borderRadius: "50%",
+                background: color,
+                color: "#0a0a0f",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 14,
+                fontWeight: 900,
+                flexShrink: 0,
+              }}
+            >
+              {icon}
+            </div>
+            <div
+              style={{
+                fontSize: 17,
+                fontWeight: 600,
+                color: "#fff",
+                fontFamily: "Inter, sans-serif",
+                lineHeight: 1.3,
+              }}
+            >
+              {text}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -365,23 +415,23 @@ const FinalBadge: React.FC<{
     <div
       style={{
         position: "absolute",
-        bottom: 40,
-        right: 60,
+        bottom: 50,
+        right: 70,
         opacity: appear,
         transform: `scale(${appear * pulse})`,
-        padding: "20px 36px",
+        padding: "24px 44px",
         background: `linear-gradient(135deg, ${color}, ${color}cc)`,
-        borderRadius: 20,
+        borderRadius: 24,
         boxShadow: `0 20px 60px ${color}80`,
         textAlign: "center",
       }}
     >
       <div
         style={{
-          fontSize: 14,
-          fontWeight: 700,
+          fontSize: 18,
+          fontWeight: 800,
           color: "#0a0a0f",
-          letterSpacing: 3,
+          letterSpacing: 4,
           fontFamily: "Inter, sans-serif",
           textTransform: "uppercase",
         }}
@@ -391,7 +441,7 @@ const FinalBadge: React.FC<{
       <div
         style={{
           marginTop: 4,
-          fontSize: 64,
+          fontSize: 76,
           fontWeight: 900,
           color: "#0a0a0f",
           lineHeight: 1,
@@ -402,7 +452,7 @@ const FinalBadge: React.FC<{
       </div>
       <div
         style={{
-          fontSize: 18,
+          fontSize: 20,
           fontWeight: 700,
           color: "#0a0a0f",
           fontFamily: "Inter, sans-serif",

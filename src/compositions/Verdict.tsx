@@ -41,12 +41,12 @@ export const Verdict: React.FC = () => {
   });
 
   // Each card is visible for ~0.22 of duration, with 0.03 crossfade gap.
-  // Schedule: 0.10-0.32, 0.35-0.57, 0.60-0.82, 0.85-1.0
+  // Schedule: 0.10-0.30, 0.33-0.53, 0.56-0.76, 0.79-0.99
   const cardSlots: Array<{ start: number; end: number }> = [
-    { start: 0.10, end: 0.32 },
-    { start: 0.35, end: 0.57 },
-    { start: 0.60, end: 0.82 },
-    { start: 0.85, end: 1.05 },
+    { start: 0.10, end: 0.30 },
+    { start: 0.33, end: 0.53 },
+    { start: 0.56, end: 0.76 },
+    { start: 0.79, end: 0.99 },
   ];
 
   return (
@@ -68,6 +68,7 @@ export const Verdict: React.FC = () => {
             WebkitTextFillColor: "transparent",
             letterSpacing: 6,
             marginBottom: 40,
+            lineHeight: 1,
           }}
         >
           THE VERDICT
@@ -83,26 +84,31 @@ export const Verdict: React.FC = () => {
         >
           {INSIGHTS.map((insight, i) => {
             const slot = cardSlots[i];
+            const isLast = i === cardSlots.length - 1;
             const fadeIn = T(slot.start);
+            const fadeInEnd = T(slot.start + 0.04);
             const holdEnd = T(slot.end);
-            const crossEnd = T(Math.min(slot.end + 0.04, 1));
-            const appear = spring({
-              frame: frame - fadeIn,
-              fps,
-              config: { damping: 12, stiffness: 200, mass: 0.5 },
-            });
-            const opacity = interpolate(
-              frame,
-              [fadeIn, fadeIn + T(0.025), holdEnd, crossEnd],
-              [0, appear, 1, 0],
-              { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-            );
-            const translateY = interpolate(
-              frame,
-              [fadeIn, fadeIn + T(0.04), holdEnd, crossEnd],
-              [60, 0, 0, -30],
-              { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-            );
+            const crossEnd = isLast
+              ? durationInFrames - 1
+              : Math.min(T(slot.end + 0.04), durationInFrames - 1);
+            const opacity = isLast
+              ? interpolate(frame, [fadeIn, fadeInEnd], [0, 1], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                })
+              : interpolate(frame, [fadeIn, fadeInEnd, holdEnd, crossEnd], [0, 1, 1, 0], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                });
+            const translateY = isLast
+              ? interpolate(frame, [fadeIn, fadeInEnd], [60, 0], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                })
+              : interpolate(frame, [fadeIn, fadeInEnd, holdEnd, crossEnd], [60, 0, 0, -30], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                });
             return (
               <div
                 key={insight.title}

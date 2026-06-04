@@ -55,16 +55,28 @@ export const BrowserFrame: React.FC<Props> = ({ screenshot, url, appear }) => {
         </div>
       </div>
       {/* Screenshot */}
-      <Img
-        src={staticFile(screenshot)}
+      <div
         style={{
           width: "100%",
-          display: "block",
           aspectRatio: "16 / 9",
-          objectFit: "cover",
-          objectPosition: "top center",
+          background: "#0a0a14",
+          backgroundImage:
+            "linear-gradient(135deg, #0a0a14 0%, #1a1a28 50%, #0a0a14 100%)",
+          overflow: "hidden",
         }}
-      />
+      >
+        <Img
+          src={staticFile(screenshot)}
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "block",
+            objectFit: "cover",
+            objectPosition: "top center",
+            backgroundColor: "#0a0a14",
+          }}
+        />
+      </div>
     </div>
   );
 };
