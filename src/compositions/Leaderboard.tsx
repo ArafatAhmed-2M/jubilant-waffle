@@ -2,6 +2,7 @@ import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate, Audio, staticFile } from "remotion";
 import { LEADERBOARD } from "./data";
 import { AnimatedBackground } from "./visuals";
+import { useWordSync, type Word } from "./useWordSync";
 
 const PLACE_COLORS: Record<number, string> = {
   1: "#fbbf24",
@@ -15,26 +16,48 @@ const RANK_LABELS: Record<number, string> = {
   3: "3rd",
 };
 
-export const Leaderboard: React.FC = () => {
+// Map each leaderboard row to the first word that triggers its reveal
+const ROW_TRIGGERS: string[] = [
+  "First",   // 1st: Mini Max M3
+  "Second",  // T-2nd: DeepSeek (reveals at "Second place, joint")
+  "Second",  // T-2nd: BigPickle (same trigger as DeepSeek)
+  "Third",   // 4th overall: MiMo
+  "Fourth",  // 5th overall: Gemma
+  "Fifth",   // 6th overall: Nemotron Super
+  "Sixth",   // 7th overall: Nemotron Nano
+];
+
+const ROW_OCCURRENCES: number[] = [1, 1, 1, 1, 1, 1, 1];
+
+type Props = { words?: Word[] };
+
+export const Leaderboard: React.FC<Props> = ({ words }) => {
   const frame = useCurrentFrame();
-  const { fps, durationInFrames } = useVideoConfig();
-  const T = (frac: number) => Math.max(0, Math.floor(frac * durationInFrames));
+  const { fps } = useVideoConfig();
+
+  const { frameAt } = useWordSync(words);
 
   const titleAppear = spring({
-    frame: frame - T(0.02),
+    frame: frame - 0,
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
 
-  // Top-3 reveal staggered; rest of table fades in together
+  // Each row's reveal frame
+  const rowRevealFrames = LEADERBOARD.map((_, i) =>
+    frameAt(ROW_TRIGGERS[i] ?? "First", ROW_OCCURRENCES[i] ?? 1),
+  );
+
+  // Top-3 callout appears just after first row
   const topReveal = spring({
-    frame: frame - T(0.08),
+    frame: frame - Math.max(0, (rowRevealFrames[0] || 0) - 6),
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
 
+  // Whole table container appears on "Here's the final leaderboard"
   const tableReveal = spring({
-    frame: frame - T(0.20),
+    frame: frame - Math.max(0, frameAt("leaderboard", 1) - 6),
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
@@ -45,7 +68,6 @@ export const Leaderboard: React.FC = () => {
       <Audio src={staticFile("audio/leaderboard.mp3")} />
 
       <AbsoluteFill style={{ padding: "60px 80px", display: "flex", flexDirection: "column" }}>
-        {/* Title */}
         <div
           style={{
             opacity: titleAppear,
@@ -152,7 +174,7 @@ export const Leaderboard: React.FC = () => {
           })}
         </div>
 
-        {/* Full leaderboard table — all rows visible at once */}
+        {/* Full leaderboard table */}
         <div
           style={{
             background: "rgba(255,255,255,0.04)",
@@ -184,10 +206,16 @@ export const Leaderboard: React.FC = () => {
             <div style={{ ...headerStyle, textAlign: "right" }}>AVERAGE</div>
           </div>
 
-          {/* All 7 rows */}
+          {/* Rows */}
           {LEADERBOARD.map((row, i) => {
             const agreed = Math.abs(row.code - row.looks) < 2;
             const rowColor = PLACE_COLORS[row.rank] || row.color;
+            const revealAt = rowRevealFrames[i] || 0;
+            const appear = spring({
+              frame: frame - revealAt,
+              fps,
+              config: { damping: 14, stiffness: 200, mass: 0.5 },
+            });
             return (
               <div
                 key={row.name}
@@ -200,6 +228,8 @@ export const Leaderboard: React.FC = () => {
                   background: agreed
                     ? "linear-gradient(90deg, rgba(74, 222, 128, 0.10), transparent)"
                     : "linear-gradient(90deg, rgba(251, 146, 60, 0.10), transparent)",
+                  opacity: appear,
+                  transform: `translateX(${(1 - appear) * 80}px)`,
                 }}
               >
                 <div
@@ -303,7 +333,7 @@ export const Leaderboard: React.FC = () => {
             gap: 36,
             justifyContent: "center",
             marginTop: 20,
-            opacity: interpolate(frame, [T(0.55), T(0.7)], [0, 1], {
+            opacity: interpolate(frame, [Math.max(0, frameAt("surprise", 1) - 6), frameAt("surprise", 1) + 12], [0, 1], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),

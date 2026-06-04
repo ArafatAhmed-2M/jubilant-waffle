@@ -1,6 +1,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring, Audio, staticFile } from "remotion";
 import { AnimatedBackground } from "./visuals";
+import { useWordSync, type Word, fadeIn } from "./useWordSync";
 
 const INSIGHTS = [
   {
@@ -29,25 +30,44 @@ const INSIGHTS = [
   },
 ];
 
-export const Verdict: React.FC = () => {
+const CARD_TRIGGERS = [
+  // Each card's start frame, derived from the audio's "Number X" / "number X" phrase
+  "Number one",
+  "Number two",
+  "Number three",
+  "number four",
+];
+
+const CARD_END_TRIGGERS = [
+  "Architecture",   // end of card 1
+  "everything",     // end of card 2
+  "personality",    // end of card 3
+  "ones",           // end of card 4
+];
+
+type Props = { words?: Word[] };
+
+export const Verdict: React.FC<Props> = ({ words }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
   const T = (frac: number) => Math.max(0, Math.floor(frac * durationInFrames));
 
+  const { phraseAt } = useWordSync(words);
+
+  // Compute each card's start/end frames from the JSON
+  const cardSlots: Array<{ start: number; end: number }> = INSIGHTS.map((_, i) => {
+    const startPhrase = phraseAt(CARD_TRIGGERS[i], 0);
+    const endPhrase = phraseAt(CARD_END_TRIGGERS[i], startPhrase ? startPhrase.start : 0);
+    const startFrame = startPhrase ? startPhrase.start : T(0.10 + i * 0.20);
+    const endFrame = endPhrase ? endPhrase.end : T(0.30 + i * 0.20);
+    return { start: startFrame, end: endFrame };
+  });
+
   const titleAppear = spring({
-    frame: frame - T(0.02),
+    frame: frame - 0,
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
-
-  // Each card is visible for ~0.22 of duration, with 0.03 crossfade gap.
-  // Schedule: 0.10-0.30, 0.33-0.53, 0.56-0.76, 0.79-0.99
-  const cardSlots: Array<{ start: number; end: number }> = [
-    { start: 0.10, end: 0.30 },
-    { start: 0.33, end: 0.53 },
-    { start: 0.56, end: 0.76 },
-    { start: 0.79, end: 0.99 },
-  ];
 
   return (
     <AbsoluteFill>
@@ -84,31 +104,32 @@ export const Verdict: React.FC = () => {
         >
           {INSIGHTS.map((insight, i) => {
             const slot = cardSlots[i];
-            const isLast = i === cardSlots.length - 1;
-            const fadeIn = T(slot.start);
-            const fadeInEnd = T(slot.start + 0.04);
-            const holdEnd = T(slot.end);
-            const crossEnd = isLast
-              ? durationInFrames - 1
-              : Math.min(T(slot.end + 0.04), durationInFrames - 1);
+            const isLast = i === INSIGHTS.length - 1;
+            const nextStart = !isLast ? cardSlots[i + 1].start : durationInFrames - 1;
+
+            const fadeInEnd = slot.start + Math.floor(0.4 * fps);
+            const holdEnd = Math.min(slot.end, nextStart - Math.floor(0.2 * fps));
+            const crossEnd = !isLast ? nextStart : durationInFrames - 1;
+
             const opacity = isLast
-              ? interpolate(frame, [fadeIn, fadeInEnd], [0, 1], {
-                  extrapolateLeft: "clamp",
-                  extrapolateRight: "clamp",
-                })
-              : interpolate(frame, [fadeIn, fadeInEnd, holdEnd, crossEnd], [0, 1, 1, 0], {
-                  extrapolateLeft: "clamp",
-                  extrapolateRight: "clamp",
-                });
+              ? fadeIn(frame, slot.start, Math.floor(0.4 * fps))
+              : interpolate(
+                  frame,
+                  [slot.start, fadeInEnd, holdEnd, crossEnd],
+                  [0, 1, 1, 0],
+                  { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+                );
             const translateY = isLast
-              ? interpolate(frame, [fadeIn, fadeInEnd], [60, 0], {
+              ? interpolate(frame, [slot.start, fadeInEnd], [60, 0], {
                   extrapolateLeft: "clamp",
                   extrapolateRight: "clamp",
                 })
-              : interpolate(frame, [fadeIn, fadeInEnd, holdEnd, crossEnd], [60, 0, 0, -30], {
-                  extrapolateLeft: "clamp",
-                  extrapolateRight: "clamp",
-                });
+              : interpolate(
+                  frame,
+                  [slot.start, fadeInEnd, holdEnd, crossEnd],
+                  [60, 0, 0, -30],
+                  { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+                );
             return (
               <div
                 key={insight.title}
@@ -197,7 +218,7 @@ export const Verdict: React.FC = () => {
             fontFamily: "Inter, sans-serif",
             letterSpacing: 4,
             textTransform: "uppercase",
-            opacity: interpolate(frame, [T(0.85), T(0.95)], [0, 1], {
+            opacity: interpolate(frame, [durationInFrames - 60, durationInFrames - 20], [0, 1], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
@@ -206,7 +227,6 @@ export const Verdict: React.FC = () => {
           7 Models · 1 Prompt · ∞ Lessons
         </div>
 
-        {/* Card progress dots */}
         <div
           style={{
             position: "absolute",
@@ -219,17 +239,16 @@ export const Verdict: React.FC = () => {
           }}
         >
           {cardSlots.map((slot, i) => {
-            const active = frame >= T(slot.start) && frame < T(slot.end + 0.04);
+            const isActive = frame >= slot.start && frame < (cardSlots[i + 1]?.start ?? durationInFrames);
             return (
               <div
                 key={i}
                 style={{
-                  width: active ? 60 : 30,
+                  width: isActive ? 60 : 30,
                   height: 8,
                   borderRadius: 4,
-                  background: active ? INSIGHTS[i].color : "#1f2937",
-                  transition: "all 0.3s",
-                  boxShadow: active ? `0 0 20px ${INSIGHTS[i].color}` : "none",
+                  background: isActive ? INSIGHTS[i].color : "#1f2937",
+                  boxShadow: isActive ? `0 0 20px ${INSIGHTS[i].color}` : "none",
                 }}
               />
             );

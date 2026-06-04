@@ -1,0 +1,391 @@
+{
+    "audio_file": "nemotron-super.mp3",
+    "total_words": 77,
+    "transcript": [
+        {
+            "word": "Nemotron",
+            "start_time": 0.0,
+            "end_time": 0.62
+        },
+        {
+            "word": "3",
+            "start_time": 0.62,
+            "end_time": 1.0
+        },
+        {
+            "word": "Super.",
+            "start_time": 1.0,
+            "end_time": 1.46
+        },
+        {
+            "word": "4",
+            "start_time": 1.98,
+            "end_time": 2.14
+        },
+        {
+            "word": "out",
+            "start_time": 2.14,
+            "end_time": 2.36
+        },
+        {
+            "word": "of",
+            "start_time": 2.36,
+            "end_time": 2.5
+        },
+        {
+            "word": "10",
+            "start_time": 2.5,
+            "end_time": 2.74
+        },
+        {
+            "word": "average.",
+            "start_time": 2.74,
+            "end_time": 3.16
+        },
+        {
+            "word": "Now",
+            "start_time": 3.62,
+            "end_time": 3.74
+        },
+        {
+            "word": "this",
+            "start_time": 3.74,
+            "end_time": 4.2
+        },
+        {
+            "word": "is",
+            "start_time": 4.2,
+            "end_time": 4.6
+        },
+        {
+            "word": "a",
+            "start_time": 4.6,
+            "end_time": 4.68
+        },
+        {
+            "word": "comeback",
+            "start_time": 4.68,
+            "end_time": 4.96
+        },
+        {
+            "word": "story.",
+            "start_time": 4.96,
+            "end_time": 5.48
+        },
+        {
+            "word": "Sort",
+            "start_time": 5.94,
+            "end_time": 6.08
+        },
+        {
+            "word": "of.",
+            "start_time": 6.08,
+            "end_time": 6.4
+        },
+        {
+            "word": "Last",
+            "start_time": 6.8,
+            "end_time": 7.14
+        },
+        {
+            "word": "round,",
+            "start_time": 7.14,
+            "end_time": 7.58
+        },
+        {
+            "word": "this",
+            "start_time": 7.8,
+            "end_time": 7.94
+        },
+        {
+            "word": "model",
+            "start_time": 7.94,
+            "end_time": 8.26
+        },
+        {
+            "word": "got",
+            "start_time": 8.26,
+            "end_time": 8.5
+        },
+        {
+            "word": "0",
+            "start_time": 8.5,
+            "end_time": 8.94
+        },
+        {
+            "word": "out",
+            "start_time": 8.94,
+            "end_time": 9.3
+        },
+        {
+            "word": "of",
+            "start_time": 9.3,
+            "end_time": 9.42
+        },
+        {
+            "word": "10",
+            "start_time": 9.42,
+            "end_time": 9.72
+        },
+        {
+            "word": "because",
+            "start_time": 9.72,
+            "end_time": 10.32
+        },
+        {
+            "word": "every",
+            "start_time": 10.32,
+            "end_time": 10.78
+        },
+        {
+            "word": "CSS",
+            "start_time": 10.78,
+            "end_time": 11.22
+        },
+        {
+            "word": "variable",
+            "start_time": 11.22,
+            "end_time": 11.88
+        },
+        {
+            "word": "had",
+            "start_time": 11.88,
+            "end_time": 12.24
+        },
+        {
+            "word": "quotes",
+            "start_time": 12.24,
+            "end_time": 12.6
+        },
+        {
+            "word": "around",
+            "start_time": 12.6,
+            "end_time": 12.92
+        },
+        {
+            "word": "the",
+            "start_time": 12.92,
+            "end_time": 13.1
+        },
+        {
+            "word": "hex",
+            "start_time": 13.1,
+            "end_time": 13.28
+        },
+        {
+            "word": "values",
+            "start_time": 13.28,
+            "end_time": 13.68
+        },
+        {
+            "word": "which",
+            "start_time": 13.68,
+            "end_time": 14.18
+        },
+        {
+            "word": "broke",
+            "start_time": 14.18,
+            "end_time": 14.46
+        },
+        {
+            "word": "everything.",
+            "start_time": 14.46,
+            "end_time": 15.0
+        },
+        {
+            "word": "This",
+            "start_time": 15.48,
+            "end_time": 15.74
+        },
+        {
+            "word": "round,",
+            "start_time": 15.74,
+            "end_time": 16.1
+        },
+        {
+            "word": "the",
+            "start_time": 16.5,
+            "end_time": 16.58
+        },
+        {
+            "word": "CSS",
+            "start_time": 16.58,
+            "end_time": 16.92
+        },
+        {
+            "word": "is",
+            "start_time": 16.92,
+            "end_time": 17.32
+        },
+        {
+            "word": "fixed.",
+            "start_time": 17.32,
+            "end_time": 17.7
+        },
+        {
+            "word": "It's",
+            "start_time": 17.96,
+            "end_time": 18.18
+        },
+        {
+            "word": "way",
+            "start_time": 18.18,
+            "end_time": 18.4
+        },
+        {
+            "word": "better.",
+            "start_time": 18.4,
+            "end_time": 18.8
+        },
+        {
+            "word": "But",
+            "start_time": 19.18,
+            "end_time": 19.34
+        },
+        {
+            "word": "it",
+            "start_time": 19.34,
+            "end_time": 19.46
+        },
+        {
+            "word": "still",
+            "start_time": 19.46,
+            "end_time": 19.76
+        },
+        {
+            "word": "looks",
+            "start_time": 19.76,
+            "end_time": 19.98
+        },
+        {
+            "word": "rough",
+            "start_time": 19.98,
+            "end_time": 20.36
+        },
+        {
+            "word": "visually.",
+            "start_time": 20.36,
+            "end_time": 20.88
+        },
+        {
+            "word": "The",
+            "start_time": 21.36,
+            "end_time": 21.48
+        },
+        {
+            "word": "design",
+            "start_time": 21.48,
+            "end_time": 21.78
+        },
+        {
+            "word": "feels",
+            "start_time": 21.78,
+            "end_time": 22.22
+        },
+        {
+            "word": "unfinished.",
+            "start_time": 22.22,
+            "end_time": 22.84
+        },
+        {
+            "word": "6",
+            "start_time": 23.44,
+            "end_time": 23.72
+        },
+        {
+            "word": ".5",
+            "start_time": 23.72,
+            "end_time": 24.22
+        },
+        {
+            "word": "from",
+            "start_time": 24.22,
+            "end_time": 24.54
+        },
+        {
+            "word": "me",
+            "start_time": 24.54,
+            "end_time": 24.8
+        },
+        {
+            "word": "on",
+            "start_time": 24.8,
+            "end_time": 25.02
+        },
+        {
+            "word": "the",
+            "start_time": 25.02,
+            "end_time": 25.16
+        },
+        {
+            "word": "code.",
+            "start_time": 25.16,
+            "end_time": 25.44
+        },
+        {
+            "word": "1",
+            "start_time": 25.88,
+            "end_time": 26.12
+        },
+        {
+            "word": ".5",
+            "start_time": 26.12,
+            "end_time": 26.66
+        },
+        {
+            "word": "from",
+            "start_time": 26.66,
+            "end_time": 26.92
+        },
+        {
+            "word": "the",
+            "start_time": 26.92,
+            "end_time": 27.04
+        },
+        {
+            "word": "visual",
+            "start_time": 27.04,
+            "end_time": 27.32
+        },
+        {
+            "word": "test.",
+            "start_time": 27.32,
+            "end_time": 27.74
+        },
+        {
+            "word": "The",
+            "start_time": 27.74,
+            "end_time": 28.28
+        },
+        {
+            "word": "code",
+            "start_time": 28.28,
+            "end_time": 28.54
+        },
+        {
+            "word": "improved.",
+            "start_time": 28.54,
+            "end_time": 29.18
+        },
+        {
+            "word": "The",
+            "start_time": 29.46,
+            "end_time": 29.56
+        },
+        {
+            "word": "looks",
+            "start_time": 29.56,
+            "end_time": 29.86
+        },
+        {
+            "word": "didn't",
+            "start_time": 29.86,
+            "end_time": 30.16
+        },
+        {
+            "word": "follow.",
+            "start_time": 30.16,
+            "end_time": 30.42
+        }
+    ]
+}

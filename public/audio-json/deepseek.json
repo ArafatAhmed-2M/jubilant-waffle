@@ -1,0 +1,321 @@
+{
+    "audio_file": "deepseek.mp3",
+    "total_words": 63,
+    "transcript": [
+        {
+            "word": "DeepSeek",
+            "start_time": 0.0,
+            "end_time": 0.86
+        },
+        {
+            "word": "V4",
+            "start_time": 0.86,
+            "end_time": 1.4
+        },
+        {
+            "word": "Flash",
+            "start_time": 1.4,
+            "end_time": 1.72
+        },
+        {
+            "word": "came",
+            "start_time": 1.72,
+            "end_time": 2.08
+        },
+        {
+            "word": "in",
+            "start_time": 2.08,
+            "end_time": 2.26
+        },
+        {
+            "word": "second",
+            "start_time": 2.26,
+            "end_time": 2.64
+        },
+        {
+            "word": "joint.",
+            "start_time": 2.64,
+            "end_time": 3.16
+        },
+        {
+            "word": "Professional",
+            "start_time": 3.66,
+            "end_time": 4.04
+        },
+        {
+            "word": "terminal",
+            "start_time": 4.04,
+            "end_time": 4.5
+        },
+        {
+            "word": "with",
+            "start_time": 4.5,
+            "end_time": 4.68
+        },
+        {
+            "word": "an",
+            "start_time": 4.68,
+            "end_time": 4.8
+        },
+        {
+            "word": "actual",
+            "start_time": 4.8,
+            "end_time": 5.22
+        },
+        {
+            "word": "file",
+            "start_time": 5.22,
+            "end_time": 5.56
+        },
+        {
+            "word": "path",
+            "start_time": 5.56,
+            "end_time": 5.9
+        },
+        {
+            "word": "in",
+            "start_time": 5.9,
+            "end_time": 6.08
+        },
+        {
+            "word": "the",
+            "start_time": 6.08,
+            "end_time": 6.18
+        },
+        {
+            "word": "title",
+            "start_time": 6.18,
+            "end_time": 6.46
+        },
+        {
+            "word": "bar.",
+            "start_time": 6.46,
+            "end_time": 6.76
+        },
+        {
+            "word": "Most",
+            "start_time": 7.2,
+            "end_time": 7.38
+        },
+        {
+            "word": "realistic",
+            "start_time": 7.38,
+            "end_time": 7.86
+        },
+        {
+            "word": "of",
+            "start_time": 7.86,
+            "end_time": 8.1
+        },
+        {
+            "word": "all",
+            "start_time": 8.1,
+            "end_time": 8.2
+        },
+        {
+            "word": "seven.",
+            "start_time": 8.2,
+            "end_time": 8.56
+        },
+        {
+            "word": "The",
+            "start_time": 9.04,
+            "end_time": 9.12
+        },
+        {
+            "word": "radar",
+            "start_time": 9.12,
+            "end_time": 9.38
+        },
+        {
+            "word": "has",
+            "start_time": 9.38,
+            "end_time": 9.76
+        },
+        {
+            "word": "proper",
+            "start_time": 9.76,
+            "end_time": 10.04
+        },
+        {
+            "word": "access",
+            "start_time": 10.04,
+            "end_time": 10.48
+        },
+        {
+            "word": "labels",
+            "start_time": 10.48,
+            "end_time": 10.92
+        },
+        {
+            "word": "and",
+            "start_time": 10.92,
+            "end_time": 11.26
+        },
+        {
+            "word": "values.",
+            "start_time": 11.26,
+            "end_time": 11.64
+        },
+        {
+            "word": "The",
+            "start_time": 12.06,
+            "end_time": 12.28
+        },
+        {
+            "word": "async",
+            "start_time": 12.28,
+            "end_time": 12.66
+        },
+        {
+            "word": "python",
+            "start_time": 12.66,
+            "end_time": 13.08
+        },
+        {
+            "word": "in",
+            "start_time": 13.08,
+            "end_time": 13.38
+        },
+        {
+            "word": "the",
+            "start_time": 13.38,
+            "end_time": 13.5
+        },
+        {
+            "word": "code",
+            "start_time": 13.5,
+            "end_time": 13.72
+        },
+        {
+            "word": "showcase",
+            "start_time": 13.72,
+            "end_time": 14.18
+        },
+        {
+            "word": "is",
+            "start_time": 14.18,
+            "end_time": 14.5
+        },
+        {
+            "word": "real",
+            "start_time": 14.5,
+            "end_time": 14.78
+        },
+        {
+            "word": "streaming",
+            "start_time": 14.78,
+            "end_time": 15.32
+        },
+        {
+            "word": "code,",
+            "start_time": 15.32,
+            "end_time": 15.74
+        },
+        {
+            "word": "not",
+            "start_time": 16.12,
+            "end_time": 16.24
+        },
+        {
+            "word": "a",
+            "start_time": 16.24,
+            "end_time": 16.4
+        },
+        {
+            "word": "stub.",
+            "start_time": 16.4,
+            "end_time": 16.7
+        },
+        {
+            "word": "8",
+            "start_time": 17.26,
+            "end_time": 17.4
+        },
+        {
+            "word": "from",
+            "start_time": 17.4,
+            "end_time": 17.64
+        },
+        {
+            "word": "me",
+            "start_time": 17.64,
+            "end_time": 17.86
+        },
+        {
+            "word": "on",
+            "start_time": 17.86,
+            "end_time": 18.06
+        },
+        {
+            "word": "the",
+            "start_time": 18.06,
+            "end_time": 18.16
+        },
+        {
+            "word": "code,",
+            "start_time": 18.16,
+            "end_time": 18.48
+        },
+        {
+            "word": "9",
+            "start_time": 18.94,
+            "end_time": 19.02
+        },
+        {
+            "word": "from",
+            "start_time": 19.02,
+            "end_time": 19.3
+        },
+        {
+            "word": "the",
+            "start_time": 19.3,
+            "end_time": 19.42
+        },
+        {
+            "word": "visual",
+            "start_time": 19.42,
+            "end_time": 19.7
+        },
+        {
+            "word": "test,",
+            "start_time": 19.7,
+            "end_time": 20.18
+        },
+        {
+            "word": "average",
+            "start_time": 20.6,
+            "end_time": 20.82
+        },
+        {
+            "word": "8",
+            "start_time": 20.82,
+            "end_time": 21.24
+        },
+        {
+            "word": ".5,",
+            "start_time": 21.24,
+            "end_time": 21.88
+        },
+        {
+            "word": "solid,",
+            "start_time": 22.4,
+            "end_time": 22.62
+        },
+        {
+            "word": "reliable",
+            "start_time": 22.9,
+            "end_time": 23.2
+        },
+        {
+            "word": "and",
+            "start_time": 23.2,
+            "end_time": 23.66
+        },
+        {
+            "word": "fast.",
+            "start_time": 23.66,
+            "end_time": 24.02
+        }
+    ]
+}

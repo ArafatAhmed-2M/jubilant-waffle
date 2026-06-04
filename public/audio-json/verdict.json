@@ -1,0 +1,476 @@
+{
+    "audio_file": "verdict.mp3",
+    "total_words": 94,
+    "transcript": [
+        {
+            "word": "So",
+            "start_time": 0.0,
+            "end_time": 0.36
+        },
+        {
+            "word": "what",
+            "start_time": 0.36,
+            "end_time": 0.72
+        },
+        {
+            "word": "does",
+            "start_time": 0.72,
+            "end_time": 0.88
+        },
+        {
+            "word": "this",
+            "start_time": 0.88,
+            "end_time": 1.06
+        },
+        {
+            "word": "actually",
+            "start_time": 1.06,
+            "end_time": 1.52
+        },
+        {
+            "word": "tell",
+            "start_time": 1.52,
+            "end_time": 1.86
+        },
+        {
+            "word": "us?",
+            "start_time": 1.86,
+            "end_time": 2.22
+        },
+        {
+            "word": "Number",
+            "start_time": 2.66,
+            "end_time": 2.82
+        },
+        {
+            "word": "one,",
+            "start_time": 2.82,
+            "end_time": 3.28
+        },
+        {
+            "word": "parameter",
+            "start_time": 3.56,
+            "end_time": 3.86
+        },
+        {
+            "word": "count",
+            "start_time": 3.86,
+            "end_time": 4.3
+        },
+        {
+            "word": "means",
+            "start_time": 4.3,
+            "end_time": 4.68
+        },
+        {
+            "word": "nothing.",
+            "start_time": 4.68,
+            "end_time": 5.42
+        },
+        {
+            "word": "A",
+            "start_time": 5.7,
+            "end_time": 5.94
+        },
+        {
+            "word": "7",
+            "start_time": 5.94,
+            "end_time": 6.32
+        },
+        {
+            "word": "billion",
+            "start_time": 6.32,
+            "end_time": 6.66
+        },
+        {
+            "word": "parameter",
+            "start_time": 6.66,
+            "end_time": 7.12
+        },
+        {
+            "word": "model",
+            "start_time": 7.12,
+            "end_time": 7.56
+        },
+        {
+            "word": "beat",
+            "start_time": 7.56,
+            "end_time": 7.82
+        },
+        {
+            "word": "a",
+            "start_time": 7.82,
+            "end_time": 8.02
+        },
+        {
+            "word": "31",
+            "start_time": 8.02,
+            "end_time": 8.56
+        },
+        {
+            "word": "billion",
+            "start_time": 8.56,
+            "end_time": 9.02
+        },
+        {
+            "word": "one.",
+            "start_time": 9.02,
+            "end_time": 9.38
+        },
+        {
+            "word": "Number",
+            "start_time": 9.9,
+            "end_time": 10.0
+        },
+        {
+            "word": "two,",
+            "start_time": 10.0,
+            "end_time": 10.38
+        },
+        {
+            "word": "one",
+            "start_time": 10.9,
+            "end_time": 11.06
+        },
+        {
+            "word": "bug",
+            "start_time": 11.06,
+            "end_time": 11.32
+        },
+        {
+            "word": "can",
+            "start_time": 11.32,
+            "end_time": 11.62
+        },
+        {
+            "word": "kill",
+            "start_time": 11.62,
+            "end_time": 11.88
+        },
+        {
+            "word": "everything.",
+            "start_time": 11.88,
+            "end_time": 12.5
+        },
+        {
+            "word": "Neumatron's",
+            "start_time": 13.02,
+            "end_time": 13.7
+        },
+        {
+            "word": "CSS",
+            "start_time": 13.7,
+            "end_time": 13.92
+        },
+        {
+            "word": "quote",
+            "start_time": 13.92,
+            "end_time": 14.38
+        },
+        {
+            "word": "error",
+            "start_time": 14.38,
+            "end_time": 14.8
+        },
+        {
+            "word": "destroyed",
+            "start_time": 14.8,
+            "end_time": 15.56
+        },
+        {
+            "word": "the",
+            "start_time": 15.56,
+            "end_time": 15.92
+        },
+        {
+            "word": "entire",
+            "start_time": 15.92,
+            "end_time": 16.4
+        },
+        {
+            "word": "visual",
+            "start_time": 16.4,
+            "end_time": 16.72
+        },
+        {
+            "word": "design",
+            "start_time": 16.72,
+            "end_time": 17.14
+        },
+        {
+            "word": "in",
+            "start_time": 17.14,
+            "end_time": 17.42
+        },
+        {
+            "word": "round",
+            "start_time": 17.42,
+            "end_time": 17.66
+        },
+        {
+            "word": "one.",
+            "start_time": 17.66,
+            "end_time": 18.06
+        },
+        {
+            "word": "Number",
+            "start_time": 18.64,
+            "end_time": 18.78
+        },
+        {
+            "word": "three,",
+            "start_time": 18.78,
+            "end_time": 19.16
+        },
+        {
+            "word": "personality",
+            "start_time": 19.62,
+            "end_time": 20.02
+        },
+        {
+            "word": "is",
+            "start_time": 20.02,
+            "end_time": 20.58
+        },
+        {
+            "word": "hard.",
+            "start_time": 20.58,
+            "end_time": 21.0
+        },
+        {
+            "word": "Big",
+            "start_time": 21.48,
+            "end_time": 21.58
+        },
+        {
+            "word": "pickle",
+            "start_time": 21.58,
+            "end_time": 21.96
+        },
+        {
+            "word": "had",
+            "start_time": 21.96,
+            "end_time": 22.18
+        },
+        {
+            "word": "to",
+            "start_time": 22.18,
+            "end_time": 22.3
+        },
+        {
+            "word": "be",
+            "start_time": 22.3,
+            "end_time": 22.4
+        },
+        {
+            "word": "funny",
+            "start_time": 22.4,
+            "end_time": 22.7
+        },
+        {
+            "word": "and",
+            "start_time": 22.7,
+            "end_time": 23.28
+        },
+        {
+            "word": "technically",
+            "start_time": 23.28,
+            "end_time": 23.8
+        },
+        {
+            "word": "correct",
+            "start_time": 23.8,
+            "end_time": 24.24
+        },
+        {
+            "word": "simultaneously.",
+            "start_time": 24.24,
+            "end_time": 25.04
+        },
+        {
+            "word": "Most",
+            "start_time": 25.68,
+            "end_time": 25.84
+        },
+        {
+            "word": "models",
+            "start_time": 25.84,
+            "end_time": 26.22
+        },
+        {
+            "word": "would",
+            "start_time": 26.22,
+            "end_time": 26.44
+        },
+        {
+            "word": "have",
+            "start_time": 26.44,
+            "end_time": 26.56
+        },
+        {
+            "word": "played",
+            "start_time": 26.56,
+            "end_time": 26.74
+        },
+        {
+            "word": "it",
+            "start_time": 26.74,
+            "end_time": 26.86
+        },
+        {
+            "word": "safe.",
+            "start_time": 26.86,
+            "end_time": 27.18
+        },
+        {
+            "word": "It",
+            "start_time": 27.66,
+            "end_time": 27.74
+        },
+        {
+            "word": "didn't.",
+            "start_time": 27.74,
+            "end_time": 28.2
+        },
+        {
+            "word": "And",
+            "start_time": 28.56,
+            "end_time": 28.62
+        },
+        {
+            "word": "number",
+            "start_time": 28.62,
+            "end_time": 28.9
+        },
+        {
+            "word": "four,",
+            "start_time": 28.9,
+            "end_time": 29.26
+        },
+        {
+            "word": "the",
+            "start_time": 29.68,
+            "end_time": 29.76
+        },
+        {
+            "word": "radar",
+            "start_time": 29.76,
+            "end_time": 30.04
+        },
+        {
+            "word": "chart",
+            "start_time": 30.04,
+            "end_time": 30.46
+        },
+        {
+            "word": "is",
+            "start_time": 30.46,
+            "end_time": 30.82
+        },
+        {
+            "word": "the",
+            "start_time": 30.82,
+            "end_time": 31.1
+        },
+        {
+            "word": "real",
+            "start_time": 31.1,
+            "end_time": 31.56
+        },
+        {
+            "word": "test.",
+            "start_time": 31.56,
+            "end_time": 32.08
+        },
+        {
+            "word": "Pure",
+            "start_time": 32.44,
+            "end_time": 32.68
+        },
+        {
+            "word": "trigonometry,",
+            "start_time": 32.68,
+            "end_time": 33.4
+        },
+        {
+            "word": "no",
+            "start_time": 33.8,
+            "end_time": 33.96
+        },
+        {
+            "word": "libraries",
+            "start_time": 33.96,
+            "end_time": 34.46
+        },
+        {
+            "word": "animate",
+            "start_time": 34.46,
+            "end_time": 35.08
+        },
+        {
+            "word": "on",
+            "start_time": 35.08,
+            "end_time": 35.42
+        },
+        {
+            "word": "scroll.",
+            "start_time": 35.42,
+            "end_time": 35.76
+        },
+        {
+            "word": "That",
+            "start_time": 36.2,
+            "end_time": 36.4
+        },
+        {
+            "word": "single",
+            "start_time": 36.4,
+            "end_time": 36.84
+        },
+        {
+            "word": "feature",
+            "start_time": 36.84,
+            "end_time": 37.22
+        },
+        {
+            "word": "separates",
+            "start_time": 37.22,
+            "end_time": 37.72
+        },
+        {
+            "word": "the",
+            "start_time": 37.72,
+            "end_time": 37.96
+        },
+        {
+            "word": "good",
+            "start_time": 37.96,
+            "end_time": 38.16
+        },
+        {
+            "word": "models",
+            "start_time": 38.16,
+            "end_time": 38.48
+        },
+        {
+            "word": "from",
+            "start_time": 38.48,
+            "end_time": 38.76
+        },
+        {
+            "word": "the",
+            "start_time": 38.76,
+            "end_time": 38.9
+        },
+        {
+            "word": "great",
+            "start_time": 38.9,
+            "end_time": 39.14
+        },
+        {
+            "word": "ones.",
+            "start_time": 39.14,
+            "end_time": 39.52
+        }
+    ]
+}

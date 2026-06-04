@@ -1,0 +1,286 @@
+{
+    "audio_file": "gemma.mp3",
+    "total_words": 56,
+    "transcript": [
+        {
+            "word": "Gemma",
+            "start_time": 0.0,
+            "end_time": 0.54
+        },
+        {
+            "word": "4.",
+            "start_time": 0.54,
+            "end_time": 0.82
+        },
+        {
+            "word": "31",
+            "start_time": 1.24,
+            "end_time": 1.66
+        },
+        {
+            "word": "billion",
+            "start_time": 1.66,
+            "end_time": 2.06
+        },
+        {
+            "word": "parameters",
+            "start_time": 2.06,
+            "end_time": 2.64
+        },
+        {
+            "word": "from",
+            "start_time": 2.64,
+            "end_time": 2.94
+        },
+        {
+            "word": "Google",
+            "start_time": 2.94,
+            "end_time": 3.28
+        },
+        {
+            "word": "DeepMind.",
+            "start_time": 3.28,
+            "end_time": 3.94
+        },
+        {
+            "word": "6",
+            "start_time": 4.38,
+            "end_time": 4.62
+        },
+        {
+            "word": ".5",
+            "start_time": 4.62,
+            "end_time": 5.08
+        },
+        {
+            "word": "average,",
+            "start_time": 5.08,
+            "end_time": 5.54
+        },
+        {
+            "word": "and",
+            "start_time": 5.92,
+            "end_time": 6.14
+        },
+        {
+            "word": "this",
+            "start_time": 6.14,
+            "end_time": 6.32
+        },
+        {
+            "word": "one",
+            "start_time": 6.32,
+            "end_time": 6.48
+        },
+        {
+            "word": "is",
+            "start_time": 6.48,
+            "end_time": 6.64
+        },
+        {
+            "word": "genuinely",
+            "start_time": 6.64,
+            "end_time": 7.04
+        },
+        {
+            "word": "surprising.",
+            "start_time": 7.04,
+            "end_time": 7.74
+        },
+        {
+            "word": "The",
+            "start_time": 8.26,
+            "end_time": 8.36
+        },
+        {
+            "word": "radar",
+            "start_time": 8.36,
+            "end_time": 8.62
+        },
+        {
+            "word": "chart",
+            "start_time": 8.62,
+            "end_time": 9.0
+        },
+        {
+            "word": "is",
+            "start_time": 9.0,
+            "end_time": 9.22
+        },
+        {
+            "word": "just",
+            "start_time": 9.22,
+            "end_time": 9.42
+        },
+        {
+            "word": "a",
+            "start_time": 9.42,
+            "end_time": 9.56
+        },
+        {
+            "word": "solid",
+            "start_time": 9.56,
+            "end_time": 9.86
+        },
+        {
+            "word": "blue",
+            "start_time": 9.86,
+            "end_time": 10.16
+        },
+        {
+            "word": "hexagon.",
+            "start_time": 10.16,
+            "end_time": 10.7
+        },
+        {
+            "word": "No",
+            "start_time": 11.16,
+            "end_time": 11.32
+        },
+        {
+            "word": "axis",
+            "start_time": 11.32,
+            "end_time": 11.7
+        },
+        {
+            "word": "labels,",
+            "start_time": 11.7,
+            "end_time": 12.14
+        },
+        {
+            "word": "no",
+            "start_time": 12.5,
+            "end_time": 12.68
+        },
+        {
+            "word": "values,",
+            "start_time": 12.68,
+            "end_time": 13.12
+        },
+        {
+            "word": "no",
+            "start_time": 13.46,
+            "end_time": 13.6
+        },
+        {
+            "word": "animation.",
+            "start_time": 13.6,
+            "end_time": 14.14
+        },
+        {
+            "word": "It",
+            "start_time": 14.64,
+            "end_time": 14.7
+        },
+        {
+            "word": "drew",
+            "start_time": 14.7,
+            "end_time": 14.92
+        },
+        {
+            "word": "a",
+            "start_time": 14.92,
+            "end_time": 15.04
+        },
+        {
+            "word": "shape",
+            "start_time": 15.04,
+            "end_time": 15.24
+        },
+        {
+            "word": "and",
+            "start_time": 15.24,
+            "end_time": 15.52
+        },
+        {
+            "word": "stopped.",
+            "start_time": 15.52,
+            "end_time": 15.84
+        },
+        {
+            "word": "The",
+            "start_time": 16.4,
+            "end_time": 16.54
+        },
+        {
+            "word": "feature",
+            "start_time": 16.54,
+            "end_time": 16.84
+        },
+        {
+            "word": "card",
+            "start_time": 16.84,
+            "end_time": 17.12
+        },
+        {
+            "word": "section",
+            "start_time": 17.12,
+            "end_time": 17.58
+        },
+        {
+            "word": "is",
+            "start_time": 17.58,
+            "end_time": 17.82
+        },
+        {
+            "word": "a",
+            "start_time": 17.82,
+            "end_time": 17.92
+        },
+        {
+            "word": "massive",
+            "start_time": 17.92,
+            "end_time": 18.28
+        },
+        {
+            "word": "blank",
+            "start_time": 18.28,
+            "end_time": 18.7
+        },
+        {
+            "word": "dark",
+            "start_time": 18.7,
+            "end_time": 19.1
+        },
+        {
+            "word": "area",
+            "start_time": 19.1,
+            "end_time": 19.72
+        },
+        {
+            "word": "for",
+            "start_time": 19.72,
+            "end_time": 20.24
+        },
+        {
+            "word": "a",
+            "start_time": 20.24,
+            "end_time": 20.36
+        },
+        {
+            "word": "31",
+            "start_time": 20.36,
+            "end_time": 20.82
+        },
+        {
+            "word": "billion",
+            "start_time": 20.82,
+            "end_time": 21.3
+        },
+        {
+            "word": "parameter",
+            "start_time": 21.3,
+            "end_time": 21.78
+        },
+        {
+            "word": "model",
+            "start_time": 21.78,
+            "end_time": 22.22
+        },
+        {
+            "word": "disappointing.",
+            "start_time": 22.22,
+            "end_time": 22.8
+        }
+    ]
+}

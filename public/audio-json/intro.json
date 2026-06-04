@@ -1,0 +1,326 @@
+{
+    "audio_file": "intro.mp3",
+    "total_words": 64,
+    "transcript": [
+        {
+            "word": "What's",
+            "start_time": 0.0,
+            "end_time": 0.64
+        },
+        {
+            "word": "up",
+            "start_time": 0.64,
+            "end_time": 0.72
+        },
+        {
+            "word": "everyone",
+            "start_time": 0.72,
+            "end_time": 1.1
+        },
+        {
+            "word": "today?",
+            "start_time": 1.1,
+            "end_time": 1.8
+        },
+        {
+            "word": "We're",
+            "start_time": 2.04,
+            "end_time": 2.08
+        },
+        {
+            "word": "doing",
+            "start_time": 2.08,
+            "end_time": 2.24
+        },
+        {
+            "word": "something",
+            "start_time": 2.24,
+            "end_time": 2.52
+        },
+        {
+            "word": "really",
+            "start_time": 2.52,
+            "end_time": 2.9
+        },
+        {
+            "word": "fun.",
+            "start_time": 2.9,
+            "end_time": 3.36
+        },
+        {
+            "word": "I",
+            "start_time": 3.48,
+            "end_time": 3.98
+        },
+        {
+            "word": "gave",
+            "start_time": 3.98,
+            "end_time": 4.16
+        },
+        {
+            "word": "seven",
+            "start_time": 4.16,
+            "end_time": 4.64
+        },
+        {
+            "word": "of",
+            "start_time": 4.64,
+            "end_time": 4.84
+        },
+        {
+            "word": "the",
+            "start_time": 4.84,
+            "end_time": 4.96
+        },
+        {
+            "word": "best",
+            "start_time": 4.96,
+            "end_time": 5.26
+        },
+        {
+            "word": "free",
+            "start_time": 5.26,
+            "end_time": 5.62
+        },
+        {
+            "word": "AI",
+            "start_time": 5.62,
+            "end_time": 6.0
+        },
+        {
+            "word": "coding",
+            "start_time": 6.0,
+            "end_time": 6.46
+        },
+        {
+            "word": "models",
+            "start_time": 6.46,
+            "end_time": 6.8
+        },
+        {
+            "word": "the",
+            "start_time": 6.8,
+            "end_time": 7.1
+        },
+        {
+            "word": "exact",
+            "start_time": 7.1,
+            "end_time": 7.42
+        },
+        {
+            "word": "same",
+            "start_time": 7.42,
+            "end_time": 7.82
+        },
+        {
+            "word": "prompt",
+            "start_time": 7.82,
+            "end_time": 8.16
+        },
+        {
+            "word": "Build",
+            "start_time": 8.16,
+            "end_time": 8.96
+        },
+        {
+            "word": "a",
+            "start_time": 8.96,
+            "end_time": 9.1
+        },
+        {
+            "word": "full",
+            "start_time": 9.1,
+            "end_time": 9.42
+        },
+        {
+            "word": "OS",
+            "start_time": 9.42,
+            "end_time": 9.92
+        },
+        {
+            "word": "dashboard",
+            "start_time": 9.92,
+            "end_time": 10.46
+        },
+        {
+            "word": "website",
+            "start_time": 10.46,
+            "end_time": 11.08
+        },
+        {
+            "word": "from",
+            "start_time": 11.08,
+            "end_time": 11.6
+        },
+        {
+            "word": "scratch",
+            "start_time": 11.6,
+            "end_time": 11.94
+        },
+        {
+            "word": "in",
+            "start_time": 11.94,
+            "end_time": 12.5
+        },
+        {
+            "word": "a",
+            "start_time": 12.5,
+            "end_time": 12.6
+        },
+        {
+            "word": "single",
+            "start_time": 12.6,
+            "end_time": 12.96
+        },
+        {
+            "word": "HTML",
+            "start_time": 12.96,
+            "end_time": 13.62
+        },
+        {
+            "word": "file",
+            "start_time": 13.62,
+            "end_time": 14.32
+        },
+        {
+            "word": "zero",
+            "start_time": 14.32,
+            "end_time": 14.84
+        },
+        {
+            "word": "libraries",
+            "start_time": 14.84,
+            "end_time": 15.38
+        },
+        {
+            "word": "zero",
+            "start_time": 15.38,
+            "end_time": 15.9
+        },
+        {
+            "word": "dependencies",
+            "start_time": 15.9,
+            "end_time": 16.58
+        },
+        {
+            "word": "pure",
+            "start_time": 16.58,
+            "end_time": 17.32
+        },
+        {
+            "word": "code",
+            "start_time": 17.32,
+            "end_time": 17.82
+        },
+        {
+            "word": "only",
+            "start_time": 17.82,
+            "end_time": 18.26
+        },
+        {
+            "word": "and",
+            "start_time": 18.26,
+            "end_time": 18.86
+        },
+        {
+            "word": "the",
+            "start_time": 18.86,
+            "end_time": 18.94
+        },
+        {
+            "word": "results",
+            "start_time": 18.94,
+            "end_time": 19.3
+        },
+        {
+            "word": "Completely",
+            "start_time": 19.819999999999997,
+            "end_time": 20.24
+        },
+        {
+            "word": "different",
+            "start_time": 20.24,
+            "end_time": 20.76
+        },
+        {
+            "word": "one",
+            "start_time": 20.76,
+            "end_time": 21.48
+        },
+        {
+            "word": "model",
+            "start_time": 21.48,
+            "end_time": 21.8
+        },
+        {
+            "word": "absolutely",
+            "start_time": 21.8,
+            "end_time": 22.42
+        },
+        {
+            "word": "crushed",
+            "start_time": 22.42,
+            "end_time": 22.96
+        },
+        {
+            "word": "it",
+            "start_time": 22.96,
+            "end_time": 23.2
+        },
+        {
+            "word": "and",
+            "start_time": 23.2,
+            "end_time": 23.68
+        },
+        {
+            "word": "one",
+            "start_time": 23.68,
+            "end_time": 23.94
+        },
+        {
+            "word": "broke",
+            "start_time": 23.94,
+            "end_time": 24.6
+        },
+        {
+            "word": "online",
+            "start_time": 24.6,
+            "end_time": 25.0
+        },
+        {
+            "word": "three",
+            "start_time": 25.0,
+            "end_time": 25.64
+        },
+        {
+            "word": "line",
+            "start_time": 25.64,
+            "end_time": 26.32
+        },
+        {
+            "word": "three",
+            "start_time": 26.32,
+            "end_time": 27.1
+        },
+        {
+            "word": "Let's",
+            "start_time": 27.1,
+            "end_time": 28.04
+        },
+        {
+            "word": "get",
+            "start_time": 28.04,
+            "end_time": 28.14
+        },
+        {
+            "word": "into",
+            "start_time": 28.14,
+            "end_time": 28.44
+        },
+        {
+            "word": "it",
+            "start_time": 28.44,
+            "end_time": 28.66
+        }
+    ]
+}

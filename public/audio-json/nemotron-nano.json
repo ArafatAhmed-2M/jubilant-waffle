@@ -1,0 +1,576 @@
+{
+    "audio_file": "nemotron-nano.mp3",
+    "total_words": 114,
+    "transcript": [
+        {
+            "word": "And",
+            "start_time": 0.0,
+            "end_time": 0.24
+        },
+        {
+            "word": "last,",
+            "start_time": 0.24,
+            "end_time": 0.58
+        },
+        {
+            "word": "Nemotron",
+            "start_time": 1.2,
+            "end_time": 1.72
+        },
+        {
+            "word": "Nano",
+            "start_time": 1.72,
+            "end_time": 2.16
+        },
+        {
+            "word": "Omni.",
+            "start_time": 2.16,
+            "end_time": 2.76
+        },
+        {
+            "word": "3",
+            "start_time": 3.26,
+            "end_time": 3.52
+        },
+        {
+            "word": ".25",
+            "start_time": 3.52,
+            "end_time": 4.28
+        },
+        {
+            "word": "average.",
+            "start_time": 4.28,
+            "end_time": 4.88
+        },
+        {
+            "word": "This",
+            "start_time": 5.4,
+            "end_time": 5.72
+        },
+        {
+            "word": "one",
+            "start_time": 5.72,
+            "end_time": 5.9
+        },
+        {
+            "word": "had",
+            "start_time": 5.9,
+            "end_time": 6.1
+        },
+        {
+            "word": "the",
+            "start_time": 6.1,
+            "end_time": 6.24
+        },
+        {
+            "word": "most",
+            "start_time": 6.24,
+            "end_time": 6.5
+        },
+        {
+            "word": "detailed",
+            "start_time": 6.5,
+            "end_time": 6.94
+        },
+        {
+            "word": "prompt",
+            "start_time": 6.94,
+            "end_time": 7.38
+        },
+        {
+            "word": "of",
+            "start_time": 7.38,
+            "end_time": 7.6
+        },
+        {
+            "word": "all",
+            "start_time": 7.6,
+            "end_time": 7.76
+        },
+        {
+            "word": "seven.",
+            "start_time": 7.76,
+            "end_time": 8.16
+        },
+        {
+            "word": "I",
+            "start_time": 8.62,
+            "end_time": 8.78
+        },
+        {
+            "word": "even",
+            "start_time": 8.78,
+            "end_time": 9.02
+        },
+        {
+            "word": "added",
+            "start_time": 9.02,
+            "end_time": 9.26
+        },
+        {
+            "word": "a",
+            "start_time": 9.26,
+            "end_time": 9.42
+        },
+        {
+            "word": "self",
+            "start_time": 9.42,
+            "end_time": 9.7
+        },
+        {
+            "word": "-check",
+            "start_time": 9.7,
+            "end_time": 9.96
+        },
+        {
+            "word": "list",
+            "start_time": 9.96,
+            "end_time": 10.28
+        },
+        {
+            "word": "at",
+            "start_time": 10.28,
+            "end_time": 10.48
+        },
+        {
+            "word": "the",
+            "start_time": 10.48,
+            "end_time": 10.6
+        },
+        {
+            "word": "bottom.",
+            "start_time": 10.6,
+            "end_time": 10.9
+        },
+        {
+            "word": "Scan",
+            "start_time": 11.44,
+            "end_time": 11.66
+        },
+        {
+            "word": "for",
+            "start_time": 11.66,
+            "end_time": 11.86
+        },
+        {
+            "word": "CSS",
+            "start_time": 11.86,
+            "end_time": 12.26
+        },
+        {
+            "word": "Quote",
+            "start_time": 12.26,
+            "end_time": 12.72
+        },
+        {
+            "word": "Bugs,",
+            "start_time": 12.72,
+            "end_time": 13.04
+        },
+        {
+            "word": "check",
+            "start_time": 13.44,
+            "end_time": 13.62
+        },
+        {
+            "word": "Card",
+            "start_time": 13.62,
+            "end_time": 13.98
+        },
+        {
+            "word": "Opacity,",
+            "start_time": 13.98,
+            "end_time": 14.54
+        },
+        {
+            "word": "verify",
+            "start_time": 15.06,
+            "end_time": 15.28
+        },
+        {
+            "word": "the",
+            "start_time": 15.28,
+            "end_time": 15.62
+        },
+        {
+            "word": "radar",
+            "start_time": 15.62,
+            "end_time": 15.86
+        },
+        {
+            "word": "math,",
+            "start_time": 15.86,
+            "end_time": 16.2
+        },
+        {
+            "word": "a",
+            "start_time": 16.62,
+            "end_time": 16.72
+        },
+        {
+            "word": "whole",
+            "start_time": 16.72,
+            "end_time": 16.9
+        },
+        {
+            "word": "checklist,",
+            "start_time": 16.9,
+            "end_time": 17.38
+        },
+        {
+            "word": "and",
+            "start_time": 17.84,
+            "end_time": 18.02
+        },
+        {
+            "word": "it",
+            "start_time": 18.02,
+            "end_time": 18.14
+        },
+        {
+            "word": "still",
+            "start_time": 18.14,
+            "end_time": 18.38
+        },
+        {
+            "word": "had",
+            "start_time": 18.38,
+            "end_time": 18.64
+        },
+        {
+            "word": "the",
+            "start_time": 18.64,
+            "end_time": 18.78
+        },
+        {
+            "word": "terminal",
+            "start_time": 18.78,
+            "end_time": 19.16
+        },
+        {
+            "word": "set",
+            "start_time": 19.16,
+            "end_time": 19.46
+        },
+        {
+            "word": "to",
+            "start_time": 19.46,
+            "end_time": 19.62
+        },
+        {
+            "word": "position",
+            "start_time": 19.62,
+            "end_time": 19.96
+        },
+        {
+            "word": "fixed,",
+            "start_time": 19.96,
+            "end_time": 20.44
+        },
+        {
+            "word": "which",
+            "start_time": 20.7,
+            "end_time": 20.94
+        },
+        {
+            "word": "means",
+            "start_time": 20.94,
+            "end_time": 21.12
+        },
+        {
+            "word": "it",
+            "start_time": 21.12,
+            "end_time": 21.28
+        },
+        {
+            "word": "overlaid",
+            "start_time": 21.28,
+            "end_time": 21.82
+        },
+        {
+            "word": "the",
+            "start_time": 21.82,
+            "end_time": 22.0
+        },
+        {
+            "word": "entire",
+            "start_time": 22.0,
+            "end_time": 22.42
+        },
+        {
+            "word": "page",
+            "start_time": 22.42,
+            "end_time": 22.86
+        },
+        {
+            "word": "and",
+            "start_time": 22.86,
+            "end_time": 23.04
+        },
+        {
+            "word": "never",
+            "start_time": 23.04,
+            "end_time": 23.32
+        },
+        {
+            "word": "scrolled",
+            "start_time": 23.32,
+            "end_time": 23.76
+        },
+        {
+            "word": "away.",
+            "start_time": 23.76,
+            "end_time": 23.98
+        },
+        {
+            "word": "The",
+            "start_time": 24.48,
+            "end_time": 24.66
+        },
+        {
+            "word": "radar",
+            "start_time": 24.66,
+            "end_time": 24.96
+        },
+        {
+            "word": "forgot",
+            "start_time": 24.96,
+            "end_time": 25.32
+        },
+        {
+            "word": "to",
+            "start_time": 25.32,
+            "end_time": 25.54
+        },
+        {
+            "word": "divide",
+            "start_time": 25.54,
+            "end_time": 25.78
+        },
+        {
+            "word": "the",
+            "start_time": 25.78,
+            "end_time": 26.02
+        },
+        {
+            "word": "score",
+            "start_time": 26.02,
+            "end_time": 26.24
+        },
+        {
+            "word": "by",
+            "start_time": 26.24,
+            "end_time": 26.44
+        },
+        {
+            "word": "100,",
+            "start_time": 26.44,
+            "end_time": 27.08
+        },
+        {
+            "word": "so",
+            "start_time": 27.08,
+            "end_time": 27.58
+        },
+        {
+            "word": "the",
+            "start_time": 27.58,
+            "end_time": 27.72
+        },
+        {
+            "word": "polygon",
+            "start_time": 27.72,
+            "end_time": 28.1
+        },
+        {
+            "word": "points",
+            "start_time": 28.1,
+            "end_time": 28.56
+        },
+        {
+            "word": "were",
+            "start_time": 28.56,
+            "end_time": 28.7
+        },
+        {
+            "word": "wildly",
+            "start_time": 28.7,
+            "end_time": 29.14
+        },
+        {
+            "word": "off",
+            "start_time": 29.14,
+            "end_time": 29.4
+        },
+        {
+            "word": "the",
+            "start_time": 29.4,
+            "end_time": 29.54
+        },
+        {
+            "word": "chart,",
+            "start_time": 29.54,
+            "end_time": 29.8
+        },
+        {
+            "word": "and",
+            "start_time": 29.8,
+            "end_time": 30.44
+        },
+        {
+            "word": "the",
+            "start_time": 30.44,
+            "end_time": 30.56
+        },
+        {
+            "word": "script",
+            "start_time": 30.56,
+            "end_time": 30.8
+        },
+        {
+            "word": "ends",
+            "start_time": 30.8,
+            "end_time": 31.28
+        },
+        {
+            "word": "with",
+            "start_time": 31.28,
+            "end_time": 31.44
+        },
+        {
+            "word": "a",
+            "start_time": 31.44,
+            "end_time": 31.58
+        },
+        {
+            "word": "raw",
+            "start_time": 31.58,
+            "end_time": 31.76
+        },
+        {
+            "word": "reasoning",
+            "start_time": 31.76,
+            "end_time": 32.22
+        },
+        {
+            "word": "tag",
+            "start_time": 32.22,
+            "end_time": 32.6
+        },
+        {
+            "word": "that",
+            "start_time": 32.6,
+            "end_time": 32.82
+        },
+        {
+            "word": "leaked",
+            "start_time": 32.82,
+            "end_time": 33.08
+        },
+        {
+            "word": "into",
+            "start_time": 33.08,
+            "end_time": 33.42
+        },
+        {
+            "word": "the",
+            "start_time": 33.42,
+            "end_time": 33.6
+        },
+        {
+            "word": "output,",
+            "start_time": 33.6,
+            "end_time": 33.92
+        },
+        {
+            "word": "meaning",
+            "start_time": 34.38,
+            "end_time": 34.58
+        },
+        {
+            "word": "the",
+            "start_time": 34.58,
+            "end_time": 34.8
+        },
+        {
+            "word": "scroll",
+            "start_time": 34.8,
+            "end_time": 35.08
+        },
+        {
+            "word": "progress",
+            "start_time": 35.08,
+            "end_time": 35.56
+        },
+        {
+            "word": "bar",
+            "start_time": 35.56,
+            "end_time": 35.9
+        },
+        {
+            "word": "JavaScript",
+            "start_time": 35.9,
+            "end_time": 36.4
+        },
+        {
+            "word": "is",
+            "start_time": 36.4,
+            "end_time": 36.84
+        },
+        {
+            "word": "just",
+            "start_time": 36.84,
+            "end_time": 37.08
+        },
+        {
+            "word": "cut",
+            "start_time": 37.08,
+            "end_time": 37.78
+        },
+        {
+            "word": "off.",
+            "start_time": 37.78,
+            "end_time": 38.2
+        },
+        {
+            "word": "One",
+            "start_time": 38.58,
+            "end_time": 38.86
+        },
+        {
+            "word": "out",
+            "start_time": 38.86,
+            "end_time": 39.12
+        },
+        {
+            "word": "of",
+            "start_time": 39.12,
+            "end_time": 39.26
+        },
+        {
+            "word": "ten",
+            "start_time": 39.26,
+            "end_time": 39.52
+        },
+        {
+            "word": "visually.",
+            "start_time": 39.52,
+            "end_time": 40.0
+        },
+        {
+            "word": "3",
+            "start_time": 40.48,
+            "end_time": 40.72
+        },
+        {
+            "word": ".25",
+            "start_time": 40.72,
+            "end_time": 41.46
+        },
+        {
+            "word": "average.",
+            "start_time": 41.46,
+            "end_time": 42.06
+        }
+    ]
+}

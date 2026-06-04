@@ -1,0 +1,401 @@
+{
+    "audio_file": "the-prompt.mp3",
+    "total_words": 79,
+    "transcript": [
+        {
+            "word": "So",
+            "start_time": 0.0,
+            "end_time": 0.36
+        },
+        {
+            "word": "here's",
+            "start_time": 0.36,
+            "end_time": 0.78
+        },
+        {
+            "word": "the",
+            "start_time": 0.78,
+            "end_time": 0.88
+        },
+        {
+            "word": "challenge.",
+            "start_time": 0.88,
+            "end_time": 1.24
+        },
+        {
+            "word": "Each",
+            "start_time": 1.82,
+            "end_time": 1.96
+        },
+        {
+            "word": "model",
+            "start_time": 1.96,
+            "end_time": 2.32
+        },
+        {
+            "word": "had",
+            "start_time": 2.32,
+            "end_time": 2.54
+        },
+        {
+            "word": "to",
+            "start_time": 2.54,
+            "end_time": 2.7
+        },
+        {
+            "word": "build",
+            "start_time": 2.7,
+            "end_time": 2.9
+        },
+        {
+            "word": "eight",
+            "start_time": 2.9,
+            "end_time": 3.24
+        },
+        {
+            "word": "sections,",
+            "start_time": 3.24,
+            "end_time": 3.8
+        },
+        {
+            "word": "a",
+            "start_time": 4.24,
+            "end_time": 4.34
+        },
+        {
+            "word": "live",
+            "start_time": 4.34,
+            "end_time": 4.6
+        },
+        {
+            "word": "clock",
+            "start_time": 4.6,
+            "end_time": 4.92
+        },
+        {
+            "word": "top",
+            "start_time": 4.92,
+            "end_time": 5.3
+        },
+        {
+            "word": "bar,",
+            "start_time": 5.3,
+            "end_time": 5.58
+        },
+        {
+            "word": "a",
+            "start_time": 6.04,
+            "end_time": 6.14
+        },
+        {
+            "word": "typewriter",
+            "start_time": 6.14,
+            "end_time": 6.58
+        },
+        {
+            "word": "terminal,",
+            "start_time": 6.58,
+            "end_time": 7.16
+        },
+        {
+            "word": "a",
+            "start_time": 7.66,
+            "end_time": 7.76
+        },
+        {
+            "word": "radar",
+            "start_time": 7.76,
+            "end_time": 8.0
+        },
+        {
+            "word": "chart",
+            "start_time": 8.0,
+            "end_time": 8.34
+        },
+        {
+            "word": "using",
+            "start_time": 8.34,
+            "end_time": 8.76
+        },
+        {
+            "word": "pure",
+            "start_time": 8.76,
+            "end_time": 9.08
+        },
+        {
+            "word": "trigonometry,",
+            "start_time": 9.08,
+            "end_time": 9.82
+        },
+        {
+            "word": "no",
+            "start_time": 10.32,
+            "end_time": 10.46
+        },
+        {
+            "word": "libraries,",
+            "start_time": 10.46,
+            "end_time": 10.94
+        },
+        {
+            "word": "a",
+            "start_time": 11.42,
+            "end_time": 11.56
+        },
+        {
+            "word": "scrolling",
+            "start_time": 11.56,
+            "end_time": 11.94
+        },
+        {
+            "word": "stats",
+            "start_time": 11.94,
+            "end_time": 12.3
+        },
+        {
+            "word": "ticker,",
+            "start_time": 12.3,
+            "end_time": 12.84
+        },
+        {
+            "word": "six",
+            "start_time": 13.18,
+            "end_time": 13.46
+        },
+        {
+            "word": "feature",
+            "start_time": 13.46,
+            "end_time": 13.84
+        },
+        {
+            "word": "cards,",
+            "start_time": 13.84,
+            "end_time": 14.16
+        },
+        {
+            "word": "a",
+            "start_time": 14.58,
+            "end_time": 14.64
+        },
+        {
+            "word": "quiz,",
+            "start_time": 14.64,
+            "end_time": 14.96
+        },
+        {
+            "word": "a",
+            "start_time": 15.4,
+            "end_time": 15.56
+        },
+        {
+            "word": "syntax",
+            "start_time": 15.56,
+            "end_time": 15.88
+        },
+        {
+            "word": "highlighted",
+            "start_time": 15.88,
+            "end_time": 16.58
+        },
+        {
+            "word": "code",
+            "start_time": 16.58,
+            "end_time": 16.92
+        },
+        {
+            "word": "block,",
+            "start_time": 16.92,
+            "end_time": 17.24
+        },
+        {
+            "word": "and",
+            "start_time": 17.5,
+            "end_time": 17.78
+        },
+        {
+            "word": "an",
+            "start_time": 17.78,
+            "end_time": 17.96
+        },
+        {
+            "word": "animated",
+            "start_time": 17.96,
+            "end_time": 18.36
+        },
+        {
+            "word": "frutter,",
+            "start_time": 18.36,
+            "end_time": 18.82
+        },
+        {
+            "word": "all",
+            "start_time": 19.34,
+            "end_time": 19.54
+        },
+        {
+            "word": "in",
+            "start_time": 19.54,
+            "end_time": 19.74
+        },
+        {
+            "word": "one",
+            "start_time": 19.74,
+            "end_time": 20.0
+        },
+        {
+            "word": "HTML",
+            "start_time": 20.0,
+            "end_time": 20.58
+        },
+        {
+            "word": "file.",
+            "start_time": 20.58,
+            "end_time": 21.16
+        },
+        {
+            "word": "The",
+            "start_time": 21.62,
+            "end_time": 21.78
+        },
+        {
+            "word": "hardest",
+            "start_time": 21.78,
+            "end_time": 22.06
+        },
+        {
+            "word": "part?",
+            "start_time": 22.06,
+            "end_time": 22.44
+        },
+        {
+            "word": "That",
+            "start_time": 22.98,
+            "end_time": 23.12
+        },
+        {
+            "word": "radar",
+            "start_time": 23.12,
+            "end_time": 23.42
+        },
+        {
+            "word": "chart,",
+            "start_time": 23.42,
+            "end_time": 23.9
+        },
+        {
+            "word": "you",
+            "start_time": 24.36,
+            "end_time": 24.48
+        },
+        {
+            "word": "have",
+            "start_time": 24.48,
+            "end_time": 24.62
+        },
+        {
+            "word": "to",
+            "start_time": 24.62,
+            "end_time": 24.76
+        },
+        {
+            "word": "write",
+            "start_time": 24.76,
+            "end_time": 24.92
+        },
+        {
+            "word": "the",
+            "start_time": 24.92,
+            "end_time": 25.1
+        },
+        {
+            "word": "math",
+            "start_time": 25.1,
+            "end_time": 25.28
+        },
+        {
+            "word": "yourself,",
+            "start_time": 25.28,
+            "end_time": 25.78
+        },
+        {
+            "word": "sign,",
+            "start_time": 25.78,
+            "end_time": 26.56
+        },
+        {
+            "word": "cosine,",
+            "start_time": 26.8,
+            "end_time": 27.12
+        },
+        {
+            "word": "the",
+            "start_time": 27.42,
+            "end_time": 27.5
+        },
+        {
+            "word": "whole",
+            "start_time": 27.5,
+            "end_time": 27.7
+        },
+        {
+            "word": "thing.",
+            "start_time": 27.7,
+            "end_time": 28.02
+        },
+        {
+            "word": "That",
+            "start_time": 28.6,
+            "end_time": 28.7
+        },
+        {
+            "word": "one",
+            "start_time": 28.7,
+            "end_time": 28.98
+        },
+        {
+            "word": "line",
+            "start_time": 28.98,
+            "end_time": 29.32
+        },
+        {
+            "word": "separates",
+            "start_time": 29.32,
+            "end_time": 29.9
+        },
+        {
+            "word": "the",
+            "start_time": 29.9,
+            "end_time": 30.16
+        },
+        {
+            "word": "good",
+            "start_time": 30.16,
+            "end_time": 30.34
+        },
+        {
+            "word": "models",
+            "start_time": 30.34,
+            "end_time": 30.68
+        },
+        {
+            "word": "from",
+            "start_time": 30.68,
+            "end_time": 30.98
+        },
+        {
+            "word": "the",
+            "start_time": 30.98,
+            "end_time": 31.12
+        },
+        {
+            "word": "great",
+            "start_time": 31.12,
+            "end_time": 31.36
+        },
+        {
+            "word": "ones.",
+            "start_time": 31.36,
+            "end_time": 31.74
+        }
+    ]
+}

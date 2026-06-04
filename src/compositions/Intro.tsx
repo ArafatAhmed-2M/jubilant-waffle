@@ -1,7 +1,8 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring, Easing } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring } from "remotion";
 import { Audio, staticFile } from "remotion";
 import { AnimatedBackground, Watermark } from "./visuals";
+import { useWordSync, type Word } from "./useWordSync";
 
 const MODEL_PILLS = [
   { name: "MiniMax M3", color: "#8b5cf6" },
@@ -13,40 +14,29 @@ const MODEL_PILLS = [
   { name: "Nemotron Nano", color: "#c8f500" },
 ];
 
-export const Intro: React.FC = () => {
+type Props = { words?: Word[] };
+
+export const Intro: React.FC<Props> = ({ words }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
-  const T = (frac: number) => Math.max(0, Math.floor(frac * durationInFrames));
 
-  const titleOpacity = interpolate(frame, [0, T(0.10)], [0, 1], {
-    extrapolateRight: "clamp",
-    extrapolateLeft: "clamp",
-  });
-  const titleY = interpolate(frame, [0, T(0.10)], [40, 0], {
-    extrapolateRight: "clamp",
-    extrapolateLeft: "clamp",
-    easing: Easing.bezier(0.16, 1, 0.3, 1),
-  });
+  const { frameAt, phraseAt } = useWordSync(words);
 
-  const subtitleOpacity = interpolate(frame, [T(0.10), T(0.20)], [0, 1], {
-    extrapolateRight: "clamp",
-    extrapolateLeft: "clamp",
-  });
-  const subtitleY = interpolate(frame, [T(0.10), T(0.20)], [20, 0], {
-    extrapolateRight: "clamp",
-    extrapolateLeft: "clamp",
-    easing: Easing.bezier(0.16, 1, 0.3, 1),
-  });
+  // Title appears on "What's" (first word)
+  const titleAt = frameAt("What", 1);
+  // Subtitle appears on "We're" (start of second sentence)
+  const subtitleAt = frameAt("Were", 1);
+  // Pills start when "seven" is said (model count)
+  const pillBaseAt = frameAt("seven", 1);
+  // "ONE BROKE" appears when the punchline moment hits
+  const breakAt = phraseAt("broke on line", 0)?.start ?? Math.floor(0.45 * durationInFrames);
+  // "Let's see" appears near end
+  const seeAt = phraseAt("see what", 0)?.start ?? Math.floor(0.75 * durationInFrames);
 
-  const breakScale = spring({
-    frame: frame - T(0.45),
-    fps,
-    config: { damping: 8, stiffness: 200, mass: 0.5 },
-  });
-  const breakVisible = frame >= T(0.45) && frame < T(0.75);
-
+  const titleProgress = smoothstep(frame, titleAt, titleAt + 18);
+  const subtitleProgress = smoothstep(frame, subtitleAt, subtitleAt + 18);
   const subAppear = spring({
-    frame: frame - T(0.75),
+    frame: frame - seeAt,
     fps,
     config: { damping: 12, stiffness: 200, mass: 0.6 },
   });
@@ -66,8 +56,8 @@ export const Intro: React.FC = () => {
         >
           <div
             style={{
-              opacity: titleOpacity,
-              transform: `translateY(${titleY}px)`,
+              opacity: titleProgress,
+              transform: `translateY(${(1 - titleProgress) * 40}px)`,
               fontSize: 140,
               fontWeight: 900,
               letterSpacing: 6,
@@ -84,8 +74,8 @@ export const Intro: React.FC = () => {
 
           <div
             style={{
-              opacity: subtitleOpacity,
-              transform: `translateY(${subtitleY}px)`,
+              opacity: subtitleProgress,
+              transform: `translateY(${(1 - subtitleProgress) * 20}px)`,
               marginTop: 18,
               fontSize: 32,
               fontWeight: 500,
@@ -97,7 +87,7 @@ export const Intro: React.FC = () => {
             One Prompt · One HTML File · No Libraries
           </div>
 
-          {frame >= T(0.20) && (
+          {frame >= pillBaseAt && (
             <div
               style={{
                 marginTop: 40,
@@ -109,7 +99,7 @@ export const Intro: React.FC = () => {
               }}
             >
               {MODEL_PILLS.map((pill, i) => {
-                const delay = T(0.20) + i * T(0.025);
+                const delay = pillBaseAt + i * 5;
                 const appear = spring({
                   frame: frame - delay,
                   fps,
@@ -140,12 +130,20 @@ export const Intro: React.FC = () => {
             </div>
           )}
 
-          {breakVisible && (
+          {frame >= breakAt && frame < breakAt + Math.floor(2 * fps) && (
             <div
               style={{
                 marginTop: 40,
-                opacity: breakScale,
-                transform: `scale(${breakScale})`,
+                opacity: spring({
+                  frame: frame - breakAt,
+                  fps,
+                  config: { damping: 8, stiffness: 200, mass: 0.5 },
+                }),
+                transform: `scale(${spring({
+                  frame: frame - breakAt,
+                  fps,
+                  config: { damping: 8, stiffness: 200, mass: 0.5 },
+                })})`,
                 fontSize: 80,
                 fontWeight: 900,
                 color: "#ff0040",
@@ -158,7 +156,7 @@ export const Intro: React.FC = () => {
             </div>
           )}
 
-          {frame >= T(0.75) && (
+          {frame >= seeAt && (
             <div
               style={{
                 marginTop: 40,
@@ -179,4 +177,11 @@ export const Intro: React.FC = () => {
       <Watermark />
     </AbsoluteFill>
   );
+};
+
+const smoothstep = (frame: number, start: number, end: number): number => {
+  if (frame < start) return 0;
+  if (frame >= end) return 1;
+  const t = (frame - start) / (end - start);
+  return t * t * (3 - 2 * t);
 };

@@ -1,11 +1,12 @@
 import "./global.css";
 import React from "react";
 import { Composition, CalculateMetadataFunction } from "remotion";
-import { getAudioDurationInSeconds } from "@remotion/media-utils";
-import { staticFile } from "remotion";
+import { readFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
 
 import { FPS } from "./compositions/utils";
 import { MODELS } from "./compositions/data";
+import type { Word } from "./compositions/useWordSync";
 
 import { Intro } from "./compositions/Intro";
 import { ThePrompt } from "./compositions/ThePrompt";
@@ -14,23 +15,19 @@ import { Leaderboard } from "./compositions/Leaderboard";
 import { Verdict } from "./compositions/Verdict";
 import { Outro } from "./compositions/Outro";
 
-const MIN_DURATION = 12;
-const TAIL_BUFFER_SECONDS = 0.6;
-const AUDIO_PROBE_TIMEOUT_MS = 30000;
+type WordData = {
+  audio_file: string;
+  total_words: number;
+  transcript: Word[];
+};
 
-async function getDurationInFrames(audioFile: string, fallbackBase: number): Promise<number> {
-  try {
-    const seconds = await Promise.race([
-      getAudioDurationInSeconds(staticFile(audioFile)),
-      new Promise<number>((_, reject) =>
-        setTimeout(() => reject(new Error("audio probe timeout")), AUDIO_PROBE_TIMEOUT_MS),
-      ),
-    ]);
-    return Math.max(MIN_DURATION, Math.ceil(seconds + TAIL_BUFFER_SECONDS)) * FPS;
-  } catch (e) {
-    return Math.max(MIN_DURATION, fallbackBase) * FPS;
-  }
-}
+const loadWords = (audio: string): WordData | null => {
+  const baseName = audio.replace(/^audio\//, "").replace(/\.mp3$/, "");
+  const jsonPath = join("public", "audio-json", `${baseName}.json`);
+  if (!existsSync(jsonPath)) return null;
+  const raw = readFileSync(jsonPath, "utf-8");
+  return JSON.parse(raw) as WordData;
+};
 
 const compositionConfigs = [
   { id: "Intro", component: Intro, audio: "audio/intro.mp3", base: 30 },
@@ -51,7 +48,9 @@ export const RemotionRoot: React.FC = () => {
   return (
     <>
       {compositionConfigs.map((cfg) => {
-        const defaultProps = cfg.model ? { data: cfg.model, audioFile: cfg.audio } : {};
+        const baseProps = cfg.model
+          ? { data: cfg.model, audioFile: cfg.audio }
+          : {};
         return (
           <Composition
             key={cfg.id}
@@ -61,8 +60,8 @@ export const RemotionRoot: React.FC = () => {
             fps={FPS}
             width={1920}
             height={1080}
-            defaultProps={defaultProps}
-            calculateMetadata={makeMeta(cfg.audio, cfg.base)}
+            defaultProps={baseProps}
+            calculateMetadata={makeMeta(cfg.audio, baseProps)}
           />
         );
       })}
@@ -70,9 +69,28 @@ export const RemotionRoot: React.FC = () => {
   );
 };
 
-function makeMeta(audio: string, fallbackBase: number): CalculateMetadataFunction<any> {
+function makeMeta(
+  audio: string,
+  baseProps: Record<string, unknown>,
+): CalculateMetadataFunction<any> {
   return async () => {
-    const durationInFrames = await getDurationInFrames(audio, fallbackBase);
-    return { durationInFrames, fps: FPS, width: 1920, height: 1080 };
+    const data = loadWords(audio);
+    const audioSec = data
+      ? data.transcript[data.transcript.length - 1].end_time
+      : 0;
+    const durationInFrames = Math.max(
+      12 * FPS,
+      Math.ceil(audioSec * FPS) + 6,
+    );
+    return {
+      durationInFrames,
+      fps: FPS,
+      width: 1920,
+      height: 1080,
+      props: {
+        ...baseProps,
+        words: data?.transcript ?? [],
+      },
+    };
   };
 }
