@@ -25,12 +25,12 @@ export const Leaderboard: React.FC = () => {
       <AnimatedBackground baseColor="#08080d" accentColor="#fbbf24" intensity={0.3} />
       <Audio src={staticFile("audio/leaderboard.mp3")} />
 
-      <AbsoluteFill style={{ padding: "60px 80px" }}>
+      <AbsoluteFill style={{ padding: "120px 80px 60px" }}>
         <div
           style={{
             opacity: titleAppear,
             transform: `translateY(${(1 - titleAppear) * 30}px)`,
-            fontSize: 80,
+            fontSize: 72,
             fontWeight: 900,
             textAlign: "center",
             fontFamily: "'Bebas Neue', 'Inter', sans-serif",
@@ -38,7 +38,8 @@ export const Leaderboard: React.FC = () => {
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             letterSpacing: 6,
-            marginBottom: 30,
+            marginBottom: 10,
+            lineHeight: 1,
           }}
         >
           FINAL LEADERBOARD
@@ -52,6 +53,7 @@ export const Leaderboard: React.FC = () => {
             alignItems: "flex-end",
             gap: 20,
             marginBottom: 30,
+            marginTop: 20,
             height: 220,
           }}
         >

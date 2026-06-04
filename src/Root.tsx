@@ -14,18 +14,18 @@ import { Leaderboard } from "./compositions/Leaderboard";
 import { Verdict } from "./compositions/Verdict";
 import { Outro } from "./compositions/Outro";
 
-const BUFFER = 1.2;
 const MIN_DURATION = 12;
+const TAIL_BUFFER_SECONDS = 0.4;
 
-async function getDurationInFrames(audioFile: string, baseDuration: number): Promise<number> {
+async function getDurationInFrames(audioFile: string, fallbackBase: number): Promise<number> {
   try {
     const seconds = await Promise.race([
       getAudioDurationInSeconds(staticFile(audioFile)),
       new Promise<number>((_, reject) => setTimeout(() => reject(new Error("audio timeout")), 2000)),
     ]);
-    return Math.max(MIN_DURATION, Math.ceil(seconds * BUFFER), baseDuration) * FPS;
+    return Math.max(MIN_DURATION, Math.ceil(seconds + TAIL_BUFFER_SECONDS)) * FPS;
   } catch (e) {
-    return baseDuration * FPS;
+    return Math.max(MIN_DURATION, fallbackBase) * FPS;
   }
 }
 
@@ -67,9 +67,9 @@ export const RemotionRoot: React.FC = () => {
   );
 };
 
-function makeMeta(audio: string, base: number): CalculateMetadataFunction<any> {
+function makeMeta(audio: string, fallbackBase: number): CalculateMetadataFunction<any> {
   return async () => {
-    const durationInFrames = await getDurationInFrames(audio, base);
+    const durationInFrames = await getDurationInFrames(audio, fallbackBase);
     return { durationInFrames, fps: FPS, width: 1920, height: 1080 };
   };
 }

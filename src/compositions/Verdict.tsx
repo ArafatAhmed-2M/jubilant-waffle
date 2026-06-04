@@ -40,6 +40,15 @@ export const Verdict: React.FC = () => {
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
 
+  // Each card is visible for ~0.22 of duration, with 0.03 crossfade gap.
+  // Schedule: 0.10-0.32, 0.35-0.57, 0.60-0.82, 0.85-1.0
+  const cardSlots: Array<{ start: number; end: number }> = [
+    { start: 0.10, end: 0.32 },
+    { start: 0.35, end: 0.57 },
+    { start: 0.60, end: 0.82 },
+    { start: 0.85, end: 1.05 },
+  ];
+
   return (
     <AbsoluteFill>
       <AnimatedBackground baseColor="#08080d" accentColor="#8b5cf6" intensity={0.35} />
@@ -66,56 +75,70 @@ export const Verdict: React.FC = () => {
 
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 28,
-            maxWidth: 1720,
+            position: "relative",
+            height: 720,
+            maxWidth: 1100,
             margin: "0 auto",
           }}
         >
           {INSIGHTS.map((insight, i) => {
-            const delay = T(0.10) + i * T(0.18);
+            const slot = cardSlots[i];
+            const fadeIn = T(slot.start);
+            const holdEnd = T(slot.end);
+            const crossEnd = T(Math.min(slot.end + 0.04, 1));
             const appear = spring({
-              frame: frame - delay,
+              frame: frame - fadeIn,
               fps,
-              config: { damping: 12, stiffness: 180, mass: 0.5 },
+              config: { damping: 12, stiffness: 200, mass: 0.5 },
             });
-            const holdStart = delay + T(0.18);
-            const pulseScale =
-              frame >= holdStart && frame < holdStart + T(0.05)
-                ? 1 + Math.sin((frame - holdStart) * 0.4) * 0.04
-                : 1;
+            const opacity = interpolate(
+              frame,
+              [fadeIn, fadeIn + T(0.025), holdEnd, crossEnd],
+              [0, appear, 1, 0],
+              { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+            );
+            const translateY = interpolate(
+              frame,
+              [fadeIn, fadeIn + T(0.04), holdEnd, crossEnd],
+              [60, 0, 0, -30],
+              { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+            );
             return (
               <div
                 key={insight.title}
                 style={{
-                  opacity: appear,
-                  transform: `translateY(${(1 - appear) * 60}px) scale(${appear * pulseScale})`,
-                  padding: "32px 40px",
-                  background: `linear-gradient(135deg, ${insight.color}22, ${insight.color}08)`,
-                  border: `2px solid ${insight.color}`,
-                  borderRadius: 22,
-                  backdropFilter: "blur(20px)",
-                  boxShadow: `0 0 60px ${insight.color}40`,
-                  position: "relative",
+                  position: "absolute",
+                  inset: 0,
+                  opacity,
+                  transform: `translateY(${translateY}px)`,
+                  padding: "60px 70px",
+                  background: `linear-gradient(135deg, ${insight.color}28, ${insight.color}0a)`,
+                  border: `3px solid ${insight.color}`,
+                  borderRadius: 28,
+                  backdropFilter: "blur(24px)",
+                  boxShadow: `0 30px 80px ${insight.color}50, 0 0 0 1px ${insight.color}33`,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
                   overflow: "hidden",
                 }}
               >
                 <div
                   style={{
                     position: "absolute",
-                    top: -40,
-                    right: -40,
-                    fontSize: 220,
-                    opacity: 0.1,
+                    top: -60,
+                    right: -60,
+                    fontSize: 320,
+                    opacity: 0.12,
+                    lineHeight: 1,
                   }}
                 >
                   {insight.icon}
                 </div>
                 <div
                   style={{
-                    fontSize: 32,
-                    marginBottom: 12,
+                    fontSize: 90,
+                    marginBottom: 24,
                     position: "relative",
                   }}
                 >
@@ -123,26 +146,28 @@ export const Verdict: React.FC = () => {
                 </div>
                 <div
                   style={{
-                    fontSize: 30,
+                    fontSize: 60,
                     fontWeight: 900,
                     color: insight.color,
                     fontFamily: "'Bebas Neue', 'Inter', sans-serif",
-                    letterSpacing: 2,
+                    letterSpacing: 3,
                     lineHeight: 1,
-                    marginBottom: 12,
+                    marginBottom: 24,
                     position: "relative",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   #{i + 1} · {insight.title}
                 </div>
                 <div
                   style={{
-                    fontSize: 19,
-                    color: "#cbd5e1",
+                    fontSize: 32,
+                    color: "#e2e8f0",
                     fontWeight: 500,
                     fontFamily: "Inter, sans-serif",
                     lineHeight: 1.4,
                     position: "relative",
+                    maxWidth: 920,
                   }}
                 >
                   {insight.body}
@@ -172,6 +197,36 @@ export const Verdict: React.FC = () => {
           }}
         >
           7 Models · 1 Prompt · ∞ Lessons
+        </div>
+
+        {/* Card progress dots */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 110,
+            left: 0,
+            right: 0,
+            display: "flex",
+            justifyContent: "center",
+            gap: 16,
+          }}
+        >
+          {cardSlots.map((slot, i) => {
+            const active = frame >= T(slot.start) && frame < T(slot.end + 0.04);
+            return (
+              <div
+                key={i}
+                style={{
+                  width: active ? 60 : 30,
+                  height: 8,
+                  borderRadius: 4,
+                  background: active ? INSIGHTS[i].color : "#1f2937",
+                  transition: "all 0.3s",
+                  boxShadow: active ? `0 0 20px ${INSIGHTS[i].color}` : "none",
+                }}
+              />
+            );
+          })}
         </div>
       </AbsoluteFill>
     </AbsoluteFill>

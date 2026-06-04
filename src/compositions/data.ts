@@ -8,6 +8,12 @@ export type ModelData = {
   avg: number;
   placement: number;
   tagline: string;
+  maker: string;
+  params: string;
+  license: string;
+  release: string;
+  info: string;
+  url: string;
   pros: string[];
   cons: string[];
 };
@@ -23,6 +29,12 @@ export const MODELS: ModelData[] = [
     avg: 9.75,
     placement: 1,
     tagline: "The clear winner",
+    maker: "MiniMax",
+    params: "Undisclosed",
+    license: "Free tier",
+    release: "2026",
+    info: "Most complete, most polished submission. Animated orb background, perfect radar chart, working light mode.",
+    url: "minimax.html",
     pros: [
       "Best visual design of all 7",
       "Animated orb background",
@@ -40,6 +52,12 @@ export const MODELS: ModelData[] = [
     avg: 8.5,
     placement: 2,
     tagline: "Solid, reliable, and fast",
+    maker: "DeepSeek AI",
+    params: "MoE · 256B total",
+    license: "MIT (open source)",
+    release: "2026",
+    info: "Professional terminal with a real file path. The async Python in the code showcase is genuine streaming code.",
+    url: "deepseek-flash.html",
     pros: [
       "Real streaming Python code",
       "Professional terminal with file path",
@@ -57,6 +75,12 @@ export const MODELS: ModelData[] = [
     avg: 8.5,
     placement: 2,
     tagline: "Most personality",
+    maker: "Big Pickle",
+    params: "Custom",
+    license: "Open weights",
+    release: "2026",
+    info: "Held two registers at once — funny AND technically correct. Boot sequence talks about 'brine' and 'fermenting reasoning'.",
+    url: "bigpickle.html",
     pros: [
       "Best personality of all 7",
       "Bubble animation background",
@@ -74,6 +98,12 @@ export const MODELS: ModelData[] = [
     avg: 8.25,
     placement: 3,
     tagline: "Small but mighty",
+    maker: "Xiaomi",
+    params: "7B",
+    license: "Apache 2.0 (open source)",
+    release: "2026",
+    info: "A 7B model that beat a 31B. Math-based quiz fits Xiaomi's math-specialist model identity. Lean into strengths.",
+    url: "mimo.html",
     pros: [
       "7B model beats 31B model",
       "Best boot terminal sequence",
@@ -91,6 +121,12 @@ export const MODELS: ModelData[] = [
     avg: 6.5,
     placement: 4,
     tagline: "Disappointing for 31B",
+    maker: "Google DeepMind",
+    params: "31B",
+    license: "Gemma terms (open weights)",
+    release: "2026",
+    info: "Google's 31B flagship underperformed. Radar is a solid blue hexagon with no axis labels. Feature cards invisible.",
+    url: "gemma.html",
     pros: [
       "Clean minimal topbar",
       "Working dark mode toggle",
@@ -112,6 +148,12 @@ export const MODELS: ModelData[] = [
     avg: 4.0,
     placement: 5,
     tagline: "Code improved, looks didn't",
+    maker: "NVIDIA",
+    params: "49B (hybrid Mamba-Transformer)",
+    license: "NVIDIA Open Model License",
+    release: "2026",
+    info: "Comeback from round 1. CSS quotes bug fixed. Code quality up. Visual design still feels unfinished and rough.",
+    url: "nemotron.html",
     pros: [
       "CSS vars fixed from round 1",
       "Quiz questions technically correct",
@@ -133,6 +175,12 @@ export const MODELS: ModelData[] = [
     avg: 3.25,
     placement: 6,
     tagline: "Detailed prompt, broken output",
+    maker: "NVIDIA",
+    params: "Multimodal (omni)",
+    license: "NVIDIA Open Model License",
+    release: "2026",
+    info: "The most detailed prompt of all seven — with a self-check list at the bottom. Still leaked a reasoning tag and broke the radar.",
+    url: "nemotron-nano.html",
     pros: [
       "VRAM widget shows GB values",
       "All 8 boot lines present",

@@ -5,11 +5,11 @@ import {
   useVideoConfig,
   interpolate,
   spring,
-  Easing,
   Audio,
   staticFile,
 } from "remotion";
 import { AnimatedBackground } from "./visuals";
+import { BrowserFrame, InfoCard } from "./BrowserFrame";
 import type { ModelData } from "./data";
 
 type Props = {
@@ -18,77 +18,89 @@ type Props = {
 };
 
 const getNameSize = (name: string): number => {
-  if (name.length > 16) return 120;
-  if (name.length > 13) return 140;
-  if (name.length > 10) return 160;
-  return 180;
+  if (name.length > 16) return 110;
+  if (name.length > 13) return 130;
+  if (name.length > 10) return 150;
+  return 165;
 };
 
 export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
-
-  // All timings as fractions of total duration so visual syncs to audio length
   const T = (frac: number) => Math.max(0, Math.floor(frac * durationInFrames));
 
-  // 0-5%: color flash
-  const flashOpacity = interpolate(
-    frame,
-    [0, T(0.02), T(0.06)],
-    [1, 0.5, 0],
-    { extrapolateRight: "clamp", extrapolateLeft: "clamp" },
-  );
-
-  // 5-10%: tagline
-  const taglineAppear = interpolate(frame, [T(0.05), T(0.10)], [0, 1], {
+  // 0-4%: color flash
+  const flashOpacity = interpolate(frame, [0, T(0.02), T(0.05)], [1, 0.5, 0], {
     extrapolateRight: "clamp",
     extrapolateLeft: "clamp",
   });
 
-  // 8-18%: name
+  // 4-9%: tagline
+  const taglineAppear = interpolate(frame, [T(0.04), T(0.09)], [0, 1], {
+    extrapolateRight: "clamp",
+    extrapolateLeft: "clamp",
+  });
+
+  // 7-15%: name
   const nameAppear = spring({
-    frame: frame - T(0.08),
+    frame: frame - T(0.07),
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
   const nameX = spring({
-    frame: frame - T(0.08),
+    frame: frame - T(0.07),
     fps,
     config: { damping: 14, stiffness: 100, mass: 0.7 },
   });
 
-  // 20-32%: score cards
+  // 14-22%: info card (maker, params, etc.)
+  const infoAppear = spring({
+    frame: frame - T(0.14),
+    fps,
+    config: { damping: 14, stiffness: 180, mass: 0.5 },
+  });
+
+  // 18-26%: score cards
   const codeCardAppear = spring({
-    frame: frame - T(0.20),
+    frame: frame - T(0.18),
     fps,
     config: { damping: 14, stiffness: 180, mass: 0.5 },
   });
   const looksCardAppear = spring({
-    frame: frame - T(0.26),
+    frame: frame - T(0.23),
     fps,
     config: { damping: 14, stiffness: 180, mass: 0.5 },
   });
 
-  // 30-55%: score bar
-  const barProgress = interpolate(frame, [T(0.30), T(0.55)], [0, 1], {
-    extrapolateRight: "clamp",
-    extrapolateLeft: "clamp",
-    easing: Easing.bezier(0.65, 0, 0.35, 1),
+  // 26-32%: browser frame
+  const screenshotAppear = spring({
+    frame: frame - T(0.26),
+    fps,
+    config: { damping: 14, stiffness: 120, mass: 0.7 },
   });
 
-  // 55-80%: pros (3 staggered)
-  // 80-95%: cons (2 staggered)
-  // 92-100%: badge
+  // 35-50%: pros (3 staggered)
+  // 55-70%: cons (2 staggered)
+  // 75-95%: badge with pulse
   const badgeAppear = spring({
-    frame: frame - T(0.92),
+    frame: frame - T(0.78),
     fps,
     config: { damping: 10, stiffness: 200, mass: 0.6 },
+  });
+  const badgePulse = frame >= T(0.85)
+    ? 1 + Math.sin((frame - T(0.85)) * 0.18) * 0.05
+    : 1;
+
+  // Final fade out near the end
+  const fadeOut = interpolate(frame, [T(0.96), T(1.0)], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
   });
 
   const nameSize = getNameSize(data.name);
 
   return (
-    <AbsoluteFill>
+    <AbsoluteFill style={{ opacity: fadeOut }}>
       <AnimatedBackground baseColor="#08080d" accentColor={data.color} intensity={0.4} />
       <Audio src={staticFile(audioFile)} />
 
@@ -99,33 +111,32 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
         }}
       />
 
-      <AbsoluteFill style={{ padding: "80px 100px", justifyContent: "center" }}>
-        <div style={{ maxWidth: 1720, width: "100%" }}>
-          {/* Tagline / placement */}
+      <AbsoluteFill style={{ padding: "50px 80px" }}>
+        {/* Top: tagline + name + info card */}
+        <div style={{ marginBottom: 20 }}>
           <div
             style={{
               opacity: taglineAppear,
               transform: `translateY(${(1 - taglineAppear) * 20}px)`,
-              fontSize: 22,
+              fontSize: 18,
               fontWeight: 700,
               color: data.color,
               letterSpacing: 6,
               textTransform: "uppercase",
               fontFamily: "Inter, sans-serif",
-              marginBottom: 12,
+              marginBottom: 8,
             }}
           >
             #{data.placement} Place · {data.tagline}
           </div>
 
-          {/* Model name - auto-sized, will not overflow */}
           <div
             style={{
               opacity: nameAppear,
               transform: `translateX(${(1 - nameX) * -200}px)`,
               fontSize: nameSize,
               fontWeight: 900,
-              lineHeight: 1,
+              lineHeight: 1.1,
               fontFamily: "'Bebas Neue', 'Inter', sans-serif",
               background: `linear-gradient(135deg, #ffffff 0%, ${data.color} 100%)`,
               WebkitBackgroundClip: "text",
@@ -134,124 +145,110 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
               textShadow: `0 0 80px ${data.color}40`,
               whiteSpace: "nowrap",
               overflow: "hidden",
-              marginBottom: 30,
+              paddingBottom: 12,
             }}
           >
             {data.name}
           </div>
+        </div>
 
-          {/* Score cards */}
-          <div style={{ display: "flex", gap: 32, marginBottom: 40 }}>
-            <ScoreCard
-              label="CODE SCORE"
-              score={data.myScore}
-              color={data.color}
-              appear={codeCardAppear}
-            />
-            <ScoreCard
-              label="LOOKS SCORE"
-              score={data.yourScore}
-              color={data.color}
-              appear={looksCardAppear}
-            />
-          </div>
-
-          {/* Animated bar */}
-          <div
-            style={{
-              opacity: interpolate(frame, [T(0.30), T(0.32)], [0, 1], {
-                extrapolateLeft: "clamp",
-                extrapolateRight: "clamp",
-              }),
-              marginBottom: 40,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: 12,
-                fontSize: 20,
-                fontWeight: 700,
-                color: "#cbd5e1",
-                fontFamily: "Inter, sans-serif",
-                letterSpacing: 2,
-              }}
-            >
-              <span>AVERAGE SCORE</span>
-              <span style={{ color: data.color }}>{(data.avg * barProgress).toFixed(2)} / 10</span>
-            </div>
-            <div
-              style={{
-                width: "100%",
-                height: 22,
-                background: "rgba(255,255,255,0.08)",
-                borderRadius: 12,
-                overflow: "hidden",
-                border: `1px solid ${data.color}40`,
-              }}
-            >
-              <div
-                style={{
-                  width: `${barProgress * 100}%`,
-                  height: "100%",
-                  background: `linear-gradient(90deg, ${data.color}, ${data.color}cc)`,
-                  boxShadow: `0 0 30px ${data.color}80`,
-                }}
+        {/* Main content: 2 columns */}
+        <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 32, alignItems: "start" }}>
+          {/* Left column: scores + info + pros/cons */}
+          <div>
+            <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+              <ScoreCard
+                label="CODE"
+                score={data.myScore}
+                color={data.color}
+                appear={codeCardAppear}
+              />
+              <ScoreCard
+                label="LOOKS"
+                score={data.yourScore}
+                color={data.color}
+                appear={looksCardAppear}
               />
             </div>
+
+            <div style={{ marginBottom: 16 }}>
+              <InfoCard
+                maker={data.maker}
+                params={data.params}
+                license={data.license}
+                release={data.release}
+                info={data.info}
+                color={data.color}
+                appear={infoAppear}
+              />
+            </div>
+
+            {/* Pros + Cons */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              {data.pros.map((pro, i) => {
+                const delay = T(0.32) + i * T(0.04);
+                const appear = spring({
+                  frame: frame - delay,
+                  fps,
+                  config: { damping: 14, stiffness: 180, mass: 0.5 },
+                });
+                return (
+                  <BulletItem
+                    key={`p-${pro}`}
+                    text={pro}
+                    appear={appear}
+                    color="#4ade80"
+                    icon="✓"
+                  />
+                );
+              })}
+              {data.cons.map((con, i) => {
+                const delay = T(0.50) + i * T(0.04);
+                const appear = spring({
+                  frame: frame - delay,
+                  fps,
+                  config: { damping: 14, stiffness: 180, mass: 0.5 },
+                });
+                return (
+                  <BulletItem
+                    key={`c-${con}`}
+                    text={con}
+                    appear={appear}
+                    color="#ff4d6d"
+                    icon="✕"
+                  />
+                );
+              })}
+            </div>
           </div>
 
-          {/* Pros + Cons - 2 columns, smaller font to avoid overflow */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 16,
-              maxWidth: 1720,
-            }}
-          >
-            {data.pros.map((pro, i) => {
-              const delay = T(0.55) + i * T(0.04);
-              const appear = spring({
-                frame: frame - delay,
-                fps,
-                config: { damping: 14, stiffness: 180, mass: 0.5 },
-              });
-              return (
-                <BulletItem
-                  key={`p-${pro}`}
-                  text={pro}
-                  appear={appear}
-                  color="#4ade80"
-                  icon="✓"
-                />
-              );
-            })}
-            {data.cons.map((con, i) => {
-              const delay = T(0.75) + i * T(0.04);
-              const appear = spring({
-                frame: frame - delay,
-                fps,
-                config: { damping: 14, stiffness: 180, mass: 0.5 },
-              });
-              return (
-                <BulletItem
-                  key={`c-${con}`}
-                  text={con}
-                  appear={appear}
-                  color="#ff4d6d"
-                  icon="✕"
-                />
-              );
-            })}
+          {/* Right column: browser frame */}
+          <div style={{ position: "relative" }}>
+            <BrowserFrame
+              screenshot={`screenshots/${data.id}.png`}
+              url={data.url}
+              appear={screenshotAppear}
+            />
+            <div
+              style={{
+                position: "absolute",
+                bottom: -36,
+                right: 0,
+                fontSize: 14,
+                color: "#64748b",
+                fontFamily: "Inter, sans-serif",
+                fontStyle: "italic",
+              }}
+            >
+              Live preview of what the model generated ↓
+            </div>
           </div>
         </div>
       </AbsoluteFill>
 
-      {/* Final badge */}
-      {frame >= T(0.92) && (
-        <FinalBadge avg={data.avg} color={data.color} appear={badgeAppear} frame={frame} startFrame={T(0.92)} />
+      {/* Final badge - bottom right */}
+      {frame >= T(0.78) && (
+        <FinalBadge avg={data.avg} color={data.color} appear={badgeAppear} pulse={badgePulse} />
       )}
     </AbsoluteFill>
   );
@@ -269,29 +266,29 @@ const ScoreCard: React.FC<{
         opacity: appear,
         transform: `scale(${0.7 + appear * 0.3}) translateY(${(1 - appear) * 20}px)`,
         flex: 1,
-        padding: "30px 40px",
+        padding: "20px 26px",
         background: `linear-gradient(135deg, ${color}22, ${color}08)`,
         border: `2px solid ${color}`,
-        borderRadius: 24,
+        borderRadius: 18,
         backdropFilter: "blur(20px)",
-        boxShadow: `0 0 60px ${color}30`,
+        boxShadow: `0 0 40px ${color}30`,
       }}
     >
       <div
         style={{
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: 700,
           color: "#94a3b8",
           letterSpacing: 4,
           fontFamily: "Inter, sans-serif",
         }}
       >
-        {label}
+        {label} SCORE
       </div>
       <div
         style={{
-          marginTop: 12,
-          fontSize: 110,
+          marginTop: 8,
+          fontSize: 80,
           fontWeight: 900,
           color: color,
           lineHeight: 1,
@@ -299,15 +296,7 @@ const ScoreCard: React.FC<{
         }}
       >
         {score.toFixed(1)}
-        <span
-          style={{
-            fontSize: 48,
-            color: "#64748b",
-            marginLeft: 8,
-          }}
-        >
-          / 10
-        </span>
+        <span style={{ fontSize: 36, color: "#64748b", marginLeft: 6 }}>/ 10</span>
       </div>
     </div>
   );
@@ -323,28 +312,28 @@ const BulletItem: React.FC<{
     <div
       style={{
         opacity: appear,
-        transform: `translateX(${(1 - appear) * -40}px)`,
-        padding: "16px 22px",
+        transform: `translateX(${(1 - appear) * -30}px)`,
+        padding: "12px 16px",
         background: `${color}11`,
-        border: `2px solid ${color}66`,
-        borderRadius: 14,
+        border: `1.5px solid ${color}55`,
+        borderRadius: 10,
         display: "flex",
         alignItems: "center",
-        gap: 16,
-        minHeight: 64,
+        gap: 12,
+        minHeight: 52,
       }}
     >
       <div
         style={{
-          width: 36,
-          height: 36,
+          width: 28,
+          height: 28,
           borderRadius: "50%",
           background: color,
           color: "#0a0a0f",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: 900,
           flexShrink: 0,
         }}
@@ -353,7 +342,7 @@ const BulletItem: React.FC<{
       </div>
       <div
         style={{
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: 600,
           color: "#fff",
           fontFamily: "Inter, sans-serif",
@@ -370,31 +359,29 @@ const FinalBadge: React.FC<{
   avg: number;
   color: string;
   appear: number;
-  frame: number;
-  startFrame: number;
-}> = ({ avg, color, appear, frame, startFrame }) => {
-  const pulse = Math.sin((frame - startFrame) * 0.15) * 0.05 + 1;
+  pulse: number;
+}> = ({ avg, color, appear, pulse }) => {
   return (
     <div
       style={{
         position: "absolute",
-        top: 60,
+        bottom: 40,
         right: 60,
         opacity: appear,
         transform: `scale(${appear * pulse})`,
-        padding: "24px 44px",
+        padding: "20px 36px",
         background: `linear-gradient(135deg, ${color}, ${color}cc)`,
-        borderRadius: 24,
+        borderRadius: 20,
         boxShadow: `0 20px 60px ${color}80`,
         textAlign: "center",
       }}
     >
       <div
         style={{
-          fontSize: 18,
+          fontSize: 14,
           fontWeight: 700,
           color: "#0a0a0f",
-          letterSpacing: 4,
+          letterSpacing: 3,
           fontFamily: "Inter, sans-serif",
           textTransform: "uppercase",
         }}
@@ -403,8 +390,8 @@ const FinalBadge: React.FC<{
       </div>
       <div
         style={{
-          marginTop: 6,
-          fontSize: 80,
+          marginTop: 4,
+          fontSize: 64,
           fontWeight: 900,
           color: "#0a0a0f",
           lineHeight: 1,
@@ -415,7 +402,7 @@ const FinalBadge: React.FC<{
       </div>
       <div
         style={{
-          fontSize: 22,
+          fontSize: 18,
           fontWeight: 700,
           color: "#0a0a0f",
           fontFamily: "Inter, sans-serif",
