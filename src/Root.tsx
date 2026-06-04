@@ -1,8 +1,6 @@
 import "./global.css";
 import React from "react";
-import { Composition, CalculateMetadataFunction } from "remotion";
-import { readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
+import { Composition, CalculateMetadataFunction, staticFile } from "remotion";
 
 import { FPS } from "./compositions/utils";
 import { MODELS } from "./compositions/data";
@@ -21,27 +19,48 @@ type WordData = {
   transcript: Word[];
 };
 
-const loadWords = (audio: string): WordData | null => {
+const loadWords = async (audio: string): Promise<WordData | null> => {
   const baseName = audio.replace(/^audio\//, "").replace(/\.mp3$/, "");
-  const jsonPath = join("public", "audio-json", `${baseName}.json`);
-  if (!existsSync(jsonPath)) return null;
-  const raw = readFileSync(jsonPath, "utf-8");
-  return JSON.parse(raw) as WordData;
+  const url = staticFile(`audio-json/${baseName}.json`);
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    return (await res.json()) as WordData;
+  } catch (e) {
+    return null;
+  }
+};
+
+// Fallback durations (seconds) used when the JSON cannot be loaded.
+// Match the actual audio length so the scene is never too short.
+const FALLBACK_DURATIONS: Record<string, number> = {
+  "audio/intro.mp3": 28.66,
+  "audio/the-prompt.mp3": 31.74,
+  "audio/minimax.mp3": 28.34,
+  "audio/deepseek.mp3": 24.02,
+  "audio/bigpickle.mp3": 28.52,
+  "audio/mimo.mp3": 28.7,
+  "audio/gemma.mp3": 22.8,
+  "audio/nemotron-super.mp3": 30.42,
+  "audio/nemotron-nano.mp3": 42.06,
+  "audio/leaderboard.mp3": 37.38,
+  "audio/verdict.mp3": 39.52,
+  "audio/outro.mp3": 18.12,
 };
 
 const compositionConfigs = [
-  { id: "Intro", component: Intro, audio: "audio/intro.mp3", base: 30 },
-  { id: "ThePrompt", component: ThePrompt, audio: "audio/the-prompt.mp3", base: 34 },
-  { id: "MiniMax", component: ModelReveal, audio: "audio/minimax.mp3", base: 30, model: MODELS[0] },
-  { id: "DeepSeek", component: ModelReveal, audio: "audio/deepseek.mp3", base: 26, model: MODELS[1] },
-  { id: "BigPickle", component: ModelReveal, audio: "audio/bigpickle.mp3", base: 30, model: MODELS[2] },
-  { id: "MiMo", component: ModelReveal, audio: "audio/mimo.mp3", base: 30, model: MODELS[3] },
-  { id: "Gemma", component: ModelReveal, audio: "audio/gemma.mp3", base: 25, model: MODELS[4] },
-  { id: "NemotronSuper", component: ModelReveal, audio: "audio/nemotron-super.mp3", base: 32, model: MODELS[5] },
-  { id: "NemotronNano", component: ModelReveal, audio: "audio/nemotron-nano.mp3", base: 44, model: MODELS[6] },
-  { id: "Leaderboard", component: Leaderboard, audio: "audio/leaderboard.mp3", base: 39 },
-  { id: "Verdict", component: Verdict, audio: "audio/verdict.mp3", base: 41 },
-  { id: "Outro", component: Outro, audio: "audio/outro.mp3", base: 20 },
+  { id: "Intro", component: Intro, audio: "audio/intro.mp3" },
+  { id: "ThePrompt", component: ThePrompt, audio: "audio/the-prompt.mp3" },
+  { id: "MiniMax", component: ModelReveal, audio: "audio/minimax.mp3", model: MODELS[0] },
+  { id: "DeepSeek", component: ModelReveal, audio: "audio/deepseek.mp3", model: MODELS[1] },
+  { id: "BigPickle", component: ModelReveal, audio: "audio/bigpickle.mp3", model: MODELS[2] },
+  { id: "MiMo", component: ModelReveal, audio: "audio/mimo.mp3", model: MODELS[3] },
+  { id: "Gemma", component: ModelReveal, audio: "audio/gemma.mp3", model: MODELS[4] },
+  { id: "NemotronSuper", component: ModelReveal, audio: "audio/nemotron-super.mp3", model: MODELS[5] },
+  { id: "NemotronNano", component: ModelReveal, audio: "audio/nemotron-nano.mp3", model: MODELS[6] },
+  { id: "Leaderboard", component: Leaderboard, audio: "audio/leaderboard.mp3" },
+  { id: "Verdict", component: Verdict, audio: "audio/verdict.mp3" },
+  { id: "Outro", component: Outro, audio: "audio/outro.mp3" },
 ];
 
 export const RemotionRoot: React.FC = () => {
@@ -56,7 +75,7 @@ export const RemotionRoot: React.FC = () => {
             key={cfg.id}
             id={cfg.id}
             component={cfg.component as React.FC<any>}
-            durationInFrames={cfg.base * FPS}
+            durationInFrames={Math.ceil((FALLBACK_DURATIONS[cfg.audio] ?? 30) * FPS)}
             fps={FPS}
             width={1920}
             height={1080}
@@ -74,14 +93,12 @@ function makeMeta(
   baseProps: Record<string, unknown>,
 ): CalculateMetadataFunction<any> {
   return async () => {
-    const data = loadWords(audio);
+    const data = await loadWords(audio);
+    const fallback = FALLBACK_DURATIONS[audio] ?? 30;
     const audioSec = data
       ? data.transcript[data.transcript.length - 1].end_time
-      : 0;
-    const durationInFrames = Math.max(
-      12 * FPS,
-      Math.ceil(audioSec * FPS) + 6,
-    );
+      : fallback;
+    const durationInFrames = Math.max(12 * FPS, Math.ceil(audioSec * FPS) + 6);
     return {
       durationInFrames,
       fps: FPS,
