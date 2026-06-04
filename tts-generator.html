@@ -141,7 +141,8 @@
 <body>
 <div class="wrap">
   <h1>🎙️ AI Benchmark — TTS Generator</h1>
-  <p class="sub">Generate all 12 voiceover segments with xAI 'ara' voice via puter.js</p>
+  <p class="sub">Generate all 12 voiceover segments via puter.js (xAI 'leo' voice — male, authoritative)</p>
+  <p class="sub" style="font-size:13px;">All xAI voices: <b>leo</b> ♂ (current) · <b>rex</b> ♂ · <b>sal</b> ♂ · <b>ara</b> ♀ · <b>eve</b> ♀ — change the <code>voice:</code> field below to switch</p>
 
   <div class="info">
     <b>Instructions:</b><br>
@@ -223,7 +224,7 @@ async function generateOne(seg) {
   try {
     const audio = await puter.ai.txt2speech(seg.text, {
       provider: "xai",
-      voice: "ara",
+      voice: "leo",
       output_format: "mp3",
     });
     let blob = null;
