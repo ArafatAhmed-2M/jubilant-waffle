@@ -1,0 +1,16 @@
+node_modules
+dist
+.DS_Store
+.env
+build
+out
+renders
+.cache
+*.log
+
+# Ignore the output video from Git but not videos you import into src/.
+out
+
+# Commit the audio MP3s - the GitHub Action needs them
+# (uncomment the line below if you want to keep them local-only)
+# public/audio/*.mp3

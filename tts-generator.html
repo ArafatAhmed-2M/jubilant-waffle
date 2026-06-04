@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>AI Benchmark Video — TTS Generator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 100%);
+    color: #fff;
+    min-height: 100vh;
+    padding: 40px 24px;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 {
+    font-size: 36px; font-weight: 900; margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff 0%, #c4b5fd 50%, #8b5cf6 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .sub { color: #94a3b8; font-size: 16px; margin-bottom: 32px; }
+  .info {
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #cbd5e1;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .info b { color: #c4b5fd; }
+  .progress-bar {
+    background: rgba(255,255,255,0.08);
+    height: 12px; border-radius: 6px;
+    overflow: hidden; margin-bottom: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8b5cf6, #ec4899);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .progress-text {
+    text-align: center;
+    color: #cbd5e1;
+    font-size: 14px;
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+  .controls {
+    display: flex; gap: 12px; margin-bottom: 32px;
+  }
+  button {
+    flex: 1;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.primary {
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+  }
+  button.primary:not(:disabled):hover { transform: translateY(-2px); }
+  button.secondary {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .segment {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+  }
+  .segment.done {
+    border-color: rgba(74, 222, 128, 0.4);
+    background: rgba(74, 222, 128, 0.06);
+  }
+  .segment.generating {
+    border-color: rgba(139, 92, 246, 0.6);
+    background: rgba(139, 92, 246, 0.1);
+  }
+  .index {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #cbd5e1;
+    flex-shrink: 0;
+  }
+  .segment.done .index {
+    background: #4ade80; color: #0a0a0f;
+  }
+  .segment.generating .index {
+    background: #8b5cf6; color: #fff;
+    animation: pulse 1s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+  .name {
+    font-weight: 700; font-size: 15px; color: #fff;
+    min-width: 180px;
+  }
+  .filename {
+    color: #94a3b8; font-size: 12px; font-family: monospace;
+  }
+  .status {
+    margin-left: auto;
+    font-size: 13px; color: #94a3b8;
+    min-width: 110px; text-align: right;
+  }
+  .segment.done .status { color: #4ade80; font-weight: 700; }
+  .segment.generating .status { color: #c4b5fd; }
+  .segment .dl {
+    background: #4ade80;
+    color: #0a0a0f;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    display: none;
+  }
+  .segment.done .dl { display: inline-block; }
+  .segment.done .dl:hover { transform: translateY(-1px); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎙️ AI Benchmark — TTS Generator</h1>
+  <p class="sub">Generate all 12 voiceover segments with xAI 'ara' voice via puter.js</p>
+
+  <div class="info">
+    <b>Instructions:</b><br>
+    1. Click <b>Generate All</b> below.<br>
+    2. Wait for all 12 MP3s to be generated (~3-5 min total).<br>
+    3. Click each <b>Download</b> button (or use the bulk download).<br>
+    4. Save all files into <code style="background:#000;padding:2px 6px;border-radius:4px;color:#4ade80;">ai-benchmark-video/public/audio/</code><br>
+    5. Then commit and trigger the GitHub Action to render the video.
+  </div>
+
+  <div class="progress-text"><span id="progressText">0 / 12 complete</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="controls">
+    <button class="primary" id="generateBtn">▶ Generate All (Sequential)</button>
+    <button class="secondary" id="resetBtn">Reset</button>
+  </div>
+
+  <div id="segments"></div>
+</div>
+
+<script src="https://js.puter.com/v2/"></script>
+<script>
+const SEGMENTS = [
+  { id: "intro", name: "Intro", text: "What's up everyone! Today we're doing something really fun. I gave seven of the best FREE AI coding models the exact same prompt — build a full OS dashboard website, from scratch, in a single HTML file, zero libraries, zero dependencies — pure code only. And the results? Completely different. One model absolutely crushed it. And one — broke on line three. Line. THREE. Let's get into it." },
+  { id: "the-prompt", name: "The Challenge", text: "So here's the challenge. Each model had to build eight sections — a live clock topbar, a typewriter terminal, a radar chart using pure trigonometry — no libraries — a scrolling stats ticker, six feature cards, a quiz, a syntax-highlighted code block, and an animated footer. All in one HTML file. The hardest part? That radar chart. You have to write the math yourself. Sine, cosine, the whole thing. That one line separates the good models from the great ones." },
+  { id: "minimax", name: "MiniMax M3", text: "First up — MiniMax M3. And honestly? This one blew me away. The background has three animated glowing orbs that slowly drift around. There's a grid overlay that fades at the edges. The radar chart is perfect. The light mode works beautifully. This is the most complete, most polished submission of all seven. Nine point five from me. Ten out of ten from the looks test. Average: nine point seven five. The clear winner." },
+  { id: "deepseek", name: "DeepSeek Flash", text: "DeepSeek V4 Flash came in second joint. Professional terminal with an actual file path in the title bar — most realistic of all seven. The radar has proper axis labels and values. The async Python in the code showcase is real streaming code, not a stub. Eight from me on the code, nine from the visual test. Average eight point five. Solid, reliable, and fast." },
+  { id: "bigpickle", name: "Big Pickle", text: "Big Pickle — also eight point five average, joint second. Now this one had a brief that was deliberately weird — build something funny AND technically correct at the same time. And it pulled it off. The terminal boot sequence says: Loading brine — one hundred percent. Fermenting reasoning engine. Ready. No cap. That is so good. The bubble animation background is the most creative visual effect of all seven. Nine from me. Eight from the looks test." },
+  { id: "mimo", name: "MiMo v2.5", text: "MiMo v2.5 — third place with eight point two five. Here's the thing that gets me about this one. It's a SEVEN billion parameter model. And it outscored models twice and four times its size. The terminal uses these tag-style labels — boot, load, spec, core — that make it feel like an actual system log. The quiz questions are real math problems because MiMo IS a math model. It knew what it was good at and leaned into it." },
+  { id: "gemma", name: "Gemma 4 31B", text: "Gemma four, thirty-one billion parameters from Google DeepMind. Six point five average. And this one is genuinely surprising. The radar chart is just a solid blue hexagon. No axis labels. No values. No animation. It drew a shape and stopped. The feature cards section is a massive blank dark area. For a thirty-one billion parameter model — disappointing." },
+  { id: "nemotron-super", name: "Nemotron Super", text: "Nemotron 3 Super. Four out of ten average. Now THIS is a comeback story — sort of. Last round, this model got zero out of ten because every CSS variable had quotes around the hex values which broke everything. This round? The CSS is fixed. It's way better. But it still looks rough visually. The design feels unfinished. Six point five from me on the code. One point five from the visual test. The code improved. The looks didn't follow." },
+  { id: "nemotron-nano", name: "Nemotron Nano", text: "And last — Nemotron Nano Omni. Three point two five average. This one had the most detailed prompt of all seven. I even added a self-check list at the bottom — scan for CSS quote bugs, check card opacity, verify the radar math — a whole checklist. And it still had the terminal set to position fixed, which means it overlaid the entire page and never scrolled away. The radar forgot to divide the score by one hundred so the polygon points were wildly off the chart. And the script ends with a raw reasoning tag that leaked into the output — meaning the scroll progress bar JavaScript is just... cut off. One out of ten visually. Three point two five average." },
+  { id: "leaderboard", name: "Leaderboard", text: "Alright here's the final leaderboard. First place — MiniMax M3 — nine point seven five. Second place joint — DeepSeek Flash and Big Pickle — both eight point five. Third place — MiMo v2.5 — eight point two five. Fourth — Gemma four — six point five. Fifth — Nemotron Super — four out of ten. Sixth — Nemotron Nano — three point two five. The biggest surprise? MiniMax absolutely dominated. The biggest disappointment? Gemma four thirty-one B losing to a seven billion parameter model." },
+  { id: "verdict", name: "Verdict", text: "So what does this actually tell us? Number one — parameter count means nothing. A seven billion parameter model beat a thirty-one billion one. Number two — one bug can kill everything. Nemotron's CSS quote error destroyed the entire visual design in round one. Number three — personality is hard. Big Pickle had to be funny AND technically correct simultaneously. Most models would have played it safe. It didn't. And number four — the radar chart is THE real test. Pure trigonometry, no libraries, animate on scroll. That single feature separates the good models from the great ones." },
+  { id: "outro", name: "Outro", text: "That's the test! Seven models, one prompt, very different results. The full prompt is in the description — paste it into any model and see what YOUR favourite produces. Drop in the comments which model surprised you most. If this was useful hit the like button, it genuinely helps the channel — and I'll see you in the next one!" },
+];
+
+const state = {};
+SEGMENTS.forEach((s, i) => { state[s.id] = { status: "pending", blob: null, index: i + 1 }; });
+
+const segmentsEl = document.getElementById("segments");
+const progressFill = document.getElementById("progressFill");
+const progressText = document.getElementById("progressText");
+const generateBtn = document.getElementById("generateBtn");
+const resetBtn = document.getElementById("resetBtn");
+
+function render() {
+  segmentsEl.innerHTML = "";
+  SEGMENTS.forEach((seg) => {
+    const s = state[seg.id];
+    const div = document.createElement("div");
+    div.className = `segment ${s.status}`;
+    div.innerHTML = `
+      <div class="index">${s.index}</div>
+      <div>
+        <div class="name">${seg.name}</div>
+        <div class="filename">${seg.id}.mp3</div>
+      </div>
+      <div class="status">${s.status === "pending" ? "pending" : s.status === "generating" ? "🔄 generating..." : "✓ ready"}</div>
+      <a class="dl" id="dl-${seg.id}">⬇ Download</a>
+    `;
+    segmentsEl.appendChild(div);
+    if (s.status === "done" && s.blob) {
+      const a = document.getElementById(`dl-${seg.id}`);
+      a.href = URL.createObjectURL(s.blob);
+      a.download = `${seg.id}.mp3`;
+    }
+  });
+  const doneCount = Object.values(state).filter(s => s.status === "done").length;
+  progressFill.style.width = `${(doneCount / SEGMENTS.length) * 100}%`;
+  progressText.textContent = `${doneCount} / ${SEGMENTS.length} complete`;
+}
+
+async function generateOne(seg) {
+  const s = state[seg.id];
+  s.status = "generating";
+  render();
+  try {
+    const audio = await puter.ai.txt2speech(seg.text, {
+      provider: "xai",
+      voice: "ara",
+      output_format: "mp3",
+    });
+    let blob = null;
+    if (audio && audio.src) {
+      const resp = await fetch(audio.src);
+      blob = await resp.blob();
+    } else if (audio instanceof Blob) {
+      blob = audio;
+    } else if (audio && audio.audio) {
+      const resp = await fetch(audio.audio);
+      blob = await resp.blob();
+    } else {
+      throw new Error("Unknown audio response shape");
+    }
+    s.blob = blob;
+    s.status = "done";
+  } catch (err) {
+    console.error("Failed for", seg.id, err);
+    s.status = "pending";
+    alert(`Failed to generate ${seg.id}. Check console. Will retry on next click.`);
+  }
+  render();
+}
+
+async function generateAll() {
+  generateBtn.disabled = true;
+  for (const seg of SEGMENTS) {
+    if (state[seg.id].status !== "done") {
+      await generateOne(seg);
+      await new Promise(r => setTimeout(r, 400));
+    }
+  }
+  generateBtn.disabled = false;
+}
+
+function reset() {
+  if (!confirm("Reset all generations? (You will lose the downloaded blobs.)")) return;
+  SEGMENTS.forEach((s) => {
+    state[s.id] = { status: "pending", blob: null, index: state[s.id].index };
+  });
+  render();
+}
+
+generateBtn.addEventListener("click", generateAll);
+resetBtn.addEventListener("click", reset);
+render();
+</script>
+</body>
+</html>

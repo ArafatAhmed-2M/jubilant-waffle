@@ -1,0 +1,107 @@
+═══════════════════════════════════════════════════════════
+YOUTUBE METADATA — @ArafatAhmedMubin
+Video: 7 Free AI Coding Models Tested
+═══════════════════════════════════════════════════════════
+
+───────────────────────────────────────────────────────────
+TITLE (under 100 chars):
+───────────────────────────────────────────────────────────
+I Tested 7 FREE AI Coding Models on the Same Prompt. Results Were Shocking.
+
+───────────────────────────────────────────────────────────
+DESCRIPTION:
+───────────────────────────────────────────────────────────
+I gave 7 of the best FREE AI coding models the exact same challenge:
+Build a full OS dashboard website — single HTML file, zero libraries, pure code.
+The results were wildly different. One scored 9.75/10. One broke on line 3.
+
+🏆 Final Rankings:
+1st — MiniMax M3 — 9.75/10
+2nd — DeepSeek Flash — 8.50/10 (tied)
+2nd — Big Pickle — 8.50/10 (tied)
+3rd — MiMo v2.5 — 8.25/10
+4th — Gemma 4 31B — 6.50/10
+5th — Nemotron 3 Super — 4.00/10
+6th — Nemotron Nano Omni — 3.25/10
+
+📝 The Universal Test Prompt (paste into any model):
+
+"Build a single-file HTML page (no external libraries, no CDN) that is a fully working operating-system-style dashboard. It MUST contain ALL of these 8 sections in this order:
+
+1. A live clock topbar — shows current time, updates every second, has a subtle glow.
+2. A typewriter terminal — animates text character-by-character, then erases and repeats with a different boot log. Must include at least 8 boot lines.
+3. A radar chart — uses pure JavaScript trigonometry (Math.sin / Math.cos). No chart libraries. Has at least 5 axis labels with values, and the polygon must animate from radius 0 to its full size.
+4. A scrolling stats ticker — horizontal marquee of at least 6 stats that loops continuously.
+5. Six feature cards — each with an icon (use SVG, not emoji), a title, a one-line description, and a subtle hover transform. Background should be slightly translucent so the page gradient shows through.
+6. A quiz module — at least 3 multiple-choice questions. After answering, show correct/incorrect with a green or red flash. Score counter at the top.
+7. A syntax-highlighted code block — show 30+ lines of real, runnable code (Python, JS, or similar) with proper token coloring (keywords, strings, comments all different colors). No library-based highlighting.
+8. An animated footer — particles or shapes drifting upward, a copyright year that updates live.
+
+Constraints:
+- ONE single .html file, all CSS and JS inline. No external imports. No CDN links.
+- Target: under 800 lines total. Be concise.
+- Use CSS variables for the color theme. Make sure hex values are NOT wrapped in quotes inside var() definitions.
+- Make the terminal a normal block in the document flow (not position:fixed) so it scrolls with the page.
+- For the radar chart, divide each metric value by 100 before computing the polygon point, so the polygon fits inside the chart area.
+- Self-check before finishing: confirm no CSS quote bugs, all 8 sections present, terminal not position:fixed, radar math divides by 100, no raw reasoning tags in the final HTML."
+
+🔔 Subscribe for more AI tests: https://www.youtube.com/@ArafatAhmedMubin
+
+Chapters:
+0:00 - The 7 Models
+0:14 - The Challenge
+0:36 - MiniMax M3 (9.75/10)
+1:04 - DeepSeek V4 Flash (8.50)
+1:26 - Big Pickle (8.50)
+1:48 - MiMo v2.5 (8.25)
+2:08 - Gemma 4 31B (6.50)
+2:26 - Nemotron 3 Super (4.00)
+2:46 - Nemotron Nano Omni (3.25)
+3:11 - Final Leaderboard
+3:36 - The Verdict
+4:04 - Subscribe
+
+#AI #CodingAI #FreeAITools #DeepSeek #MiniMax #Gemma #Nemotron
+
+───────────────────────────────────────────────────────────
+TAGS (500 char limit):
+───────────────────────────────────────────────────────────
+AI coding models, free AI tools, DeepSeek, MiniMax, Gemma, NVIDIA Nemotron, MiMo, Big Pickle, AI benchmark, coding AI test, best free AI 2026, AI HTML generator, frontend AI test, AI comparison 2026, AI dashboard, free coding AI, LLM benchmark, prompt engineering, AI vs AI, which AI is best, MiniMax M3, gemma 4 31b, nemotron super, deepseek flash, mimo v2.5, big pickle
+
+───────────────────────────────────────────────────────────
+THUMBNAIL SUGGESTION:
+───────────────────────────────────────────────────────────
+Resolution: 1280 x 720 px
+Layout: Split-screen comparison
+
+LEFT SIDE (60%):
+- Show a screenshot of MiniMax's dashboard (the purple glowing orb version)
+- Big "9.75/10" badge in green at top right
+- "🥇 WINNER" sticker
+- Background: dark with subtle purple gradient
+
+RIGHT SIDE (40%):
+- Show a screenshot of Nemotron Nano's broken page
+- Big "3.25/10" badge in red
+- "💀 LAST PLACE" sticker
+- Visible bugs highlighted with red circles
+
+CENTER (overlay):
+- Bold sans-serif text: "7 FREE AI MODELS TESTED"
+- Below it: "1 broke on line 3" in red
+
+BOTTOM LEFT:
+- Your face (or a stock surprised emoji) with shocked expression
+- 3-4px white outline around the face
+
+FONT: Bebas Neue or similar condensed sans-serif
+COLORS: Purple (#8b5cf6), red (#ff0040), green (#4ade80), white text on dark
+CONTRAST: High — must be readable on mobile
+TEST: View thumbnail at small size to verify text legibility
+
+───────────────────────────────────────────────────────────
+END SCREEN (last 20 sec of video):
+───────────────────────────────────────────────────────────
+- Subscribe button overlay (right side)
+- "Watch next" panel with 2 video suggestions
+- Channel watermark

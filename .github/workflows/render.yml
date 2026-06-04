@@ -1,0 +1,71 @@
+name: Render Scenes
+on:
+  workflow_dispatch:
+    inputs:
+      scene:
+        description: 'Scene(s) to render: 01-12, comma-separated (01,02,03), or "all"'
+        required: true
+        default: 'all'
+      quality:
+        description: 'Render quality'
+        required: true
+        default: 'draft'
+        type: choice
+        options:
+          - draft
+          - standard
+env:
+  QUALITY: ${{ github.event.inputs.quality || 'draft' }}
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: |
+          SCENE="${{ github.event.inputs.scene }}"
+          if [ "$SCENE" = "all" ]; then
+            echo 'matrix=["01","02","03","04","05","06","07","08","09","10","11","12"]' >> $GITHUB_OUTPUT
+          else
+            echo "matrix=[\"$(echo $SCENE | sed 's/,/","/g')\"]" >> $GITHUB_OUTPUT
+          fi
+  render:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        scene: ${{ fromJSON(needs.setup.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Cache Chrome
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-chrome-${{ hashFiles('package.json') }}
+      - name: Install FFmpeg
+        run: sudo apt-get update -qq && sudo apt-get install ffmpeg -y -qq
+      - name: Install dependencies
+        run: npm install
+      - name: Render scene ${{ matrix.scene }}
+        run: node scripts/render-scenes.mjs --scene=${{ matrix.scene }} --quality=${{ env.QUALITY }}
+      - name: Determine scene name
+        id: scene-info
+        run: |
+          SCENE=${{ matrix.scene }}
+          case $SCENE in
+            01) NAME="hook" ;; 02) NAME="setup" ;; 03) NAME="minimax" ;;
+            04) NAME="deepseek" ;; 05) NAME="bigpickle" ;; 06) NAME="mimo" ;;
+            07) NAME="gemma" ;; 08) NAME="nemotron-super" ;; 09) NAME="nemotron-nano" ;;
+            10) NAME="leaderboard" ;; 11) NAME="verdict" ;; 12) NAME="outro" ;;
+          esac
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+      - name: Upload render
+        uses: actions/upload-artifact@v4
+        with:
+          name: scene-${{ matrix.scene }}-${{ steps.scene-info.outputs.name }}
+          path: renders/*.mp4
