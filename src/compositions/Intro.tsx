@@ -1,8 +1,7 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring } from "remotion";
-import { Audio, staticFile } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, Audio, staticFile } from "remotion";
 import { AnimatedBackground, Watermark } from "./visuals";
-import { useWordSync, type Word } from "./useWordSync";
+import { useSecToFrame, fadeIn } from "./utils";
 
 const MODEL_PILLS = [
   { name: "MiniMax M3", color: "#8b5cf6" },
@@ -14,32 +13,46 @@ const MODEL_PILLS = [
   { name: "Nemotron Nano", color: "#c8f500" },
 ];
 
-type Props = { words?: Word[] };
-
-export const Intro: React.FC<Props> = ({ words }) => {
+/**
+ * Intro scene — 28.66s audio.
+ *
+ * Hand-picked timing read directly from intro.json transcript:
+ *   0.0  "What's"                → title
+ *   2.04 "We're"                 → subtitle
+ *   3.48 "I gave seven..."       → pills (model list)
+ *   8.16 "Build a full OS..."    → big code block reveal
+ *  19.82 "Completely different"  → "THE RESULTS" label
+ *  21.48 "one model absolutely"  → MiniMax winner badge
+ *  23.68 "one broke on line 3"   → Nemotron red X
+ *  27.1  "Let's get into it"     → final tagline
+ */
+export const Intro: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps, durationInFrames } = useVideoConfig();
+  const { fps } = useVideoConfig();
+  const T = useSecToFrame();
 
-  const { frameAt, phraseAt } = useWordSync(words);
+  // Title at 0.0s — fades in immediately
+  const titleAt = T(0.0);
+  // Subtitle at 2.0s — slightly after "We're doing something really fun."
+  const subtitleAt = T(2.0);
+  // Pills start at 3.5s — when "I gave seven of the best..." is being said
+  const pillBaseAt = T(3.5);
+  // Big prompt reveal at 8.0s — when "Build a full OS dashboard..." starts
+  const promptAt = T(8.0);
+  // "THE RESULTS" label at 19.8s
+  const resultsAt = T(19.8);
+  // MiniMax winner badge at 21.5s — when "absolutely crushed it" hits
+  const winnerAt = T(21.5);
+  // Nemotron red X at 23.7s — "one broke on line 3"
+  const brokeAt = T(23.7);
+  // "Let's see" final line at 27.1s
+  const seeAt = T(27.1);
 
-  // Title appears on "What's" (first word)
-  const titleAt = frameAt("What", 1);
-  // Subtitle appears on "We're" (start of second sentence)
-  const subtitleAt = frameAt("Were", 1);
-  // Pills start when "seven" is said (model count)
-  const pillBaseAt = frameAt("seven", 1);
-  // "ONE BROKE" appears when the punchline moment hits
-  const breakAt = phraseAt("broke on line", 0)?.start ?? Math.floor(0.45 * durationInFrames);
-  // "Let's see" appears near end
-  const seeAt = phraseAt("see what", 0)?.start ?? Math.floor(0.75 * durationInFrames);
-
-  const titleProgress = smoothstep(frame, titleAt, titleAt + 18);
-  const subtitleProgress = smoothstep(frame, subtitleAt, subtitleAt + 18);
-  const subAppear = spring({
-    frame: frame - seeAt,
-    fps,
-    config: { damping: 12, stiffness: 200, mass: 0.6 },
-  });
+  const titleProgress = fadeIn(frame, titleAt, 18);
+  const subtitleProgress = fadeIn(frame, subtitleAt, 18);
+  const promptProgress = fadeIn(frame, promptAt, 20);
+  const resultsProgress = fadeIn(frame, resultsAt, 16);
+  const seeProgress = fadeIn(frame, seeAt, 16);
 
   return (
     <AbsoluteFill>
@@ -130,37 +143,124 @@ export const Intro: React.FC<Props> = ({ words }) => {
             </div>
           )}
 
-          {frame >= breakAt && frame < breakAt + Math.floor(2 * fps) && (
+          {frame >= promptAt && (
             <div
               style={{
-                marginTop: 40,
-                opacity: spring({
-                  frame: frame - breakAt,
-                  fps,
-                  config: { damping: 8, stiffness: 200, mass: 0.5 },
-                }),
-                transform: `scale(${spring({
-                  frame: frame - breakAt,
-                  fps,
-                  config: { damping: 8, stiffness: 200, mass: 0.5 },
-                })})`,
-                fontSize: 80,
-                fontWeight: 900,
-                color: "#ff0040",
-                letterSpacing: 4,
-                fontFamily: "'Bebas Neue', 'Inter', sans-serif",
-                textShadow: "0 0 60px rgba(255, 0, 64, 0.7), 0 0 30px rgba(255, 0, 64, 0.4)",
+                marginTop: 36,
+                opacity: promptProgress,
+                transform: `translateY(${(1 - promptProgress) * 30}px) scale(${0.94 + promptProgress * 0.06})`,
+                padding: "22px 32px",
+                background: "rgba(10, 10, 18, 0.85)",
+                border: "2px solid rgba(139, 92, 246, 0.5)",
+                borderRadius: 14,
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 22,
+                color: "#a5b4fc",
+                fontWeight: 600,
+                letterSpacing: 0.5,
+                textAlign: "left",
+                boxShadow: "0 16px 50px rgba(0,0,0,0.6)",
+                maxWidth: 1100,
+                margin: "36px auto 0",
               }}
             >
-              ONE BROKE ON LINE 3
+              <span style={{ color: "#6b7280" }}>$</span> Build a full OS dashboard
+              website from scratch, in a single HTML file. Zero libraries, zero
+              dependencies. Pure code only.
+            </div>
+          )}
+
+          {frame >= resultsAt && (
+            <div
+              style={{
+                marginTop: 32,
+                opacity: resultsProgress,
+                transform: `translateY(${(1 - resultsProgress) * 16}px)`,
+                fontSize: 22,
+                color: "#94a3b8",
+                fontWeight: 700,
+                letterSpacing: 6,
+                textTransform: "uppercase",
+                fontFamily: "Inter, sans-serif",
+              }}
+            >
+              The results
+            </div>
+          )}
+
+          {frame >= winnerAt && frame < brokeAt + 30 && (
+            <div
+              style={{
+                marginTop: 18,
+                display: "flex",
+                gap: 24,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  opacity: fadeIn(frame, winnerAt, 14),
+                  transform: `scale(${0.8 + fadeIn(frame, winnerAt, 14) * 0.2})`,
+                  padding: "16px 28px",
+                  background: "linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(139, 92, 246, 0.05))",
+                  border: "2px solid #8b5cf6",
+                  borderRadius: 18,
+                  textAlign: "center",
+                  boxShadow: "0 0 60px rgba(139, 92, 246, 0.5)",
+                }}
+              >
+                <div style={{ fontSize: 36 }}>👑</div>
+                <div
+                  style={{
+                    fontSize: 18,
+                    color: "#c4b5fd",
+                    fontWeight: 800,
+                    letterSpacing: 2,
+                    marginTop: 4,
+                    fontFamily: "Inter, sans-serif",
+                  }}
+                >
+                  MiniMax absolutely crushed it
+                </div>
+              </div>
+
+              {frame >= brokeAt && (
+                <div
+                  style={{
+                    opacity: fadeIn(frame, brokeAt, 14),
+                    transform: `scale(${0.8 + fadeIn(frame, brokeAt, 14) * 0.2})`,
+                    padding: "16px 28px",
+                    background: "linear-gradient(135deg, rgba(255, 0, 64, 0.3), rgba(255, 0, 64, 0.05))",
+                    border: "2px solid #ff0040",
+                    borderRadius: 18,
+                    textAlign: "center",
+                    boxShadow: "0 0 60px rgba(255, 0, 64, 0.5)",
+                  }}
+                >
+                  <div style={{ fontSize: 36 }}>💀</div>
+                  <div
+                    style={{
+                      fontSize: 18,
+                      color: "#ff4d6d",
+                      fontWeight: 800,
+                      letterSpacing: 2,
+                      marginTop: 4,
+                      fontFamily: "Inter, sans-serif",
+                    }}
+                  >
+                    One broke on line 3
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
           {frame >= seeAt && (
             <div
               style={{
-                marginTop: 40,
-                opacity: subAppear,
+                marginTop: 28,
+                opacity: seeProgress,
                 fontSize: 28,
                 color: "#94a3b8",
                 fontWeight: 500,
@@ -177,11 +277,4 @@ export const Intro: React.FC<Props> = ({ words }) => {
       <Watermark />
     </AbsoluteFill>
   );
-};
-
-const smoothstep = (frame: number, start: number, end: number): number => {
-  if (frame < start) return 0;
-  if (frame >= end) return 1;
-  const t = (frame - start) / (end - start);
-  return t * t * (3 - 2 * t);
 };

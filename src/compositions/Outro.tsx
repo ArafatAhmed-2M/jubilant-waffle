@@ -1,31 +1,37 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring, Audio, staticFile } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, Audio, staticFile } from "remotion";
 import { AnimatedBackground, Watermark } from "./visuals";
 import { LEADERBOARD } from "./data";
-import { useWordSync, type Word } from "./useWordSync";
+import { useSecToFrame, fadeIn } from "./utils";
 
 const COMMENT = "Drop a comment: which model surprised you most?";
 
-type Props = { words?: Word[] };
-
-export const Outro: React.FC<Props> = ({ words }) => {
+/**
+ * Outro scene — 18.12s audio.
+ *
+ * Hand-picked timing read directly from outro.json transcript:
+ *   0.0   "That's the test."    → "THAT'S THE TEST!" title
+ *   1.24  "Seven models..."     → subhead + top-3 podium
+ *   2.8   "very different..."   → top-3 reveal
+ *   6.52  "Paste it into..."    → "PASTE THE PROMPT" instruction
+ *  10.2   "Drop in the comments"→ comment typewriter
+ *  13.96  "hit the like"        → like + bell CTAs
+ *  15.12  "It genuinely helps"  → subscribe button
+ *  16.82  "and I'll see you"    → final thanks line
+ */
+export const Outro: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps, durationInFrames } = useVideoConfig();
-  const T = (frac: number) => Math.max(0, Math.floor(frac * durationInFrames));
+  const { fps } = useVideoConfig();
+  const T = useSecToFrame();
 
-  const { phraseAt } = useWordSync(words);
-
-  // Sync triggers to specific words in the outro audio
-  // "That's the test." → t=0
-  const titleAt = 0;
-  // "very different results" → top-3 reveal (t=2.8)
-  const top3At = phraseAt("very different", 0)?.start ?? T(0.20);
-  // "Drop in the comments" → t=10.2
-  const commentAt = phraseAt("Drop in the comments", 0)?.start ?? T(0.55);
-  // "If this was useful, hit the like button" → t=12.8
-  const likeAt = phraseAt("hit the like", 0)?.start ?? T(0.70);
-  // "I'll see you in the next one" → final thanks
-  const thanksAt = phraseAt("see you in the next one", 0)?.start ?? T(0.88);
+  const titleAt = T(0.0);
+  const subheadAt = T(1.24);
+  const top3At = T(2.8);
+  const pasteAt = T(6.52);
+  const commentAt = T(10.2);
+  const likeAt = T(13.96);
+  const subscribeAt = T(15.12);
+  const thanksAt = T(16.82);
 
   const titleAppear = spring({
     frame: frame - titleAt,
@@ -34,21 +40,20 @@ export const Outro: React.FC<Props> = ({ words }) => {
   });
 
   const subBounce = spring({
-    frame: frame - likeAt,
+    frame: frame - subscribeAt,
     fps,
     config: { damping: 8, stiffness: 200, mass: 0.5 },
   });
 
-  // Typewriter: char-by-char at ~12 chars per second synced to the audio pace
-  // Total comment duration ≈ thanksAt - commentAt
-  const totalCommentSec = Math.max(0.5, (thanksAt - commentAt) / fps);
+  // Typewriter: char-by-char over the spoken comment window (10.2 → 12.8 = "Drop in the comments" duration)
+  const totalCommentSec = 2.6; // ~how long the user takes to say the comment
   const charsPerSec = COMMENT.length / totalCommentSec;
   const charIndex = Math.min(
     COMMENT.length,
     Math.max(0, Math.floor((frame - commentAt) / fps * charsPerSec)),
   );
 
-  // Like / Bell / Subscribe rows appear after subscribe bounce
+  // CTA row appears with likeAt
   const ctaAppear = spring({
     frame: frame - likeAt,
     fps,
@@ -59,17 +64,21 @@ export const Outro: React.FC<Props> = ({ words }) => {
   const winnerPulse = frame >= top3At ? 1 + Math.sin((frame - top3At) * 0.12) * 0.04 : 1;
 
   // Final thanks
-  const thanksAppear = interpolate(frame, [thanksAt, thanksAt + Math.floor(0.5 * fps)], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  const thanksAppear = fadeIn(frame, thanksAt, 16);
 
   return (
     <AbsoluteFill>
       <AnimatedBackground baseColor="#08080d" accentColor="#8b5cf6" intensity={0.4} />
       <Audio src={staticFile("audio/outro.mp3")} />
 
-      <AbsoluteFill style={{ padding: "60px 80px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <AbsoluteFill
+        style={{
+          padding: "60px 80px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
         {/* Title */}
         <div
           style={{
@@ -97,7 +106,7 @@ export const Outro: React.FC<Props> = ({ words }) => {
           </div>
           <div
             style={{
-              opacity: titleAppear,
+              opacity: fadeIn(frame, subheadAt, 16),
               fontSize: 22,
               color: "#94a3b8",
               fontFamily: "Inter, sans-serif",
@@ -111,7 +120,7 @@ export const Outro: React.FC<Props> = ({ words }) => {
           </div>
         </div>
 
-        {/* Top 3 podium callout */}
+        {/* Top 3 podium callout — appears at 2.8s on "very different results" */}
         <div
           style={{
             display: "grid",
@@ -189,7 +198,48 @@ export const Outro: React.FC<Props> = ({ words }) => {
           })}
         </div>
 
-        {/* CTAs */}
+        {/* PASTE THE PROMPT instruction — appears at 6.52s */}
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: 24,
+            opacity: fadeIn(frame, pasteAt, 16),
+            transform: `translateY(${(1 - fadeIn(frame, pasteAt, 16)) * 16}px)`,
+            padding: "16px 32px",
+            background: "rgba(34, 211, 238, 0.1)",
+            border: "1.5px solid rgba(34, 211, 238, 0.5)",
+            borderRadius: 14,
+            maxWidth: 1300,
+            margin: "0 auto 24px",
+            width: "fit-content",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 14,
+              color: "#67e8f9",
+              fontWeight: 800,
+              letterSpacing: 4,
+              marginBottom: 6,
+              fontFamily: "Inter, sans-serif",
+              textTransform: "uppercase",
+            }}
+          >
+            📋 The full prompt is in the description
+          </div>
+          <div
+            style={{
+              fontSize: 20,
+              color: "#cbd5e1",
+              fontWeight: 500,
+              fontFamily: "Inter, sans-serif",
+            }}
+          >
+            Paste it into any model and see what your favourite produces.
+          </div>
+        </div>
+
+        {/* CTAs — appear at 13.96s on "hit the like" */}
         <div
           style={{
             display: "flex",
@@ -225,7 +275,7 @@ export const Outro: React.FC<Props> = ({ words }) => {
           <CTA icon="💬" label="COMMENT" color="#8b5cf6" delay={9} current={frame} t0={likeAt} fps={fps} />
         </div>
 
-        {/* Comment typewriter */}
+        {/* Comment typewriter — appears at 10.2s on "Drop in the comments" */}
         <div
           style={{
             minHeight: 64,
@@ -243,8 +293,8 @@ export const Outro: React.FC<Props> = ({ words }) => {
             maxWidth: 1300,
             margin: "0 auto 24px",
             width: "fit-content",
-            opacity: frame >= commentAt ? 1 : 0,
-            transform: `translateY(${frame >= commentAt ? 0 : 20}px)`,
+            opacity: fadeIn(frame, commentAt, 16),
+            transform: `translateY(${(1 - fadeIn(frame, commentAt, 16)) * 20}px)`,
           }}
         >
           💬 {COMMENT.substring(0, charIndex)}
@@ -258,7 +308,7 @@ export const Outro: React.FC<Props> = ({ words }) => {
           </span>
         </div>
 
-        {/* Final thanks line */}
+        {/* Final thanks line — appears at 16.82s on "and I'll see you in the next one" */}
         <div
           style={{
             textAlign: "center",

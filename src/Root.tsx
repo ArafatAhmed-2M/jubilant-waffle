@@ -1,10 +1,9 @@
 import "./global.css";
 import React from "react";
-import { Composition, CalculateMetadataFunction, staticFile } from "remotion";
+import { Composition } from "remotion";
 
 import { FPS } from "./compositions/utils";
 import { MODELS } from "./compositions/data";
-import type { Word } from "./compositions/useWordSync";
 
 import { Intro } from "./compositions/Intro";
 import { ThePrompt } from "./compositions/ThePrompt";
@@ -13,26 +12,11 @@ import { Leaderboard } from "./compositions/Leaderboard";
 import { Verdict } from "./compositions/Verdict";
 import { Outro } from "./compositions/Outro";
 
-type WordData = {
-  audio_file: string;
-  total_words: number;
-  transcript: Word[];
-};
-
-const loadWords = async (audio: string): Promise<WordData | null> => {
-  const baseName = audio.replace(/^audio\//, "").replace(/\.mp3$/, "");
-  const url = staticFile(`audio-json/${baseName}.json`);
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    return (await res.json()) as WordData;
-  } catch (e) {
-    return null;
-  }
-};
-
-// Fallback durations (seconds) used when the JSON cannot be loaded.
-// Match the actual audio length so the scene is never too short.
+/**
+ * Fallback durations (seconds) for each scene's audio. The scene audio
+ * length never changes once generated, so we hardcode it here. The
+ * actual duration used at render time is `Math.ceil(audioSec * FPS) + 6`.
+ */
 const FALLBACK_DURATIONS: Record<string, number> = {
   "audio/intro.mp3": 28.66,
   "audio/the-prompt.mp3": 31.74,
@@ -75,39 +59,14 @@ export const RemotionRoot: React.FC = () => {
             key={cfg.id}
             id={cfg.id}
             component={cfg.component as React.FC<any>}
-            durationInFrames={Math.ceil((FALLBACK_DURATIONS[cfg.audio] ?? 30) * FPS)}
+            durationInFrames={Math.ceil((FALLBACK_DURATIONS[cfg.audio] ?? 30) * FPS) + 6}
             fps={FPS}
             width={1920}
             height={1080}
             defaultProps={baseProps}
-            calculateMetadata={makeMeta(cfg.audio, baseProps)}
           />
         );
       })}
     </>
   );
 };
-
-function makeMeta(
-  audio: string,
-  baseProps: Record<string, unknown>,
-): CalculateMetadataFunction<any> {
-  return async () => {
-    const data = await loadWords(audio);
-    const fallback = FALLBACK_DURATIONS[audio] ?? 30;
-    const audioSec = data
-      ? data.transcript[data.transcript.length - 1].end_time
-      : fallback;
-    const durationInFrames = Math.max(12 * FPS, Math.ceil(audioSec * FPS) + 6);
-    return {
-      durationInFrames,
-      fps: FPS,
-      width: 1920,
-      height: 1080,
-      props: {
-        ...baseProps,
-        words: data?.transcript ?? [],
-      },
-    };
-  };
-}

@@ -1,8 +1,8 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate, Audio, staticFile } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, Audio, staticFile } from "remotion";
 import { LEADERBOARD } from "./data";
 import { AnimatedBackground } from "./visuals";
-import { useWordSync, type Word } from "./useWordSync";
+import { useSecToFrame, fadeIn } from "./utils";
 
 const PLACE_COLORS: Record<number, string> = {
   1: "#fbbf24",
@@ -16,48 +16,60 @@ const RANK_LABELS: Record<number, string> = {
   3: "3rd",
 };
 
-// Map each leaderboard row to the first word that triggers its reveal
-const ROW_TRIGGERS: string[] = [
-  "First",   // 1st: Mini Max M3
-  "Second",  // T-2nd: DeepSeek (reveals at "Second place, joint")
-  "Second",  // T-2nd: BigPickle (same trigger as DeepSeek)
-  "Third",   // 4th overall: MiMo
-  "Fourth",  // 5th overall: Gemma
-  "Fifth",   // 6th overall: Nemotron Super
-  "Sixth",   // 7th overall: Nemotron Nano
+/**
+ * Per-row reveal time (in seconds), read directly from leaderboard.json.
+ * Order matches LEADERBOARD in data.ts.
+ */
+const ROW_REVEAL_SEC = [
+  2.9,    // 1st: Mini Max M3       (audio: "First place,")
+  7.36,   // T-2nd: DeepSeek Flash  (audio: "Second place, joint,")
+  7.36,   // T-2nd: Big Pickle      (same trigger)
+  13.16,  // 3rd: MiMo v2.5         (audio: "Third place,")
+  17.88,  // 4th: Gemma 4 31B       (audio: "Fourth,")
+  21.06,  // 5th: Nemotron 3 Super  (audio: "Fifth,")
+  24.38,  // 6th: Nemotron Nano     (audio: "Sixth,")
 ];
 
-const ROW_OCCURRENCES: number[] = [1, 1, 1, 1, 1, 1, 1];
-
-type Props = { words?: Word[] };
-
-export const Leaderboard: React.FC<Props> = ({ words }) => {
+/**
+ * Leaderboard scene — 37.38s audio.
+ *
+ * Hand-picked timing read directly from leaderboard.json transcript:
+ *   0.0   "Alright,"              → title fade-in
+ *   1.28  "final leaderboard."    → subhead "Code · Looks · Average"
+ *   2.9   "First place"           → row 1 (MiniMax) + top-3 callout
+ *   7.36  "Second place, joint"   → rows 2 & 3 (DeepSeek, BigPickle)
+ *  13.16  "Third place"           → row 4 (MiMo)
+ *  17.88  "Fourth"                → row 5 (Gemma)
+ *  21.06  "Fifth"                 → row 6 (Nemotron Super)
+ *  24.38  "Sixth"                 → row 7 (Nemotron Nano)
+ *  27.44  "biggest surprise"      → legend
+ *  31.82  "biggest disappointment"→ final commentary stays on screen
+ */
+export const Leaderboard: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const T = useSecToFrame();
 
-  const { frameAt } = useWordSync(words);
+  const titleAt = T(0.0);
+  const subheadAt = T(1.28);
+  const tableRevealAt = T(1.66);
+  const top3RevealAt = T(2.9);
+  const legendAt = T(27.44);
 
   const titleAppear = spring({
-    frame: frame - 0,
+    frame: frame - titleAt,
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
 
-  // Each row's reveal frame
-  const rowRevealFrames = LEADERBOARD.map((_, i) =>
-    frameAt(ROW_TRIGGERS[i] ?? "First", ROW_OCCURRENCES[i] ?? 1),
-  );
-
-  // Top-3 callout appears just after first row
-  const topReveal = spring({
-    frame: frame - Math.max(0, (rowRevealFrames[0] || 0) - 6),
-    fps,
-    config: { damping: 14, stiffness: 160, mass: 0.6 },
-  });
-
-  // Whole table container appears on "Here's the final leaderboard"
   const tableReveal = spring({
-    frame: frame - Math.max(0, frameAt("leaderboard", 1) - 6),
+    frame: frame - tableRevealAt,
+    fps,
+    config: { damping: 14, stiffness: 160, mass: 0.6 },
+  });
+
+  const topReveal = spring({
+    frame: frame - top3RevealAt,
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
@@ -88,7 +100,7 @@ export const Leaderboard: React.FC<Props> = ({ words }) => {
         </div>
         <div
           style={{
-            opacity: titleAppear,
+            opacity: fadeIn(frame, subheadAt, 14),
             textAlign: "center",
             fontSize: 18,
             color: "#94a3b8",
@@ -210,7 +222,7 @@ export const Leaderboard: React.FC<Props> = ({ words }) => {
           {LEADERBOARD.map((row, i) => {
             const agreed = Math.abs(row.code - row.looks) < 2;
             const rowColor = PLACE_COLORS[row.rank] || row.color;
-            const revealAt = rowRevealFrames[i] || 0;
+            const revealAt = T(ROW_REVEAL_SEC[i] ?? 0);
             const appear = spring({
               frame: frame - revealAt,
               fps,
@@ -326,17 +338,15 @@ export const Leaderboard: React.FC<Props> = ({ words }) => {
           })}
         </div>
 
-        {/* Legend */}
+        {/* Legend — appears at 27.44s on "biggest surprise" */}
         <div
           style={{
             display: "flex",
             gap: 36,
             justifyContent: "center",
             marginTop: 20,
-            opacity: interpolate(frame, [Math.max(0, frameAt("surprise", 1) - 6), frameAt("surprise", 1) + 12], [0, 1], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-            }),
+            opacity: fadeIn(frame, legendAt, 16),
+            transform: `translateY(${(1 - fadeIn(frame, legendAt, 16)) * 12}px)`,
           }}
         >
           <span style={legendTextStyle}>

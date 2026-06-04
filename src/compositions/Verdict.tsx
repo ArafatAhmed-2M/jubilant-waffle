@@ -1,7 +1,7 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring, Audio, staticFile } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate, Audio, staticFile } from "remotion";
 import { AnimatedBackground } from "./visuals";
-import { useWordSync, type Word, fadeIn } from "./useWordSync";
+import { useSecToFrame } from "./utils";
 
 const INSIGHTS = [
   {
@@ -30,44 +30,37 @@ const INSIGHTS = [
   },
 ];
 
-const CARD_TRIGGERS = [
-  // Each card's start frame, derived from the audio's "Number X" / "number X" phrase
-  "Number one",
-  "Number two",
-  "Number three",
-  "number four",
-];
+/**
+ * Per-card start time (in seconds), read directly from verdict.json.
+ *   2.66  "Number one,"     → card 1 (SIZE ≠ QUALITY)
+ *   9.9   "Number two,"     → card 2 (ONE BUG = ...)
+ *  18.64  "Number three,"   → card 3 (PERSONALITY IS HARD)
+ *  28.56  "number four,"    → card 4 (THE RADAR CHART IS THE TEST)
+ */
+const CARD_START_SEC = [2.66, 9.9, 18.64, 28.56];
 
-const CARD_END_TRIGGERS = [
-  "Architecture",   // end of card 1
-  "everything",     // end of card 2
-  "personality",    // end of card 3
-  "ones",           // end of card 4
-];
-
-type Props = { words?: Word[] };
-
-export const Verdict: React.FC<Props> = ({ words }) => {
+/**
+ * Verdict scene — 39.52s audio.
+ *
+ * Four insight cards cross-fade in sync with "Number one/two/three/four".
+ * The last card holds until the end of the audio.
+ */
+export const Verdict: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
-  const T = (frac: number) => Math.max(0, Math.floor(frac * durationInFrames));
+  const T = useSecToFrame();
 
-  const { phraseAt } = useWordSync(words);
+  const titleAt = T(0.0);
 
-  // Compute each card's start/end frames from the JSON
-  const cardSlots: Array<{ start: number; end: number }> = INSIGHTS.map((_, i) => {
-    const startPhrase = phraseAt(CARD_TRIGGERS[i], 0);
-    const endPhrase = phraseAt(CARD_END_TRIGGERS[i], startPhrase ? startPhrase.start : 0);
-    const startFrame = startPhrase ? startPhrase.start : T(0.10 + i * 0.20);
-    const endFrame = endPhrase ? endPhrase.end : T(0.30 + i * 0.20);
-    return { start: startFrame, end: endFrame };
-  });
+  const cardStarts = CARD_START_SEC.map((s) => T(s));
 
   const titleAppear = spring({
-    frame: frame - 0,
+    frame: frame - titleAt,
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
+
+  const crossDur = Math.floor(0.5 * fps); // 0.5s cross-fade
 
   return (
     <AbsoluteFill>
@@ -103,33 +96,37 @@ export const Verdict: React.FC<Props> = ({ words }) => {
           }}
         >
           {INSIGHTS.map((insight, i) => {
-            const slot = cardSlots[i];
             const isLast = i === INSIGHTS.length - 1;
-            const nextStart = !isLast ? cardSlots[i + 1].start : durationInFrames - 1;
-
-            const fadeInEnd = slot.start + Math.floor(0.4 * fps);
-            const holdEnd = Math.min(slot.end, nextStart - Math.floor(0.2 * fps));
-            const crossEnd = !isLast ? nextStart : durationInFrames - 1;
+            const startFrame = cardStarts[i];
+            const nextStart = !isLast ? cardStarts[i + 1] : durationInFrames - 1;
+            // Simpler: hold until next start, cross-fade out
+            const fadeInEnd = startFrame + crossDur;
+            const crossOutStart = isLast ? durationInFrames - 1 : Math.max(startFrame, nextStart - crossDur);
 
             const opacity = isLast
-              ? fadeIn(frame, slot.start, Math.floor(0.4 * fps))
-              : interpolate(
-                  frame,
-                  [slot.start, fadeInEnd, holdEnd, crossEnd],
-                  [0, 1, 1, 0],
-                  { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-                );
-            const translateY = isLast
-              ? interpolate(frame, [slot.start, fadeInEnd], [60, 0], {
+              ? interpolate(frame, [startFrame, fadeInEnd], [0, 1], {
                   extrapolateLeft: "clamp",
                   extrapolateRight: "clamp",
                 })
               : interpolate(
                   frame,
-                  [slot.start, fadeInEnd, holdEnd, crossEnd],
+                  [startFrame, fadeInEnd, crossOutStart, nextStart],
+                  [0, 1, 1, 0],
+                  { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+                );
+
+            const translateY = isLast
+              ? interpolate(frame, [startFrame, fadeInEnd], [60, 0], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                })
+              : interpolate(
+                  frame,
+                  [startFrame, fadeInEnd, crossOutStart, nextStart],
                   [60, 0, 0, -30],
                   { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
                 );
+
             return (
               <div
                 key={insight.title}
@@ -218,10 +215,12 @@ export const Verdict: React.FC<Props> = ({ words }) => {
             fontFamily: "Inter, sans-serif",
             letterSpacing: 4,
             textTransform: "uppercase",
-            opacity: interpolate(frame, [durationInFrames - 60, durationInFrames - 20], [0, 1], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-            }),
+            opacity: interpolate(
+              frame,
+              [durationInFrames - 60, durationInFrames - 20],
+              [0, 1],
+              { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+            ),
           }}
         >
           7 Models · 1 Prompt · ∞ Lessons
@@ -238,8 +237,10 @@ export const Verdict: React.FC<Props> = ({ words }) => {
             gap: 16,
           }}
         >
-          {cardSlots.map((slot, i) => {
-            const isActive = frame >= slot.start && frame < (cardSlots[i + 1]?.start ?? durationInFrames);
+          {cardStarts.map((start, i) => {
+            const isActive =
+              frame >= start &&
+              frame < (cardStarts[i + 1] ?? durationInFrames);
             return (
               <div
                 key={i}
@@ -249,6 +250,7 @@ export const Verdict: React.FC<Props> = ({ words }) => {
                   borderRadius: 4,
                   background: isActive ? INSIGHTS[i].color : "#1f2937",
                   boxShadow: isActive ? `0 0 20px ${INSIGHTS[i].color}` : "none",
+                  transition: "width 0.2s",
                 }}
               />
             );

@@ -11,12 +11,11 @@ import {
 import { AnimatedBackground } from "./visuals";
 import { BrowserFrame, InfoCard } from "./BrowserFrame";
 import type { ModelData } from "./data";
-import { useWordSync, type Word } from "./useWordSync";
+import { useSecToFrame, fadeIn } from "./utils";
 
 type Props = {
   data: ModelData;
   audioFile: string;
-  words?: Word[];
 };
 
 const getNameSize = (name: string): number => {
@@ -26,79 +25,53 @@ const getNameSize = (name: string): number => {
   return 165;
 };
 
-export const ModelReveal: React.FC<Props> = ({ data, audioFile, words }) => {
+/**
+ * ModelReveal — generic per-model scene driven by `data.schedule`.
+ *
+ * Every model has a `schedule` (in seconds) read from its audio JSON.
+ * Convert each value to a frame via `T(sec)` and use the result as the
+ * exact frame where the element should appear.
+ *
+ * Visual structure:
+ *   ┌──────────────────────────────────┬──────────────────┐
+ *   │ TAGLINE                          │                  │
+ *   │ MODEL NAME (huge)                │   [BROWSER]      │
+ *   ├──────────────────────────────────┤                  │
+ *   │ [CODE]   [LOOKS]                 │                  │
+ *   │ [INFO CARD]                      │                  │
+ *   │ [PROS]    [CONS]                 │                  │
+ *   └──────────────────────────────────┴──────────────────┘
+ *   ┌─[AVERAGE badge top-right]─┐
+ */
+export const ModelReveal: React.FC<Props> = ({ data, audioFile }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
+  const T = useSecToFrame();
 
-  const { wordAt, frameAt } = useWordSync(words);
-
-  // Trigger frames for each section, anchored to specific words
-  // 1. Name appears when first word of model name is said
-  // 2. Tagline appears when "honestly" / "now" / "this" / "and" (the descriptive opener)
-  // 3. Info card appears when "parameters" / model context is mentioned
-  // 4. Score cards appear when first score number is read
-  // 5. Pros/cons appear during the descriptive middle
-  // 6. Average badge appears on "average"
-  const nameAt = wordAt(
-    (w) => normalize(w.word) === normalize(data.name.split(" ")[0] ?? data.name),
-  );
-
-  const taglineAt = nameAt > 0
-    ? wordAt(
-        (w, i, all) =>
-          w.start_time > (all.find((a) => normalize(a.word) === normalize(data.name.split(" ")[0] ?? data.name))?.end_time ?? 0) + 0.5 &&
-          ["this", "now", "and", "but", "honestly", "sort", "mimo", "gemma", "deepseek", "big", "nemotron"].includes(
-            normalize(w.word),
-          ),
-      )
-    : 0;
-
-  // Info card: when model context (maker/params) is mentioned
-  // For MiniMax: "background has three animated glowing orbs" → 5.48
-  // For DeepSeek: "Professional terminal" → 3.66
-  // For BigPickle: "brief that was deliberately weird" → 5.6
-  // For MiMo: "7 billion parameter model" → 7.22
-  // For Gemma: "31 billion parameters" → 1.24
-  // For NemotronSuper: "comeback story" → 4.68
-  // For NemotronNano: "most detailed prompt" → 6.24
-  const infoAt = wordAt(
-    (w) =>
-      ["background", "professional", "brief", "billion", "comeback", "detailed"].includes(
-        normalize(w.word),
-      ),
-  ) || Math.max(0, nameAt + Math.floor(1.5 * fps));
-
-  // Score cards: when the first score number is read (e.g. "9.5" or "8.5")
-  const codeScoreAt = frameAt("me", 1) + Math.floor(0.3 * fps);
-  const looksScoreAt = codeScoreAt + Math.floor(1.0 * fps);
-
-  // Pros: when descriptive middle is being read (after first score)
-  const prosAt = codeScoreAt + Math.floor(0.4 * fps);
-
-  // Average badge: when "average" is said
-  const averageAt = wordAt((w) => normalize(w.word) === "average");
-  const browserAt = Math.max(0, nameAt + Math.floor(2.0 * fps));
+  const s = data.schedule;
 
   const nameSize = getNameSize(data.name);
 
-  // Cross-fade near end
-  const fadeOut = interpolate(frame, [durationInFrames - 24, durationInFrames - 4], [1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  // Cross-fade out at the very end of the scene
+  const fadeOut = interpolate(
+    frame,
+    [durationInFrames - 24, durationInFrames - 4],
+    [1, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+  );
 
   return (
     <AbsoluteFill style={{ opacity: fadeOut }}>
       <AnimatedBackground baseColor="#08080d" accentColor={data.color} intensity={0.4} />
       <Audio src={staticFile(audioFile)} />
 
-      {/* Top: tagline + name */}
-      <AbsoluteFill style={{ padding: "40px 70px", display: "flex", flexDirection: "column" }}>
+      <AbsoluteFill style={{ padding: "50px 70px", display: "flex", flexDirection: "column" }}>
+        {/* Top: tagline + name */}
         <div style={{ marginBottom: 20 }}>
           <div
             style={{
-              opacity: taglineAt > 0 ? fadeInAt(frame, taglineAt) : 0,
-              transform: `translateY(${(1 - fadeInAt(frame, taglineAt)) * 20}px)`,
+              opacity: fadeIn(frame, T(s.taglineAt), 16),
+              transform: `translateY(${(1 - fadeIn(frame, T(s.taglineAt), 16)) * 16}px)`,
               fontSize: 22,
               fontWeight: 800,
               color: data.color,
@@ -106,15 +79,33 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile, words }) => {
               textTransform: "uppercase",
               fontFamily: "Inter, sans-serif",
               marginBottom: 8,
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
             }}
           >
-            #{data.placement} Place · {data.tagline}
+            <span>#{data.placement} Place</span>
+            {data.placement === 1 && (
+              <span
+                style={{
+                  padding: "4px 12px",
+                  background: "#fbbf24",
+                  color: "#0a0a0f",
+                  borderRadius: 999,
+                  fontSize: 14,
+                  letterSpacing: 2,
+                }}
+              >
+                👑 WINNER
+              </span>
+            )}
+            <span style={{ color: "#94a3b8" }}>· {data.tagline}</span>
           </div>
 
           <div
             style={{
-              opacity: nameAt > 0 ? fadeInAt(frame, nameAt) : 0,
-              transform: `translateX(${(1 - fadeInAt(frame, nameAt)) * -200}px)`,
+              opacity: fadeIn(frame, T(s.nameAt), 16),
+              transform: `translateX(${(1 - fadeIn(frame, T(s.nameAt), 16)) * -200}px)`,
               fontSize: nameSize,
               fontWeight: 900,
               lineHeight: 1.05,
@@ -150,13 +141,13 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile, words }) => {
                 label="CODE"
                 score={data.myScore}
                 color={data.color}
-                appear={fadeInAt(frame, codeScoreAt)}
+                appear={fadeIn(frame, T(s.codeScoreAt), 18)}
               />
               <ScoreCard
                 label="LOOKS"
                 score={data.yourScore}
                 color={data.color}
-                appear={fadeInAt(frame, looksScoreAt)}
+                appear={fadeIn(frame, T(s.looksScoreAt), 18)}
               />
             </div>
 
@@ -167,7 +158,7 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile, words }) => {
               release={data.release}
               info={data.info}
               color={data.color}
-              appear={fadeInAt(frame, infoAt)}
+              appear={fadeIn(frame, T(s.infoAt), 18)}
             />
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, flex: 1 }}>
@@ -176,7 +167,7 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile, words }) => {
                 color="#4ade80"
                 icon="✓"
                 label="PROS"
-                startFrame={prosAt}
+                startFrame={T(s.prosAt)}
                 frame={frame}
                 fps={fps}
               />
@@ -185,7 +176,7 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile, words }) => {
                 color="#ff4d6d"
                 icon="✕"
                 label="CONS"
-                startFrame={Math.max(0, averageAt - Math.floor(2 * fps))}
+                startFrame={T(s.consAt)}
                 frame={frame}
                 fps={fps}
               />
@@ -197,7 +188,7 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile, words }) => {
               <BrowserFrame
                 screenshot={`screenshots/${data.id}.png`}
                 url={data.url}
-                appear={fadeInAt(frame, browserAt)}
+                appear={fadeIn(frame, T(s.browserAt), 20)}
               />
               <div
                 style={{
@@ -206,8 +197,8 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile, words }) => {
                   background: "rgba(255,255,255,0.04)",
                   border: "1px solid rgba(255,255,255,0.1)",
                   borderRadius: 12,
-                  opacity: fadeInAt(frame, browserAt + Math.floor(1.0 * fps)),
-                  transform: `translateY(${(1 - fadeInAt(frame, browserAt + Math.floor(1.0 * fps))) * 20}px)`,
+                  opacity: fadeIn(frame, T(s.browserAt) + Math.floor(1.0 * fps), 18),
+                  transform: `translateY(${(1 - fadeIn(frame, T(s.browserAt) + Math.floor(1.0 * fps), 18)) * 20}px)`,
                 }}
               >
                 <div
@@ -240,29 +231,14 @@ export const ModelReveal: React.FC<Props> = ({ data, audioFile, words }) => {
         </div>
       </AbsoluteFill>
 
-      {/* Final badge - appears on "average" */}
-      {averageAt > 0 && (
-        <FinalBadge
-          avg={data.avg}
-          color={data.color}
-          appear={fadeInAt(frame, averageAt)}
-          pulse={1}
-        />
-      )}
+      {/* AVERAGE badge (top-right) */}
+      <FinalBadge
+        avg={data.avg}
+        color={data.color}
+        appear={fadeIn(frame, T(s.averageAt), 18)}
+      />
     </AbsoluteFill>
   );
-};
-
-// Local helpers
-const normalize = (w: string): string => w.toLowerCase().replace(/[^a-z0-9]/g, "");
-
-/** Returns 0 before `start`, ramps to 1 over 12 frames, then holds at 1. */
-const fadeInAt = (frame: number, start: number): number => {
-  if (start <= 0) return 0;
-  if (frame < start) return 0;
-  const dur = 14;
-  if (frame >= start + dur) return 1;
-  return (frame - start) / dur;
 };
 
 const ScoreCard: React.FC<{
@@ -271,12 +247,11 @@ const ScoreCard: React.FC<{
   color: string;
   appear: number;
 }> = ({ label, score, color, appear }) => {
-  const transform = `scale(${0.85 + appear * 0.15}) translateY(${(1 - appear) * 20}px)`;
   return (
     <div
       style={{
         opacity: appear,
-        transform,
+        transform: `scale(${0.85 + appear * 0.15}) translateY(${(1 - appear) * 20}px)`,
         flex: 1,
         padding: "20px 24px",
         background: `linear-gradient(135deg, ${color}22, ${color}08)`,
@@ -405,19 +380,18 @@ const FinalBadge: React.FC<{
   avg: number;
   color: string;
   appear: number;
-  pulse: number;
-}> = ({ avg, color, appear, pulse }) => {
+}> = ({ avg, color, appear }) => {
   return (
     <div
       style={{
         position: "absolute",
-        top: 200,
+        top: 50,
         right: 60,
         opacity: appear,
-        transform: `scale(${appear * pulse})`,
-        padding: "18px 32px",
+        transform: `scale(${0.7 + appear * 0.3})`,
+        padding: "20px 36px",
         background: `linear-gradient(135deg, ${color}, ${color}cc)`,
-        borderRadius: 20,
+        borderRadius: 22,
         boxShadow: `0 16px 50px ${color}80`,
         textAlign: "center",
         zIndex: 10,
@@ -438,7 +412,7 @@ const FinalBadge: React.FC<{
       <div
         style={{
           marginTop: 2,
-          fontSize: 58,
+          fontSize: 64,
           fontWeight: 900,
           color: "#0a0a0f",
           lineHeight: 1,

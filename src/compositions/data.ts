@@ -1,3 +1,24 @@
+export type ModelSchedule = {
+  /** sec — when the model name appears */
+  nameAt: number;
+  /** sec — when the tagline + placement text appears */
+  taglineAt: number;
+  /** sec — when the InfoCard (maker/params/...) appears */
+  infoAt: number;
+  /** sec — when the CODE score card appears */
+  codeScoreAt: number;
+  /** sec — when the LOOKS score card appears */
+  looksScoreAt: number;
+  /** sec — when the PROS bullets start streaming in */
+  prosAt: number;
+  /** sec — when the CONS bullets start streaming in */
+  consAt: number;
+  /** sec — when the browser screenshot appears */
+  browserAt: number;
+  /** sec — when the AVERAGE badge appears (top-right) */
+  averageAt: number;
+};
+
 export type ModelData = {
   id: string;
   name: string;
@@ -16,6 +37,12 @@ export type ModelData = {
   url: string;
   pros: string[];
   cons: string[];
+  /**
+   * Hand-picked animation schedule (in seconds) read from the audio JSON.
+   * Each value is the second in the audio at which the element should
+   * appear. The component converts these to frames via fps.
+   */
+  schedule: ModelSchedule;
 };
 
 export const MODELS: ModelData[] = [
@@ -41,6 +68,23 @@ export const MODELS: ModelData[] = [
       "Perfect radar chart",
     ],
     cons: ["Over 800 line limit"],
+    // transcript: "First up, Mini Max M3." → 1.04
+    // "And honestly, this one blew me away." → 2.76
+    // "The background has three animated glowing orbs..." → 5.48
+    // "9.5 from me" (9) → 21.0
+    // "10 out of 10 from the looks test" (10) → 23.32
+    // "average 9.75" → 25.38
+    schedule: {
+      nameAt: 1.04,
+      taglineAt: 1.04,
+      infoAt: 5.48,
+      codeScoreAt: 21.0,
+      looksScoreAt: 23.32,
+      prosAt: 7.0,
+      consAt: 19.0,
+      browserAt: 4.0,
+      averageAt: 25.38,
+    },
   },
   {
     id: "deepseek",
@@ -64,6 +108,23 @@ export const MODELS: ModelData[] = [
       "Clean IIFE structure",
     ],
     cons: ["Cards slightly too faint on dark bg"],
+    // transcript: "DeepSeek V4 Flash" → 0.0
+    // "came in second joint." → 2.64
+    // "Professional terminal with an actual file path..." → 3.66
+    // "8 from me on the code" (8) → 17.26
+    // "9 from the visual test" (9) → 18.94
+    // "average 8.5" → 20.6
+    schedule: {
+      nameAt: 0.0,
+      taglineAt: 0.0,
+      infoAt: 3.66,
+      codeScoreAt: 17.26,
+      looksScoreAt: 18.94,
+      prosAt: 6.0,
+      consAt: 14.0,
+      browserAt: 2.5,
+      averageAt: 20.6,
+    },
   },
   {
     id: "bigpickle",
@@ -87,6 +148,22 @@ export const MODELS: ModelData[] = [
       "Most readable code",
     ],
     cons: ["1230 lines vs 800 limit", "Brine refills instead of draining"],
+    // transcript: "Big pickle," → 0.0
+    // "8.5 average, joint second." → 1.56 / 3.46
+    // "Now this one had a brief..." → 4.6
+    // "9 from me" (9) → 26.6
+    // "8 from the looks test" (8) → 27.66
+    schedule: {
+      nameAt: 0.0,
+      taglineAt: 0.0,
+      infoAt: 4.6,
+      codeScoreAt: 26.6,
+      looksScoreAt: 27.66,
+      prosAt: 8.0,
+      consAt: 18.0,
+      browserAt: 3.5,
+      averageAt: 25.0,
+    },
   },
   {
     id: "mimo",
@@ -110,6 +187,20 @@ export const MODELS: ModelData[] = [
       "Math-based quiz fits identity",
     ],
     cons: ["Sparse ticker", "Cards slightly faint"],
+    // transcript: "Mimo V2 .5" → 0.0
+    // "Third place with 8 .25" → 1.84 / 3.3
+    // "Here's the thing..." → 4.88
+    schedule: {
+      nameAt: 0.0,
+      taglineAt: 0.0,
+      infoAt: 4.88,
+      codeScoreAt: 3.3,
+      looksScoreAt: 3.3,
+      prosAt: 7.0,
+      consAt: 18.0,
+      browserAt: 3.5,
+      averageAt: 3.3,
+    },
   },
   {
     id: "gemma",
@@ -137,6 +228,22 @@ export const MODELS: ModelData[] = [
       "Feature cards invisible",
       "Ticker static no animation",
     ],
+    // transcript: "Gemma 4." → 0.0
+    // "31 billion parameters" → 1.66
+    // "Google DeepMind." → 3.28
+    // "6 .5 average" → 4.62
+    // "this one is genuinely surprising" → 6.32
+    schedule: {
+      nameAt: 0.0,
+      taglineAt: 0.0,
+      infoAt: 6.32,
+      codeScoreAt: 4.62,
+      looksScoreAt: 4.62,
+      prosAt: 8.0,
+      consAt: 14.0,
+      browserAt: 3.5,
+      averageAt: 18.0,
+    },
   },
   {
     id: "nemotron-super",
@@ -164,6 +271,22 @@ export const MODELS: ModelData[] = [
       "gap syntax missing colons",
       "Design unfinished",
     ],
+    // transcript: "Nemotron 3 Super." → 0.0
+    // "4 out of 10 average." → 2.14 / 2.74
+    // "Now this is a comeback story." → 3.62
+    // "6 .5 from me on the code" (6.5) → 23.72
+    // "1 .5 from the visual test" (1.5) → 26.12
+    schedule: {
+      nameAt: 0.0,
+      taglineAt: 0.0,
+      infoAt: 3.62,
+      codeScoreAt: 23.72,
+      looksScoreAt: 26.12,
+      prosAt: 10.0,
+      consAt: 20.0,
+      browserAt: 4.0,
+      averageAt: 28.0,
+    },
   },
   {
     id: "nemotron-nano",
@@ -191,6 +314,23 @@ export const MODELS: ModelData[] = [
       "Radar forgot /100 so points off chart",
       "Script ends with leaked reasoning tag",
     ],
+    // transcript: "And last," → 0.0
+    // "Nemotron Nano Omni." → 1.2
+    // "3 .25 average." → 3.26
+    // "This one had the most detailed prompt..." → 5.4
+    // "One out of ten visually." → 39.12
+    // "3 .25 average." (end) → 40.72
+    schedule: {
+      nameAt: 1.2,
+      taglineAt: 1.2,
+      infoAt: 5.4,
+      codeScoreAt: 3.26,
+      looksScoreAt: 39.12,
+      prosAt: 8.0,
+      consAt: 18.0,
+      browserAt: 4.5,
+      averageAt: 40.72,
+    },
   },
 ];
 
