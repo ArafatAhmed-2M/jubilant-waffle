@@ -1,27 +1,10 @@
 @echo off
 REM Concatenate all 12 scene MP4s into a single final video.
-REM Run this from the ai-benchmark-video folder.
+REM This file is a thin wrapper — uses concat-videos.js
 
-setlocal
+node concat-videos.js
+pause
 
-set INPUT_DIR=output
-set OUTPUT=final-video.mp4
-set LIST=list.txt
-
-if not exist "%INPUT_DIR%" (
-  echo ERROR: %INPUT_DIR% folder not found.
-  echo Put the 12 scene MP4s in %INPUT_DIR%\ first.
-  pause
-  exit /b 1
-)
-
-where ffmpeg >nul 2>nul
-if %ERRORLEVEL% neq 0 (
-  echo ERROR: ffmpeg is not installed.
-  echo Install with: winget install Gyan.FFmpeg
-  pause
-  exit /b 1
-)
 
 echo Building concat list...
 > %LIST% echo file '%INPUT_DIR%\01-hook.mp4'
