@@ -4,10 +4,11 @@ import { AnimatedBackground } from "./visuals";
 
 export const ThePrompt: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
+  const T = (frac: number) => Math.max(0, Math.floor(frac * durationInFrames));
 
   const titleAppear = spring({
-    frame: frame - 0.3 * fps,
+    frame: frame - T(0.02),
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
@@ -28,13 +29,13 @@ export const ThePrompt: React.FC = () => {
       <AnimatedBackground baseColor="#08080d" accentColor="#22d3ee" intensity={0.25} />
       <Audio src={staticFile("audio/the-prompt.mp3")} />
 
-      <AbsoluteFill style={{ padding: "100px 120px", justifyContent: "center" }}>
-        <div style={{ maxWidth: 1700 }}>
+      <AbsoluteFill style={{ padding: "70px 100px", justifyContent: "center" }}>
+        <div style={{ maxWidth: 1720 }}>
           <div
             style={{
               opacity: titleAppear,
               transform: `translateY(${(1 - titleAppear) * 40}px)`,
-              fontSize: 140,
+              fontSize: 110,
               fontWeight: 900,
               lineHeight: 1,
               fontFamily: "'Bebas Neue', 'Inter', sans-serif",
@@ -49,12 +50,13 @@ export const ThePrompt: React.FC = () => {
 
           <div
             style={{
-              marginTop: 30,
-              fontSize: 36,
+              marginTop: 20,
+              fontSize: 30,
               color: "#cbd5e1",
               fontWeight: 500,
               fontFamily: "Inter, sans-serif",
               maxWidth: 1500,
+              lineHeight: 1.4,
             }}
           >
             Build a complete OS dashboard in <span style={{ color: "#22d3ee", fontWeight: 700 }}>one HTML file</span> — <span style={{ color: "#22d3ee", fontWeight: 700 }}>no libraries</span>, pure code.
@@ -62,14 +64,14 @@ export const ThePrompt: React.FC = () => {
 
           <div
             style={{
-              marginTop: 80,
+              marginTop: 40,
               display: "grid",
               gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 24,
+              gap: 18,
             }}
           >
             {sections.map((section, i) => {
-              const delay = 4 * fps + i * 0.5 * fps;
+              const delay = T(0.18) + i * T(0.05);
               const appear = spring({
                 frame: frame - delay,
                 fps,
@@ -81,27 +83,27 @@ export const ThePrompt: React.FC = () => {
                   style={{
                     opacity: appear,
                     transform: `translateX(${(1 - appear) * -60}px)`,
-                    padding: "28px 36px",
+                    padding: "22px 30px",
                     background: "rgba(34, 211, 238, 0.08)",
                     border: "2px solid rgba(34, 211, 238, 0.4)",
                     borderRadius: 16,
                     display: "flex",
                     alignItems: "center",
-                    gap: 24,
+                    gap: 20,
                     backdropFilter: "blur(10px)",
                   }}
                 >
                   <div
                     style={{
-                      width: 56,
-                      height: 56,
+                      width: 48,
+                      height: 48,
                       borderRadius: "50%",
                       background: "#22d3ee",
                       color: "#0a0a0f",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: 28,
+                      fontSize: 24,
                       fontWeight: 900,
                       fontFamily: "Inter, sans-serif",
                       flexShrink: 0,
@@ -111,7 +113,7 @@ export const ThePrompt: React.FC = () => {
                   </div>
                   <div
                     style={{
-                      fontSize: 30,
+                      fontSize: 26,
                       fontWeight: 700,
                       color: "#fff",
                       fontFamily: "Inter, sans-serif",
@@ -126,21 +128,21 @@ export const ThePrompt: React.FC = () => {
 
           <div
             style={{
-              marginTop: 60,
-              opacity: interpolate(frame, [16 * fps, 18 * fps], [0, 1], {
+              marginTop: 36,
+              opacity: interpolate(frame, [T(0.72), T(0.82)], [0, 1], {
                 extrapolateLeft: "clamp",
                 extrapolateRight: "clamp",
               }),
-              transform: `translateY(${interpolate(frame, [16 * fps, 18 * fps], [20, 0], {
+              transform: `translateY(${interpolate(frame, [T(0.72), T(0.82)], [20, 0], {
                 extrapolateLeft: "clamp",
                 extrapolateRight: "clamp",
                 easing: Easing.bezier(0.16, 1, 0.3, 1),
               })}px)`,
-              padding: "32px 48px",
+              padding: "24px 40px",
               background: "linear-gradient(135deg, rgba(255, 0, 64, 0.15), rgba(255, 0, 64, 0.05))",
               border: "2px solid #ff0040",
               borderRadius: 20,
-              fontSize: 32,
+              fontSize: 26,
               fontWeight: 800,
               color: "#fff",
               fontFamily: "Inter, sans-serif",

@@ -11,10 +11,11 @@ const PLACE_COLORS: Record<number, string> = {
 
 export const Leaderboard: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
+  const T = (frac: number) => Math.max(0, Math.floor(frac * durationInFrames));
 
   const titleAppear = spring({
-    frame: frame - 0.3 * fps,
+    frame: frame - T(0.02),
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
@@ -24,42 +25,42 @@ export const Leaderboard: React.FC = () => {
       <AnimatedBackground baseColor="#08080d" accentColor="#fbbf24" intensity={0.3} />
       <Audio src={staticFile("audio/leaderboard.mp3")} />
 
-      <AbsoluteFill style={{ padding: "80px 100px" }}>
+      <AbsoluteFill style={{ padding: "60px 80px" }}>
         <div
           style={{
             opacity: titleAppear,
             transform: `translateY(${(1 - titleAppear) * 30}px)`,
-            fontSize: 100,
+            fontSize: 80,
             fontWeight: 900,
             textAlign: "center",
             fontFamily: "'Bebas Neue', 'Inter', sans-serif",
             background: "linear-gradient(135deg, #fff 0%, #fbbf24 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
-            letterSpacing: 8,
-            marginBottom: 40,
+            letterSpacing: 6,
+            marginBottom: 30,
           }}
         >
           FINAL LEADERBOARD
         </div>
 
-        {/* Podium */}
+        {/* Podium - 2nd, 1st, 2nd layout */}
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-end",
-            gap: 24,
-            marginBottom: 50,
-            height: 280,
+            gap: 20,
+            marginBottom: 30,
+            height: 220,
           }}
         >
-          <PodiumColumn rank={2} model={LEADERBOARD[1]} delay={1.5 * fps} height={180} />
-          <PodiumColumn rank={1} model={LEADERBOARD[0]} delay={1 * fps} height={240} />
-          <PodiumColumn rank={2} model={LEADERBOARD[2]} delay={2 * fps} height={180} />
+          <PodiumColumn rank={2} model={LEADERBOARD[1]} delay={T(0.08)} height={140} />
+          <PodiumColumn rank={1} model={LEADERBOARD[0]} delay={T(0.05)} height={200} />
+          <PodiumColumn rank={2} model={LEADERBOARD[2]} delay={T(0.11)} height={140} />
         </div>
 
-        {/* Table */}
+        {/* Table - fixed columns prevent overlap */}
         <div
           style={{
             background: "rgba(255,255,255,0.04)",
@@ -67,15 +68,17 @@ export const Leaderboard: React.FC = () => {
             borderRadius: 16,
             overflow: "hidden",
             backdropFilter: "blur(10px)",
+            maxWidth: 1720,
+            margin: "0 auto",
           }}
         >
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "100px 1fr 200px 200px 200px",
-              padding: "20px 32px",
+              gridTemplateColumns: "80px minmax(0,1fr) 80px 80px 100px",
+              padding: "16px 24px",
               background: "rgba(255,255,255,0.06)",
-              fontSize: 18,
+              fontSize: 14,
               fontWeight: 700,
               color: "#94a3b8",
               letterSpacing: 2,
@@ -85,13 +88,13 @@ export const Leaderboard: React.FC = () => {
           >
             <div>RANK</div>
             <div>MODEL</div>
-            <div>CODE</div>
-            <div>LOOKS</div>
-            <div>AVERAGE</div>
+            <div style={{ textAlign: "center" }}>CODE</div>
+            <div style={{ textAlign: "center" }}>LOOKS</div>
+            <div style={{ textAlign: "right" }}>AVG</div>
           </div>
 
           {LEADERBOARD.map((row, i) => {
-            const delay = 3 * fps + i * 0.3 * fps;
+            const delay = T(0.20) + i * T(0.04);
             const appear = spring({
               frame: frame - delay,
               fps,
@@ -103,21 +106,22 @@ export const Leaderboard: React.FC = () => {
                 key={row.name}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "100px 1fr 200px 200px 200px",
-                  padding: "24px 32px",
+                  gridTemplateColumns: "80px minmax(0,1fr) 80px 80px 100px",
+                  padding: "14px 24px",
                   alignItems: "center",
                   borderTop: "1px solid rgba(255,255,255,0.06)",
                   background: agreed
                     ? "linear-gradient(90deg, rgba(74, 222, 128, 0.08), transparent)"
                     : "linear-gradient(90deg, rgba(251, 146, 60, 0.08), transparent)",
                   opacity: appear,
-                  transform: `translateX(${(1 - appear) * 80}px)`,
+                  transform: `translateX(${(1 - appear) * 60}px)`,
                   fontFamily: "Inter, sans-serif",
+                  minHeight: 56,
                 }}
               >
                 <div
                   style={{
-                    fontSize: 32,
+                    fontSize: 26,
                     fontWeight: 900,
                     color: PLACE_COLORS[row.rank] || "#64748b",
                     fontFamily: "'Bebas Neue', 'Inter', sans-serif",
@@ -127,51 +131,47 @@ export const Leaderboard: React.FC = () => {
                 </div>
                 <div
                   style={{
-                    fontSize: 28,
+                    fontSize: 22,
                     fontWeight: 700,
                     color: row.color,
                     display: "flex",
                     alignItems: "center",
                     gap: 12,
+                    overflow: "hidden",
                   }}
                 >
                   <div
                     style={{
-                      width: 8,
-                      height: 40,
+                      width: 6,
+                      height: 32,
                       background: row.color,
-                      borderRadius: 4,
+                      borderRadius: 3,
+                      flexShrink: 0,
                     }}
                   />
-                  {row.name}
-                  {!agreed && (
-                    <span
-                      style={{
-                        fontSize: 14,
-                        color: "#fb923c",
-                        background: "rgba(251, 146, 60, 0.15)",
-                        padding: "4px 10px",
-                        borderRadius: 6,
-                        fontWeight: 700,
-                        letterSpacing: 1,
-                      }}
-                    >
-                      DISAGREED
-                    </span>
-                  )}
+                  <span
+                    style={{
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {row.name}
+                  </span>
                 </div>
-                <div style={{ fontSize: 24, color: "#fff", fontWeight: 600 }}>
+                <div style={{ fontSize: 20, color: "#fff", fontWeight: 600, textAlign: "center" }}>
                   {row.code.toFixed(1)}
                 </div>
-                <div style={{ fontSize: 24, color: "#fff", fontWeight: 600 }}>
+                <div style={{ fontSize: 20, color: "#fff", fontWeight: 600, textAlign: "center" }}>
                   {row.looks.toFixed(1)}
                 </div>
                 <div
                   style={{
-                    fontSize: 32,
+                    fontSize: 24,
                     fontWeight: 900,
                     color: row.color,
                     fontFamily: "'Bebas Neue', 'Inter', sans-serif",
+                    textAlign: "right",
                   }}
                 >
                   {row.avg.toFixed(2)}
@@ -179,6 +179,47 @@ export const Leaderboard: React.FC = () => {
               </div>
             );
           })}
+
+          {/* Legend - shown after all rows */}
+          {frame >= T(0.55) && (
+            <div
+              style={{
+                display: "flex",
+                gap: 32,
+                padding: "16px 24px",
+                background: "rgba(0,0,0,0.3)",
+                fontSize: 14,
+                color: "#cbd5e1",
+                fontFamily: "Inter, sans-serif",
+                borderTop: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span
+                  style={{
+                    width: 24,
+                    height: 14,
+                    background: "linear-gradient(90deg, rgba(74, 222, 128, 0.3), transparent)",
+                    border: "1px solid rgba(74, 222, 128, 0.4)",
+                    borderRadius: 4,
+                  }}
+                />
+                We agreed on the score
+              </span>
+              <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span
+                  style={{
+                    width: 24,
+                    height: 14,
+                    background: "linear-gradient(90deg, rgba(251, 146, 60, 0.3), transparent)",
+                    border: "1px solid rgba(251, 146, 60, 0.4)",
+                    borderRadius: 4,
+                  }}
+                />
+                We disagreed
+              </span>
+            </div>
+          )}
         </div>
       </AbsoluteFill>
     </AbsoluteFill>
@@ -203,7 +244,7 @@ const PodiumColumn: React.FC<{
   return (
     <div
       style={{
-        width: 280,
+        width: 240,
         opacity: rise,
         transform: `translateY(${(1 - rise) * 200}px)`,
         display: "flex",
@@ -213,24 +254,28 @@ const PodiumColumn: React.FC<{
     >
       <div
         style={{
-          fontSize: 22,
+          fontSize: 18,
           color: "#cbd5e1",
           fontWeight: 700,
           fontFamily: "Inter, sans-serif",
-          marginBottom: 12,
+          marginBottom: 8,
           textAlign: "center",
+          maxWidth: 240,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
         }}
       >
         {model.name}
       </div>
       <div
         style={{
-          fontSize: 80,
+          fontSize: 56,
           fontWeight: 900,
           color: PLACE_COLORS[rank],
           fontFamily: "'Bebas Neue', 'Inter', sans-serif",
           lineHeight: 1,
-          marginBottom: 16,
+          marginBottom: 12,
         }}
       >
         {model.avg.toFixed(2)}
@@ -244,7 +289,7 @@ const PodiumColumn: React.FC<{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 60,
+          fontSize: 48,
           fontWeight: 900,
           color: "#0a0a0f",
           fontFamily: "'Bebas Neue', 'Inter', sans-serif",

@@ -31,10 +31,11 @@ const INSIGHTS = [
 
 export const Verdict: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
+  const T = (frac: number) => Math.max(0, Math.floor(frac * durationInFrames));
 
   const titleAppear = spring({
-    frame: frame - 0.3 * fps,
+    frame: frame - T(0.02),
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.6 },
   });
@@ -44,12 +45,12 @@ export const Verdict: React.FC = () => {
       <AnimatedBackground baseColor="#08080d" accentColor="#8b5cf6" intensity={0.35} />
       <Audio src={staticFile("audio/verdict.mp3")} />
 
-      <AbsoluteFill style={{ padding: "100px 120px" }}>
+      <AbsoluteFill style={{ padding: "70px 100px" }}>
         <div
           style={{
             opacity: titleAppear,
             transform: `translateY(${(1 - titleAppear) * 30}px)`,
-            fontSize: 110,
+            fontSize: 90,
             fontWeight: 900,
             textAlign: "center",
             fontFamily: "'Bebas Neue', 'Inter', sans-serif",
@@ -57,7 +58,7 @@ export const Verdict: React.FC = () => {
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             letterSpacing: 6,
-            marginBottom: 60,
+            marginBottom: 40,
           }}
         >
           THE VERDICT
@@ -67,32 +68,33 @@ export const Verdict: React.FC = () => {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gap: 40,
-            maxWidth: 1680,
+            gap: 28,
+            maxWidth: 1720,
             margin: "0 auto",
           }}
         >
           {INSIGHTS.map((insight, i) => {
-            const delay = 1.5 * fps + i * 1.2 * fps;
+            const delay = T(0.10) + i * T(0.18);
             const appear = spring({
               frame: frame - delay,
               fps,
               config: { damping: 12, stiffness: 180, mass: 0.5 },
             });
-            const hold = frame >= delay + 5 * fps;
-            const pulseScale = hold && frame < delay + 6 * fps
-              ? 1 + Math.sin((frame - delay - 5 * fps) * 0.5) * 0.04
-              : 1;
+            const holdStart = delay + T(0.18);
+            const pulseScale =
+              frame >= holdStart && frame < holdStart + T(0.05)
+                ? 1 + Math.sin((frame - holdStart) * 0.4) * 0.04
+                : 1;
             return (
               <div
                 key={insight.title}
                 style={{
                   opacity: appear,
                   transform: `translateY(${(1 - appear) * 60}px) scale(${appear * pulseScale})`,
-                  padding: "44px 48px",
+                  padding: "32px 40px",
                   background: `linear-gradient(135deg, ${insight.color}22, ${insight.color}08)`,
                   border: `2px solid ${insight.color}`,
-                  borderRadius: 24,
+                  borderRadius: 22,
                   backdropFilter: "blur(20px)",
                   boxShadow: `0 0 60px ${insight.color}40`,
                   position: "relative",
@@ -104,7 +106,7 @@ export const Verdict: React.FC = () => {
                     position: "absolute",
                     top: -40,
                     right: -40,
-                    fontSize: 240,
+                    fontSize: 220,
                     opacity: 0.1,
                   }}
                 >
@@ -112,8 +114,8 @@ export const Verdict: React.FC = () => {
                 </div>
                 <div
                   style={{
-                    fontSize: 40,
-                    marginBottom: 16,
+                    fontSize: 32,
+                    marginBottom: 12,
                     position: "relative",
                   }}
                 >
@@ -121,13 +123,13 @@ export const Verdict: React.FC = () => {
                 </div>
                 <div
                   style={{
-                    fontSize: 36,
+                    fontSize: 30,
                     fontWeight: 900,
                     color: insight.color,
                     fontFamily: "'Bebas Neue', 'Inter', sans-serif",
                     letterSpacing: 2,
                     lineHeight: 1,
-                    marginBottom: 16,
+                    marginBottom: 12,
                     position: "relative",
                   }}
                 >
@@ -135,7 +137,7 @@ export const Verdict: React.FC = () => {
                 </div>
                 <div
                   style={{
-                    fontSize: 22,
+                    fontSize: 19,
                     color: "#cbd5e1",
                     fontWeight: 500,
                     fontFamily: "Inter, sans-serif",
@@ -153,17 +155,17 @@ export const Verdict: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            bottom: 60,
+            bottom: 50,
             left: 0,
             right: 0,
             textAlign: "center",
-            fontSize: 28,
+            fontSize: 24,
             color: "#64748b",
             fontWeight: 500,
             fontFamily: "Inter, sans-serif",
             letterSpacing: 4,
             textTransform: "uppercase",
-            opacity: interpolate(frame, [22 * fps, 25 * fps], [0, 1], {
+            opacity: interpolate(frame, [T(0.85), T(0.95)], [0, 1], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
