@@ -149,20 +149,20 @@ export const MODELS: ModelData[] = [
     ],
     cons: ["1230 lines vs 800 limit", "Brine refills instead of draining"],
     // transcript: "Big pickle," → 0.0
-    // "8.5 average, joint second." → 1.56 / 3.46
-    // "Now this one had a brief..." → 4.6
-    // "9 from me" (9) → 26.6
-    // "8 from the looks test" (8) → 27.66
+    // "8.5 average, joint second." → "8" at 1.56, "average" at 2.42
+    // "Now this one had a brief..." → "Now" at 4.6
+    // "Nine from me" → "from" at 26.6
+    // "8 from the looks test" → "looks" at 28.0
     schedule: {
       nameAt: 0.0,
       taglineAt: 0.0,
       infoAt: 4.6,
       codeScoreAt: 26.6,
-      looksScoreAt: 27.66,
+      looksScoreAt: 28.0,
       prosAt: 8.0,
       consAt: 18.0,
       browserAt: 3.5,
-      averageAt: 25.0,
+      averageAt: 1.56,
     },
   },
   {
@@ -231,18 +231,20 @@ export const MODELS: ModelData[] = [
     // transcript: "Gemma 4." → 0.0
     // "31 billion parameters" → 1.66
     // "Google DeepMind." → 3.28
-    // "6 .5 average" → 4.62
-    // "this one is genuinely surprising" → 6.32
+    // "6 .5 average" → "6" at 4.38, "average" at 5.08
+    // "and this one is genuinely surprising" → "and" at 5.92, "genuinely" at 6.64
+    // NOTE: audio only mentions 6.5 average, no separate code/looks breakdown,
+    // so all 3 score cards (code/looks/avg) appear together at average time.
     schedule: {
       nameAt: 0.0,
       taglineAt: 0.0,
-      infoAt: 6.32,
-      codeScoreAt: 4.62,
-      looksScoreAt: 4.62,
+      infoAt: 5.92,
+      codeScoreAt: 5.08,
+      looksScoreAt: 5.08,
       prosAt: 8.0,
       consAt: 14.0,
       browserAt: 3.5,
-      averageAt: 18.0,
+      averageAt: 5.08,
     },
   },
   {
@@ -272,7 +274,7 @@ export const MODELS: ModelData[] = [
       "Design unfinished",
     ],
     // transcript: "Nemotron 3 Super." → 0.0
-    // "4 out of 10 average." → 2.14 / 2.74
+    // "4 out of 10 average." → "4" at 1.98, "out" at 2.14, "average" at 2.74
     // "Now this is a comeback story." → 3.62
     // "6 .5 from me on the code" (6.5) → 23.72
     // "1 .5 from the visual test" (1.5) → 26.12
@@ -285,7 +287,7 @@ export const MODELS: ModelData[] = [
       prosAt: 10.0,
       consAt: 20.0,
       browserAt: 4.0,
-      averageAt: 28.0,
+      averageAt: 1.98,
     },
   },
   {
@@ -316,20 +318,20 @@ export const MODELS: ModelData[] = [
     ],
     // transcript: "And last," → 0.0
     // "Nemotron Nano Omni." → 1.2
-    // "3 .25 average." → 3.26
+    // "3 .25 average." → "3" at 3.26, "average" at 4.28
     // "This one had the most detailed prompt..." → 5.4
-    // "One out of ten visually." → 39.12
+    // "One out of ten visually." → "One" at 38.58
     // "3 .25 average." (end) → 40.72
     schedule: {
       nameAt: 1.2,
       taglineAt: 1.2,
       infoAt: 5.4,
       codeScoreAt: 3.26,
-      looksScoreAt: 39.12,
+      looksScoreAt: 38.58,
       prosAt: 8.0,
       consAt: 18.0,
       browserAt: 4.5,
-      averageAt: 40.72,
+      averageAt: 3.26,
     },
   },
 ];

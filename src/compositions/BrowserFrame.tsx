@@ -1,5 +1,6 @@
 import React from "react";
 import { Img, staticFile } from "remotion";
+import { C, FONT } from "./theme";
 
 type Props = {
   screenshot: string;
@@ -7,51 +8,56 @@ type Props = {
   appear: number;
 };
 
+/**
+ * Minimalist browser frame — flat black with a 1px gray border.
+ * Mono URL bar, no traffic lights glow.
+ */
 export const BrowserFrame: React.FC<Props> = ({ screenshot, url, appear }) => {
   return (
     <div
       style={{
         opacity: appear,
-        transform: `translateX(${(1 - appear) * 60}px) perspective(1200px) rotateY(${(1 - appear) * 8}deg)`,
-        borderRadius: 16,
+        transform: `translateX(${(1 - appear) * 60}px)`,
+        borderRadius: 0,
         overflow: "hidden",
-        background: "#1a1a24",
-        border: "1px solid rgba(255,255,255,0.1)",
-        boxShadow: "0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05)",
+        background: C.surface,
+        border: `1px solid ${C.border}`,
       }}
     >
-      {/* Title bar */}
+      {/* Title bar — flat, 1px bottom border */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          padding: "12px 16px",
-          background: "linear-gradient(180deg, #2a2a35, #1a1a24)",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
+          padding: "10px 14px",
+          background: C.surface,
+          borderBottom: `1px solid ${C.border}`,
+          gap: 14,
         }}
       >
-        <div style={{ display: "flex", gap: 8 }}>
-          <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#ff5f57" }} />
-          <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#febc2e" }} />
-          <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#28c840" }} />
+        {/* Three monochrome squares instead of colored dots */}
+        <div style={{ display: "flex", gap: 6 }}>
+          <div style={{ width: 10, height: 10, background: C.borderStrong }} />
+          <div style={{ width: 10, height: 10, background: C.borderStrong }} />
+          <div style={{ width: 10, height: 10, background: C.borderStrong }} />
         </div>
         <div
           style={{
             flex: 1,
-            marginLeft: 16,
-            padding: "6px 14px",
-            background: "rgba(0,0,0,0.3)",
-            borderRadius: 8,
-            fontSize: 14,
-            color: "#94a3b8",
-            fontFamily: "'JetBrains Mono', monospace",
-            textAlign: "center",
+            padding: "5px 12px",
+            background: C.bg,
+            border: `1px solid ${C.border}`,
+            fontSize: 12,
+            color: C.textMuted,
+            fontFamily: FONT.mono,
+            textAlign: "left",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            letterSpacing: 1,
           }}
         >
-          🌐 {url}
+          https://{url}
         </div>
       </div>
       {/* Screenshot */}
@@ -59,9 +65,7 @@ export const BrowserFrame: React.FC<Props> = ({ screenshot, url, appear }) => {
         style={{
           width: "100%",
           aspectRatio: "16 / 9",
-          background: "#0a0a14",
-          backgroundImage:
-            "linear-gradient(135deg, #0a0a14 0%, #1a1a28 50%, #0a0a14 100%)",
+          background: C.bg,
           overflow: "hidden",
         }}
       >
@@ -73,7 +77,7 @@ export const BrowserFrame: React.FC<Props> = ({ screenshot, url, appear }) => {
             display: "block",
             objectFit: "cover",
             objectPosition: "top center",
-            backgroundColor: "#0a0a14",
+            backgroundColor: C.bg,
           }}
         />
       </div>
@@ -91,58 +95,102 @@ type InfoCardProps = {
   appear: number;
 };
 
-export const InfoCard: React.FC<InfoCardProps> = ({ maker, params, license, release, info, color, appear }) => {
+/**
+ * Flat info card — pure black, hairline gray border, Fira Code labels.
+ */
+export const InfoCard: React.FC<InfoCardProps> = ({
+  maker,
+  params,
+  license,
+  release,
+  info,
+  color,
+  appear,
+}) => {
   return (
     <div
       style={{
         opacity: appear,
         transform: `translateY(${(1 - appear) * 20}px)`,
-        padding: "22px 26px",
-        background: `linear-gradient(135deg, ${color}14, ${color}06)`,
-        border: `1.5px solid ${color}66`,
-        borderRadius: 14,
+        padding: "20px 22px",
+        background: C.surface,
+        border: `1px solid ${C.border}`,
         display: "grid",
         gridTemplateColumns: "auto 1fr",
         gap: "10px 22px",
-        fontFamily: "Inter, sans-serif",
+        fontFamily: FONT.body,
       }}
     >
-      <Field label="Maker" value={maker} color={color} />
-      <Field label="Params" value={params} color={color} />
-      <Field label="License" value={license} color={color} />
-      <Field label="Released" value={release} color={color} />
-      <div style={{ gridColumn: "1 / -1", marginTop: 12, paddingTop: 12, borderTop: `1px solid ${color}44` }}>
+      <Field label="Maker" value={maker} accent={color} />
+      <Field label="Params" value={params} accent={color} />
+      <Field label="License" value={license} accent={color} />
+      <Field label="Released" value={release} accent={color} />
+      <div
+        style={{
+          gridColumn: "1 / -1",
+          marginTop: 12,
+          paddingTop: 14,
+          borderTop: `1px solid ${C.border}`,
+        }}
+      >
         <div
           style={{
-            fontSize: 13,
-            color: "#94a3b8",
-            fontWeight: 800,
+            fontSize: 11,
+            color: C.textFaint,
+            fontWeight: 500,
             letterSpacing: 3,
             textTransform: "uppercase",
             marginBottom: 8,
+            fontFamily: FONT.mono,
           }}
         >
-          What it built
+          // What it built
         </div>
-        <div style={{ fontSize: 20, color: "#e2e8f0", lineHeight: 1.45, fontWeight: 500 }}>{info}</div>
+        <div
+          style={{
+            fontSize: 18,
+            color: C.text,
+            lineHeight: 1.5,
+            fontWeight: 400,
+            fontFamily: FONT.body,
+          }}
+        >
+          {info}
+        </div>
       </div>
     </div>
   );
 };
 
-const Field: React.FC<{ label: string; value: string; color: string }> = ({ label, value, color }) => (
+const Field: React.FC<{ label: string; value: string; accent: string }> = ({
+  label,
+  value,
+  accent,
+}) => (
   <>
     <div
       style={{
-        fontSize: 13,
-        color: "#94a3b8",
-        fontWeight: 800,
+        fontSize: 11,
+        color: C.textFaint,
+        fontWeight: 500,
         letterSpacing: 3,
         textTransform: "uppercase",
+        fontFamily: FONT.mono,
+        alignSelf: "center",
       }}
     >
       {label}
     </div>
-    <div style={{ fontSize: 19, color: "#fff", fontWeight: 700 }}>{value}</div>
+    <div
+      style={{
+        fontSize: 18,
+        color: C.text,
+        fontWeight: 600,
+        fontFamily: FONT.body,
+        alignSelf: "center",
+      }}
+    >
+      {value}
+    </div>
   </>
 );

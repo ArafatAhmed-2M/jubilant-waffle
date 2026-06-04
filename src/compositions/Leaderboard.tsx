@@ -1,19 +1,22 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, Audio, staticFile } from "remotion";
+import {
+  AbsoluteFill,
+  useCurrentFrame,
+  useVideoConfig,
+  spring,
+  Audio,
+  staticFile,
+} from "remotion";
 import { LEADERBOARD } from "./data";
 import { AnimatedBackground } from "./visuals";
+import { SceneFrame } from "./SceneFrame";
 import { useSecToFrame, fadeIn } from "./utils";
-
-const PLACE_COLORS: Record<number, string> = {
-  1: "#fbbf24",
-  2: "#cbd5e1",
-  3: "#fb923c",
-};
+import { C, FONT } from "./theme";
 
 const RANK_LABELS: Record<number, string> = {
-  1: "1st",
-  2: "T-2nd",
-  3: "3rd",
+  1: "1ST",
+  2: "T-2ND",
+  3: "3RD",
 };
 
 /**
@@ -31,21 +34,14 @@ const ROW_REVEAL_SEC = [
 ];
 
 /**
- * Leaderboard scene — 37.38s audio.
- *
- * Hand-picked timing read directly from leaderboard.json transcript:
- *   0.0   "Alright,"              → title fade-in
- *   1.28  "final leaderboard."    → subhead "Code · Looks · Average"
- *   2.9   "First place"           → row 1 (MiniMax) + top-3 callout
- *   7.36  "Second place, joint"   → rows 2 & 3 (DeepSeek, BigPickle)
- *  13.16  "Third place"           → row 4 (MiMo)
- *  17.88  "Fourth"                → row 5 (Gemma)
- *  21.06  "Fifth"                 → row 6 (Nemotron Super)
- *  24.38  "Sixth"                 → row 7 (Nemotron Nano)
- *  27.44  "biggest surprise"      → legend
- *  31.82  "biggest disappointment"→ final commentary stays on screen
+ * Leaderboard scene — TEST 10/12 · 37.38s audio.
+ * Brutalist: "FINAL LEADERBOARD" Oswald headline, top-3 as a 3-column
+ * bordered row, then a clean hairlined table with mono numbers.
  */
-export const Leaderboard: React.FC = () => {
+export const Leaderboard: React.FC<{ sceneIndex: number; sceneName: string }> = ({
+  sceneIndex,
+  sceneName,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const T = useSecToFrame();
@@ -75,153 +71,229 @@ export const Leaderboard: React.FC = () => {
   });
 
   return (
-    <AbsoluteFill>
-      <AnimatedBackground baseColor="#08080d" accentColor="#fbbf24" intensity={0.3} />
+    <SceneFrame
+      sceneIndex={sceneIndex}
+      totalScenes={12}
+      sceneName={sceneName}
+      accentColor={C.text}
+    >
+      <AnimatedBackground baseColor={C.bg} accentColor={C.textMuted} intensity={0.18} />
       <Audio src={staticFile("audio/leaderboard.mp3")} />
 
-      <AbsoluteFill style={{ padding: "60px 80px", display: "flex", flexDirection: "column" }}>
+      <AbsoluteFill
+        style={{
+          padding: "110px 80px 90px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* Eyebrow */}
         <div
           style={{
             opacity: titleAppear,
-            transform: `translateY(${(1 - titleAppear) * 30}px)`,
-            fontSize: 64,
-            fontWeight: 900,
-            textAlign: "center",
-            fontFamily: "'Bebas Neue', 'Inter', sans-serif",
-            background: "linear-gradient(135deg, #fff 0%, #fbbf24 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            letterSpacing: 6,
-            lineHeight: 1,
-            marginBottom: 8,
+            transform: `translateX(${(1 - titleAppear) * -16}px)`,
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            marginBottom: 14,
           }}
         >
-          FINAL LEADERBOARD
+          <div style={{ width: 40, height: 1, background: C.text }} />
+          <div
+            style={{
+              fontSize: 12,
+              color: C.textMuted,
+              fontFamily: FONT.mono,
+              letterSpacing: 4,
+              textTransform: "uppercase",
+              fontWeight: 500,
+            }}
+          >
+            Episode 10 // Final Standings
+          </div>
+        </div>
+
+        <div
+          style={{
+            opacity: titleAppear,
+            transform: `translateY(${(1 - titleAppear) * 24}px)`,
+            fontSize: 96,
+            fontWeight: 700,
+            fontFamily: FONT.display,
+            color: C.text,
+            letterSpacing: 4,
+            lineHeight: 0.95,
+            textTransform: "uppercase",
+            marginBottom: 6,
+          }}
+        >
+          Final Leaderboard
         </div>
         <div
           style={{
             opacity: fadeIn(frame, subheadAt, 14),
-            textAlign: "center",
-            fontSize: 18,
-            color: "#94a3b8",
-            fontFamily: "Inter, sans-serif",
-            letterSpacing: 4,
+            fontSize: 13,
+            color: C.textMuted,
+            fontFamily: FONT.mono,
+            letterSpacing: 3,
             textTransform: "uppercase",
-            fontWeight: 600,
-            marginBottom: 24,
+            fontWeight: 500,
+            marginBottom: 22,
           }}
         >
-          Code · Looks · Average
+          // Code · Looks · Average
         </div>
 
-        {/* Top 3 horizontal cards */}
+        {/* Top 3 row — 3 columns, no gradient, just borders */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1.2fr 1fr",
-            gap: 16,
-            marginBottom: 28,
+            gap: 10,
+            marginBottom: 24,
             opacity: topReveal,
-            transform: `translateY(${(1 - topReveal) * 30}px)`,
+            transform: `translateY(${(1 - topReveal) * 24}px)`,
           }}
         >
           {LEADERBOARD.slice(0, 3).map((m, i) => {
             const rank = i + 1;
-            const color = PLACE_COLORS[rank];
-            const label = RANK_LABELS[rank] || `${rank}th`;
+            const label = RANK_LABELS[rank] || `${rank}TH`;
+            const isWinner = rank === 1;
+            const cardAppear = spring({
+              frame: frame - top3RevealAt - i * 6,
+              fps,
+              config: { damping: 12, stiffness: 200, mass: 0.5 },
+            });
             return (
               <div
                 key={m.name}
                 style={{
+                  opacity: cardAppear,
+                  transform: `translateY(${(1 - cardAppear) * 16}px)`,
                   padding: "18px 20px",
-                  background: `linear-gradient(135deg, ${color}30, ${color}0a)`,
-                  border: `3px solid ${color}`,
-                  borderRadius: 16,
-                  textAlign: "center",
-                  boxShadow: rank === 1 ? `0 0 50px ${color}80` : "none",
+                  background: C.surface,
+                  border: `1px solid ${C.border}`,
+                  borderTop: `2px solid ${isWinner ? m.color : C.textFaint}`,
+                  textAlign: "left",
                 }}
               >
                 <div
                   style={{
-                    fontSize: 16,
-                    fontWeight: 800,
-                    color: color,
-                    letterSpacing: 4,
-                    fontFamily: "Inter, sans-serif",
-                    textTransform: "uppercase",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 6,
                   }}
                 >
-                  {label} PLACE
+                  <div
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 500,
+                      color: C.textFaint,
+                      fontFamily: FONT.mono,
+                      letterSpacing: 3,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {label}
+                  </div>
+                  {isWinner && (
+                    <div
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 500,
+                        color: m.color,
+                        fontFamily: FONT.mono,
+                        letterSpacing: 2,
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      ★ Winner
+                    </div>
+                  )}
                 </div>
                 <div
                   style={{
-                    fontSize: 26,
-                    fontWeight: 900,
-                    color: "#fff",
-                    fontFamily: "'Bebas Neue', 'Inter', sans-serif",
-                    marginTop: 6,
-                    marginBottom: 4,
+                    fontSize: 22,
+                    fontWeight: 600,
+                    color: C.text,
+                    fontFamily: FONT.display,
+                    letterSpacing: 2,
+                    textTransform: "uppercase",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     lineHeight: 1.1,
+                    marginBottom: 8,
                   }}
                 >
                   {m.name}
                 </div>
                 <div
                   style={{
-                    fontSize: 48,
-                    fontWeight: 900,
-                    color: color,
-                    fontFamily: "'Bebas Neue', 'Inter', sans-serif",
-                    lineHeight: 1,
-                    marginTop: 4,
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: 4,
                   }}
                 >
-                  {m.avg.toFixed(2)}
+                  <div
+                    style={{
+                      fontSize: 44,
+                      fontWeight: 700,
+                      color: m.color,
+                      fontFamily: FONT.display,
+                      lineHeight: 1,
+                    }}
+                  >
+                    {m.avg.toFixed(2)}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      color: C.textFaint,
+                      fontFamily: FONT.mono,
+                    }}
+                  >
+                    / 10
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Full leaderboard table */}
+        {/* Full leaderboard table — clean hairline rows */}
         <div
           style={{
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            borderRadius: 18,
-            overflow: "hidden",
-            backdropFilter: "blur(10px)",
+            background: C.surface,
+            border: `1px solid ${C.border}`,
             maxWidth: 1720,
             margin: "0 auto",
             width: "100%",
             opacity: tableReveal,
-            transform: `translateY(${(1 - tableReveal) * 20}px)`,
+            transform: `translateY(${(1 - tableReveal) * 16}px)`,
           }}
         >
           {/* Header */}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "120px 1fr 160px 160px 180px",
-              padding: "18px 32px",
-              background: "rgba(255,255,255,0.08)",
-              borderBottom: "2px solid rgba(255,255,255,0.15)",
+              gridTemplateColumns: "100px 1fr 140px 140px 160px",
+              padding: "14px 24px",
+              borderBottom: `1px solid ${C.border}`,
+              background: C.bgRaised,
             }}
           >
-            <div style={headerStyle}>RANK</div>
-            <div style={headerStyle}>MODEL</div>
-            <div style={{ ...headerStyle, textAlign: "center" }}>CODE</div>
-            <div style={{ ...headerStyle, textAlign: "center" }}>LOOKS</div>
-            <div style={{ ...headerStyle, textAlign: "right" }}>AVERAGE</div>
+            <div style={headerStyle}>#</div>
+            <div style={headerStyle}>Model</div>
+            <div style={{ ...headerStyle, textAlign: "center" }}>Code</div>
+            <div style={{ ...headerStyle, textAlign: "center" }}>Looks</div>
+            <div style={{ ...headerStyle, textAlign: "right" }}>Average</div>
           </div>
 
           {/* Rows */}
           {LEADERBOARD.map((row, i) => {
-            const agreed = Math.abs(row.code - row.looks) < 2;
-            const rowColor = PLACE_COLORS[row.rank] || row.color;
+            const rowColor = row.color;
             const revealAt = T(ROW_REVEAL_SEC[i] ?? 0);
             const appear = spring({
               frame: frame - revealAt,
@@ -233,37 +305,39 @@ export const Leaderboard: React.FC = () => {
                 key={row.name}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "120px 1fr 160px 160px 180px",
-                  padding: "16px 32px",
+                  gridTemplateColumns: "100px 1fr 140px 140px 160px",
+                  padding: "14px 24px",
                   alignItems: "center",
-                  borderTop: i === 0 ? "none" : "1px solid rgba(255,255,255,0.08)",
-                  background: agreed
-                    ? "linear-gradient(90deg, rgba(74, 222, 128, 0.10), transparent)"
-                    : "linear-gradient(90deg, rgba(251, 146, 60, 0.10), transparent)",
+                  borderBottom:
+                    i === LEADERBOARD.length - 1
+                      ? "none"
+                      : `1px solid ${C.border}`,
                   opacity: appear,
-                  transform: `translateX(${(1 - appear) * 80}px)`,
+                  transform: `translateX(${(1 - appear) * 60}px)`,
+                  background: i % 2 === 0 ? C.surface : C.surfaceAlt,
                 }}
               >
                 <div
                   style={{
+                    fontSize: 24,
+                    fontWeight: 700,
+                    color: rowColor,
+                    fontFamily: FONT.display,
                     display: "flex",
                     alignItems: "center",
-                    gap: 8,
-                    fontSize: 28,
-                    fontWeight: 900,
-                    color: rowColor,
-                    fontFamily: "'Bebas Neue', 'Inter', sans-serif",
+                    gap: 6,
                   }}
                 >
-                  #{row.rank}
+                  {String(row.rank).padStart(2, "0")}
                   {row.rank === 2 && LEADERBOARD.filter((r) => r.rank === 2).length > 1 && (
                     <span
                       style={{
-                        fontSize: 12,
-                        color: "#94a3b8",
-                        fontFamily: "Inter, sans-serif",
-                        fontWeight: 700,
-                        letterSpacing: 1,
+                        fontSize: 10,
+                        color: C.textMuted,
+                        fontFamily: FONT.mono,
+                        fontWeight: 500,
+                        letterSpacing: 2,
+                        textTransform: "uppercase",
                       }}
                     >
                       TIE
@@ -272,21 +346,21 @@ export const Leaderboard: React.FC = () => {
                 </div>
                 <div
                   style={{
-                    fontSize: 24,
-                    fontWeight: 700,
-                    color: "#fff",
+                    fontSize: 20,
+                    fontWeight: 500,
+                    color: C.text,
                     display: "flex",
                     alignItems: "center",
-                    gap: 14,
+                    gap: 10,
                     overflow: "hidden",
+                    fontFamily: FONT.body,
                   }}
                 >
                   <div
                     style={{
-                      width: 6,
-                      height: 30,
-                      background: row.color,
-                      borderRadius: 3,
+                      width: 4,
+                      height: 24,
+                      background: rowColor,
                       flexShrink: 0,
                     }}
                   />
@@ -302,32 +376,32 @@ export const Leaderboard: React.FC = () => {
                 </div>
                 <div
                   style={{
-                    fontSize: 24,
-                    color: "#fff",
-                    fontWeight: 700,
+                    fontSize: 20,
+                    color: C.text,
+                    fontWeight: 500,
                     textAlign: "center",
-                    fontFamily: "'Bebas Neue', 'Inter', sans-serif",
+                    fontFamily: FONT.mono,
                   }}
                 >
                   {row.code.toFixed(1)}
                 </div>
                 <div
                   style={{
-                    fontSize: 24,
-                    color: "#fff",
-                    fontWeight: 700,
+                    fontSize: 20,
+                    color: C.text,
+                    fontWeight: 500,
                     textAlign: "center",
-                    fontFamily: "'Bebas Neue', 'Inter', sans-serif",
+                    fontFamily: FONT.mono,
                   }}
                 >
                   {row.looks.toFixed(1)}
                 </div>
                 <div
                   style={{
-                    fontSize: 28,
-                    fontWeight: 900,
-                    color: row.color,
-                    fontFamily: "'Bebas Neue', 'Inter', sans-serif",
+                    fontSize: 24,
+                    fontWeight: 700,
+                    color: rowColor,
+                    fontFamily: FONT.display,
                     textAlign: "right",
                   }}
                 >
@@ -338,65 +412,66 @@ export const Leaderboard: React.FC = () => {
           })}
         </div>
 
-        {/* Legend — appears at 27.44s on "biggest surprise" */}
+        {/* Legend */}
         <div
           style={{
             display: "flex",
-            gap: 36,
+            gap: 28,
             justifyContent: "center",
-            marginTop: 20,
+            marginTop: 18,
             opacity: fadeIn(frame, legendAt, 16),
-            transform: `translateY(${(1 - fadeIn(frame, legendAt, 16)) * 12}px)`,
+            transform: `translateY(${(1 - fadeIn(frame, legendAt, 16)) * 8}px)`,
           }}
         >
           <span style={legendTextStyle}>
             <span
               style={{
                 ...legendSwatchStyle,
-                background: "linear-gradient(90deg, rgba(74, 222, 128, 0.4), transparent)",
-                borderColor: "rgba(74, 222, 128, 0.6)",
+                background: C.surface,
+                borderColor: C.positive,
               }}
             />
-            We agreed on the score
+            <span style={{ color: C.textFaint }}>//</span> agreed
           </span>
           <span style={legendTextStyle}>
             <span
               style={{
                 ...legendSwatchStyle,
-                background: "linear-gradient(90deg, rgba(251, 146, 60, 0.4), transparent)",
-                borderColor: "rgba(251, 146, 60, 0.6)",
+                background: C.surface,
+                borderColor: C.warn,
               }}
             />
-            We disagreed
+            <span style={{ color: C.textFaint }}>//</span> disagreed
           </span>
         </div>
       </AbsoluteFill>
-    </AbsoluteFill>
+    </SceneFrame>
   );
 };
 
 const headerStyle: React.CSSProperties = {
-  fontSize: 18,
-  fontWeight: 800,
-  color: "#cbd5e1",
+  fontSize: 11,
+  fontWeight: 500,
+  color: C.textFaint,
   letterSpacing: 3,
-  fontFamily: "Inter, sans-serif",
+  fontFamily: FONT.mono,
   textTransform: "uppercase",
 };
 
 const legendTextStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
-  gap: 10,
-  fontSize: 18,
-  color: "#cbd5e1",
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 600,
+  gap: 8,
+  fontSize: 13,
+  color: C.textMuted,
+  fontFamily: FONT.mono,
+  fontWeight: 400,
+  letterSpacing: 1,
+  textTransform: "uppercase",
 };
 
 const legendSwatchStyle: React.CSSProperties = {
-  width: 32,
-  height: 18,
-  borderRadius: 4,
-  border: "1px solid",
+  width: 30,
+  height: 14,
+  border: `1px solid`,
 };
